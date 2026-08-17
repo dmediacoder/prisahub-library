@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prisahub — NHS Application Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0a0f1e;--blue:#2563eb;--blue-light:#3b82f6;--purple:#7c3aed;--green:#059669;--red:#dc2626;--bg:#f0f2f8;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+/* NAV */
+.nav{background:var(--navy);height:60px;display:flex;align-items:center;padding:0 28px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;letter-spacing:-.5px}
+.nav-name{font-size:16px;font-weight:900;color:#fff;letter-spacing:-.4px}
+.nav-name span{color:#60a5fa}
+.nav-divider{width:1px;height:20px;background:rgba(255,255,255,.12);margin:0 16px}
+.nav-subtitle{font-size:12px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.05em}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-stat{font-size:12px;font-weight:700;color:rgba(255,255,255,.5)}
+.nav-stat span{color:#60a5fa}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#0d1b3e 60%,#1a0533 100%);padding:48px 28px 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-40%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(37,99,235,.1) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:960px;margin:0 auto;position:relative}
+.hero h1{font-size:clamp(24px,4vw,36px);font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:10px}
+.hero h1 span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:28px;line-height:1.6;max-width:520px}
+.hero-stats{display:flex;gap:20px;flex-wrap:wrap}
+.hstat{text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 20px;min-width:100px}
+.hstat-val{font-size:24px;font-weight:900;color:#fff}
+.hstat-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+
+/* SEARCH AREA */
+.search-area{background:var(--navy);padding:0 28px 24px;border-bottom:1px solid rgba(255,255,255,.06)}
+.search-inner{max-width:960px;margin:0 auto}
+.search-row{display:flex;gap:10px;align-items:flex-start}
+.search-box{flex:1;position:relative}
+.search-input{width:100%;padding:14px 18px 14px 48px;border:2px solid rgba(255,255,255,.1);border-radius:12px;font-family:inherit;font-size:14px;color:#fff;background:rgba(255,255,255,.07);outline:none;transition:all .2s;backdrop-filter:blur(10px)}
+.search-input::placeholder{color:rgba(255,255,255,.3)}
+.search-input:focus{border-color:var(--blue-light);background:rgba(255,255,255,.1);box-shadow:0 0 0 4px rgba(59,130,246,.15)}
+.search-icon-wrap{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);pointer-events:none}
+.dropdown-btn{padding:14px 18px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.1);border-radius:12px;color:rgba(255,255,255,.7);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.dropdown-btn:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.12)}
+.dropdown-btn.open{border-color:var(--blue-light);background:rgba(59,130,246,.15);color:#fff}
+.search-results{background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-top:6px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.4);max-height:280px;overflow-y:auto;display:none}
+.search-results.show{display:block}
+.search-results::-webkit-scrollbar{width:4px}
+.search-results::-webkit-scrollbar-track{background:transparent}
+.search-results::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px}
+.sri{padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);transition:background .1s}
+.sri:last-child{border-bottom:none}
+.sri:hover{background:rgba(59,130,246,.15)}
+.sri-name{font-size:13px;font-weight:600;color:#e2e8f0}
+.sri-badge{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:8px}
+.b-saved{background:rgba(37,99,235,.3);color:#93c5fd}
+.b-new{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.sri-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);padding:8px 16px 4px;text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid rgba(255,255,255,.06)}
+
+/* DROPDOWN PANEL */
+.dropdown-panel{position:absolute;top:calc(100% + 8px);right:0;background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);width:340px;max-height:420px;overflow-y:auto;display:none;z-index:200}
+.dropdown-panel.show{display:block}
+.dp-section{padding:8px 0}
+.dp-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.12em;padding:8px 16px 4px}
+.dp-item{padding:10px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+.dp-item:hover{background:rgba(59,130,246,.15)}
+.dp-name{font-size:13px;font-weight:500;color:#e2e8f0}
+.dp-count{font-size:11px;font-weight:700;color:#60a5fa}
+.dp-divider{height:1px;background:rgba(255,255,255,.06);margin:4px 0}
+.dropdown-box{position:relative}
+
+/* MAIN CONTENT */
+.content-area{max-width:960px;margin:0 auto;padding:24px 28px}
+
+/* WELCOME */
+.welcome{text-align:center;padding:60px 20px;background:var(--card);border-radius:20px;border:1px solid var(--border)}
+.welcome-gfx{width:80px;height:80px;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 20px}
+.welcome h2{font-size:20px;font-weight:800;margin-bottom:8px}
+.welcome p{color:var(--muted);font-size:13.5px;line-height:1.7;max-width:420px;margin:0 auto}
+
+/* TRUST CARD */
+.trust-card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid var(--border)}
+.trust-banner{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.trust-info h2{font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+.trust-info p{font-size:12px;color:rgba(255,255,255,.45)}
+.trust-info .trust-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.tmeta-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.trust-actions{display:flex;gap:8px;flex-shrink:0}
+.btn{padding:9px 18px;border:none;border-radius:10px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:6px}
+.btn-add{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-add:hover{background:rgba(255,255,255,.22)}
+.btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.btn-blue:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,99,235,.4)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:#94a3b8;color:var(--text)}
+.btn-del{background:#fff1f2;color:var(--red);border:none}
+.btn-del:hover{background:#fee2e2}
+.btn-sm{padding:6px 12px;font-size:11.5px;border-radius:8px}
+
+/* STMT LIST */
+.stmts-area{padding:20px 24px}
+.no-stmts{text-align:center;padding:40px 20px;color:var(--muted)}
+.no-stmts-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.no-stmts p{font-size:13px;line-height:1.6}
+
+/* FILTER ROW */
+.filter-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-chip{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.filter-chip:hover{border-color:var(--blue-light);color:var(--blue)}
+.filter-chip.active{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
+
+/* STMT CARD */
+.sc{border:1.5px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:all .18s}
+.sc:hover{border-color:#bfdbfe;box-shadow:0 4px 16px rgba(37,99,235,.08)}
+.sc-head{padding:13px 16px;background:#fafbff;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sc-pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:8px;display:inline-flex;align-items:center;gap:4px}
+.p-role{background:#eff6ff;color:#1d4ed8}
+.p-band{background:#f0fdf4;color:#166534}
+.p-date{background:#f8fafc;color:#64748b;font-weight:500}
+.sc-acts{display:flex;gap:6px;flex-shrink:0}
+.sc-body{padding:14px 16px}
+.sc-label{font-size:12px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sc-text{font-size:13.5px;color:#1e293b;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.sc-text.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.expand-btn{font-size:12px;color:var(--blue);font-weight:600;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:inherit;padding:0}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(10,15,30,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:all .25s;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-head{padding:22px 26px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+.modal-head h2{font-size:17px;font-weight:800}
+.modal-head p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.btn-close{width:32px;height:32px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s}
+.btn-close:hover{background:#e2e8f0;color:var(--text)}
+.modal-body{padding:22px 26px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;color:var(--text);background:#fafbff;outline:none;transition:all .15s;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:#fff}
+.field textarea{min-height:200px;resize:vertical;line-height:1.75}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.char-info{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:5px}
+.modal-foot{padding:16px 26px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:#fff;position:sticky;bottom:0}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:400;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+@media(max-width:640px){
+  .nav{padding:0 16px}.hero{padding:32px 16px 28px}.search-area{padding:0 16px 18px}
+  .content-area{padding:16px}.trust-banner{padding:16px 18px}
+  .stmts-area{padding:14px 16px}.modal-body,.modal-head,.modal-foot{padding-left:18px;padding-right:18px}
+  .field-row{grid-template-columns:1fr}.dropdown-panel{width:280px}
+  .search-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-icon">P</div>
+    <div class="nav-name">Prisa<span>hub</span></div>
+    <div class="nav-divider"></div>
+    <div class="nav-subtitle">APPLICATION LIBRARY</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-stat"><span id="n-trusts">0</span> trusts &nbsp;·&nbsp; <span id="n-stmts">0</span> statements &nbsp;·&nbsp; <span style="color:#34d399">&#9679; Synced</span></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Your NHS <span>Winning Statements</span><br/>All in One Place</h1>
+    <p class="hero-sub">Search any NHS Trust, view your saved supporting statements by role and band, and apply faster with confidence.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val" id="h-trusts">0</div><div class="hstat-lbl">Trusts Saved</div></div>
+      <div class="hstat"><div class="hstat-val" id="h-stmts">0</div><div class="hstat-lbl">Statements</div></div>
+      <div class="hstat"><div class="hstat-val" id="h-roles">0</div><div class="hstat-lbl">Unique Roles</div></div>
+      <div class="hstat"><div class="hstat-val">215</div><div class="hstat-lbl">NHS Trusts</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH AREA -->
+<div class="search-area">
+  <div class="search-inner">
+    <div class="search-row">
+      <div class="search-box">
+        <div class="search-icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <input class="search-input" id="search-input" placeholder="Search NHS Trust name..." autocomplete="off" oninput="onSearch(this.value)" onfocus="onSearch(this.value)"/>
+        <div class="search-results" id="search-results"></div>
+      </div>
+      <div class="dropdown-box">
+        <button class="dropdown-btn" id="dropdown-btn" onclick="toggleDropdown()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Browse All Trusts
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown-panel" id="dropdown-panel"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="content-area">
+  <div id="content">
+    <div class="welcome">
+      <div class="welcome-gfx">🏥</div>
+      <h2>Find Your NHS Trust</h2>
+      <p>Search or browse 215 NHS Trusts above. Select a trust to view your saved statements or add a new one. Save up to 10 statements per trust.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeForm()">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="modal-title">Add Supporting Statement</h2>
+        <p id="modal-sub">Save a winning statement for this trust</p>
+      </div>
+      <button class="btn-close" onclick="closeForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Role Title</label>
+          <input type="text" id="f-role" placeholder="e.g. Healthcare Support Worker"/>
+        </div>
+        <div class="field">
+          <label>Band</label>
+          <select id="f-band">
+            <option value="">Select...</option>
+            <option>Band 2</option><option>Band 3</option><option>Band 4</option>
+            <option>Band 5</option><option>Band 6</option><option>Band 7</option>
+            <option>Band 8a</option><option>Band 8b</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Statement Label <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional)</span></label>
+        <input type="text" id="f-label" placeholder="e.g. NHS Values, Why I applied, Experience & Skills"/>
+      </div>
+      <div class="field">
+        <label>Supporting Statement</label>
+        <textarea id="f-text" placeholder="Paste your supporting statement here..." oninput="updCC()"></textarea>
+        <div class="char-info">
+          <span id="cc">0 characters</span>
+          <span style="color:#94a3b8">No limit</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeForm()">Cancel</button>
+      <button class="btn btn-blue" onclick="saveStmt()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Save Statement
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="tdot" id="tdot"></span><span id="tmsg"></span></div>
+
+<script>
+var db={},currentTrust=null,editId=null,exp={},filterBand='all',syncing=false;
+
+// ── SUPABASE ──
+var SB_URL='https://opntstuzymdqkcddfjfn.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wbnRzdHV6eW1kcWtjZGRmamZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NjU1NTcsImV4cCI6MjEwMDI0MTU1N30.vTj7S4Mt0fjBAmIBgSo2yYI0l9atcgoQQ35-Cl9NjoE';
+var SBH={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+
+async function sbLoadAll(){
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/library_statements?select=*&order=created_at.desc',{headers:SBH});
+    if(!r.ok)return;
+    var rows=await r.json();
+    // Rebuild db from Supabase rows
+    db={};
+    rows.forEach(function(row){
+      if(!db[row.trust_name])db[row.trust_name]={s:[]};
+      db[row.trust_name].s.push({
+        id:row.id,role:row.role||'',band:row.band||'',
+        label:row.label||'',text:row.statement||'',
+        date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''
+      });
+    });
+    save(); // also keep local backup
+    updateStats();
+    if(currentTrust)renderTrust();
+  }catch(e){console.error('Load error',e);}
+}
+
+async function sbSave(stmt,trust){
+  try{
+    await fetch(SB_URL+'/rest/v1/library_statements',{
+      method:'POST',
+      headers:{...SBH,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({id:stmt.id,trust_name:trust,role:stmt.role,band:stmt.band,label:stmt.label,statement:stmt.text})
+    });
+  }catch(e){console.error('Save error',e);}
+}
+
+async function sbUpdate(stmt){
+  try{
+    await fetch(SB_URL+'/rest/v1/library_statements?id=eq.'+stmt.id,{
+      method:'PATCH',
+      headers:SBH,
+      body:JSON.stringify({role:stmt.role,band:stmt.band,label:stmt.label,statement:stmt.text})
+    });
+  }catch(e){console.error('Update error',e);}
+}
+
+async function sbDelete(id){
+  try{
+    await fetch(SB_URL+'/rest/v1/library_statements?id=eq.'+id,{method:'DELETE',headers:SBH});
+  }catch(e){console.error('Delete error',e);}
+}
+
+var TRUSTS=["Airedale NHS Foundation Trust","Alder Hey Children's NHS Foundation Trust","Ashford and St Peter's Hospitals NHS Foundation Trust","Avon and Wiltshire Mental Health Partnership NHS Trust","Barking, Havering and Redbridge University Hospitals NHS Trust","Barnet Enfield and Haringey Mental Health NHS Trust","Barnsley Hospital NHS Foundation Trust","Bath NHS Trust","Bedfordshire Hospitals NHS Foundation Trust","Berkshire Healthcare NHS Foundation Trust","Bridgewater Community Healthcare NHS Foundation Trust","Birmingham and Solihull Mental Health NHS Foundation Trust","Birmingham Community Healthcare NHS Foundation Trust","Birmingham Women's and Children's NHS Foundation Trust","Black Country Healthcare NHS Foundation Trust","Blackpool Teaching Hospitals NHS Foundation Trust","Bradford District Care NHS Foundation Trust","Bradford Teaching Hospitals NHS Foundation Trust","Buckinghamshire Healthcare NHS Trust","Calderdale and Huddersfield NHS Foundation Trust","Cambridge University Hospitals NHS Foundation Trust","Cambridgeshire and Peterborough NHS Foundation Trust","Cambridgeshire Community Services NHS Trust","Central and North West London NHS Foundation Trust","Central London Community Healthcare NHS Trust","Chelsea and Westminster Hospital NHS Foundation Trust","Cheshire and Wirral Partnership NHS Foundation Trust","Chesterfield Royal Hospital NHS Foundation Trust","Cornwall Partnership NHS Foundation Trust","Countess of Chester Hospital NHS Foundation Trust","County Durham and Darlington NHS Foundation Trust","Coventry and Warwickshire Partnership NHS Trust","Croydon Health Services NHS Trust","Cumbria, Northumberland, Tyne and Wear NHS Foundation Trust","Dartford and Gravesham NHS Trust","Derbyshire Community Health Services NHS Foundation Trust","Derbyshire Healthcare NHS Foundation Trust","Devon Partnership NHS Trust","Doncaster and Bassetlaw Teaching Hospitals NHS Foundation Trust","Dorset County Hospital NHS Foundation Trust","Dorset HealthCare University NHS Foundation Trust","Dudley Integrated Health and Care NHS Trust","East Cheshire NHS Trust","East and North Hertfordshire Teaching NHS Trust","East Kent Hospitals University NHS Foundation Trust","East Lancashire Hospitals NHS Trust","East London NHS Foundation Trust","East Midlands Ambulance Service NHS Trust","East of England Ambulance Service NHS Trust","East Suffolk and North Essex NHS Foundation Trust","East Sussex NHS Trust","Epsom and St Helier University Hospitals NHS Trust","Essex Partnership University NHS Foundation Trust","Frimley Health NHS Foundation Trust","Gateshead Health NHS Foundation Trust","George Eliot Hospital NHS Trust","Gloucestershire Health and Care NHS Foundation Trust","Gloucestershire Hospitals NHS Foundation Trust","Great Ormond Street Hospital For Children NHS Foundation Trust","Great Western Hospitals NHS Foundation Trust","Greater Manchester Mental Health NHS Foundation Trust","Guy's and St Thomas' NHS Foundation Trust","Hampshire Hospitals NHS Foundation Trust","Hampshire and Isle of Wight Healthcare NHS Foundation Trust","Harrogate and District NHS Foundation Trust","Herefordshire and Worcestershire Health and Care NHS Trust","Hertfordshire Community NHS Trust","Hertfordshire Partnership University NHS Foundation Trust","Homerton Healthcare NHS Foundation Trust","Humber Teaching NHS Foundation Trust","Imperial College Healthcare NHS Trust","Isle of Wight NHS Trust","James Paget University Hospitals NHS Foundation Trust","Kent and Medway NHS and Social Care Partnership Trust","Kent Community Health NHS Foundation Trust","Kettering General Hospital NHS Foundation Trust","King's College Hospital NHS Foundation Trust","Kingston and Richmond NHS Foundation Trust","Lancashire and South Cumbria NHS Foundation Trust","Leeds Community Healthcare NHS Trust","Leeds Teaching Hospitals NHS Trust","Leicestershire Partnership NHS Trust","Lincolnshire Community Health Services NHS Trust","Lincolnshire Partnership NHS Foundation Trust","Liverpool Heart and Chest Hospital NHS Foundation Trust","Liverpool University Hospitals NHS Foundation Trust","Liverpool Women's NHS Foundation Trust","London Ambulance Service NHS Trust","London North West University Healthcare NHS Trust","Maidstone and Tunbridge Wells NHS Trust","Manchester University NHS Foundation Trust","Medway NHS Foundation Trust","Mersey and West Lancashire Teaching Hospitals NHS Trust","Mid and South Essex NHS Foundation Trust","Mid Cheshire Hospitals NHS Foundation Trust","Mid Yorkshire Hospitals NHS Trust","Midlands Partnership University NHS Foundation Trust","Milton Keynes University Hospital NHS Foundation Trust","Moorfields Eye Hospital NHS Foundation Trust","Norfolk and Norwich University Hospitals NHS Foundation Trust","Norfolk and Suffolk NHS Foundation Trust","North Bristol NHS Trust","North Cumbria Integrated Care NHS Foundation Trust","North East Ambulance Service NHS Foundation Trust","North East London NHS Foundation Trust","North Middlesex University Hospital NHS Trust","North Staffordshire Combined Healthcare NHS Trust","North Tees and Hartlepool NHS Foundation Trust","North West Ambulance Service NHS Trust","North West Boroughs Healthcare NHS Foundation Trust","Northampton General Hospital NHS Trust","Northamptonshire Healthcare NHS Foundation Trust","Northern Care Alliance NHS Foundation Trust","Northern Lincolnshire and Goole NHS Foundation Trust","Northumbria Healthcare NHS Foundation Trust","Nottingham University Hospitals NHS Trust","Nottinghamshire Healthcare NHS Foundation Trust","Oxleas NHS Foundation Trust","Oxford Health NHS Foundation Trust","Oxford University Hospitals NHS Foundation Trust","Pennine Care NHS Foundation Trust","Portsmouth Hospitals University NHS Trust","Queen Victoria Hospital NHS Foundation Trust","Rotherham Doncaster and South Humber NHS Foundation Trust","Royal Berkshire NHS Foundation Trust","Royal Cornwall Hospitals NHS Trust","Royal Devon University Healthcare NHS Foundation Trust","Royal Free London NHS Foundation Trust","Royal National Orthopaedic Hospital NHS Trust","Royal Papworth Hospital NHS Foundation Trust","Royal Surrey NHS Foundation Trust","Royal United Hospitals Bath NHS Foundation Trust","Royal Wolverhampton NHS Trust","Salisbury NHS Foundation Trust","Sandwell and West Birmingham Hospitals NHS Foundation Trust","Sheffield Children's NHS Foundation Trust","Sheffield Health and Social Care NHS Foundation Trust","Sheffield Teaching Hospitals NHS Foundation Trust","Sherwood Forest Hospitals NHS Foundation Trust","Shrewsbury and Telford Hospital NHS Trust","Solent NHS Trust","Somerset NHS Foundation Trust","South Central Ambulance Service NHS Foundation Trust","South East Coast Ambulance Service NHS Foundation Trust","South London and Maudsley NHS Foundation Trust","South Tees Hospitals NHS Foundation Trust","South Tyneside and Sunderland NHS Foundation Trust","South Warwickshire University NHS Foundation Trust","South West Yorkshire Partnership NHS Foundation Trust","South Western Ambulance Service NHS Foundation Trust","Southport and Ormskirk Hospital NHS Trust","Stockport NHS Foundation Trust","Surrey and Borders Partnership NHS Foundation Trust","Sussex Community NHS Foundation Trust","Sussex Partnership NHS Foundation Trust","Tameside and Glossop Integrated Care NHS Foundation Trust","Taunton and Somerset NHS Foundation Trust","Tees Esk and Wear Valleys NHS Foundation Trust","The Christie NHS Foundation Trust","The Clatterbridge Cancer Centre NHS Foundation Trust","The Dudley Group NHS Foundation Trust","The Hillingdon Hospitals NHS Foundation Trust","The Newcastle Upon Tyne Hospitals NHS Foundation Trust","The Princess Alexandra Hospital NHS Trust","The Queen Elizabeth Hospital King's Lynn NHSFT","The Robert Jones and Agnes Hunt Orthopaedic Hospital NHS Foundation Trust","The Rotherham NHS Foundation Trust","The Royal Orthopaedic Hospital NHS Foundation Trust","The Royal Marsden NHS Foundation Trust","The Walton Centre NHS Foundation Trust","University College London Hospitals NHS Foundation Trust","United Lincolnshire Hospitals NHS Trust","University Hospital Southampton NHS Foundation Trust","University Hospitals Birmingham NHS Foundation Trust","University Hospitals Bristol and Weston NHS Foundation Trust","University Hospitals Coventry and Warwickshire NHS Trust","University Hospitals of Derby and Burton NHS Foundation Trust","University Hospitals Dorset NHS Foundation Trust","University Hospitals of Leicester NHS Trust","University Hospitals of Morecambe Bay NHS Foundation Trust","University Hospitals of North Midlands NHS Trust","University Hospitals Plymouth NHS Trust","University Hospitals Sussex NHS Foundation Trust","Walsall Healthcare NHS Trust","West Hertfordshire Teaching Hospitals NHS Trust","West London NHS Trust","West Midlands Ambulance Service NHS Trust","West Suffolk NHS Foundation Trust","Whittington Health NHS Trust","Wirral Community NHS Foundation Trust","Wirral University Teaching Hospital NHS Foundation Trust","Worcestershire Acute Hospitals NHS Trust","Worcestershire Health and Care NHS Trust","Wye Valley NHS Trust","York and Scarborough Teaching Hospitals NHS Foundation Trust","Yorkshire Ambulance Service NHS Trust"];
+
+function load(){try{var s=localStorage.getItem('prisahub_lib');if(s)db=JSON.parse(s);}catch(e){db={};}}
+function save(){try{localStorage.setItem('prisahub_lib',JSON.stringify(db));}catch(e){}}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── SEARCH ──
+function onSearch(val){
+  var box=document.getElementById('search-results');
+  document.getElementById('dropdown-panel').classList.remove('show');
+  document.getElementById('dropdown-btn').classList.remove('open');
+  if(!val||val.length<1){box.classList.remove('show');return;}
+  var low=val.toLowerCase();
+  var matches=TRUSTS.filter(function(t){return t.toLowerCase().includes(low);}).slice(0,15);
+  if(!matches.length){box.classList.remove('show');return;}
+  box.innerHTML=matches.map(function(t){
+    var n=db[t]&&db[t].s&&db[t].s.length;
+    return'<div class="sri" onclick="pick(\''+t.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">'
+      +'<span class="sri-name">'+esc(t)+'</span>'
+      +(n?'<span class="sri-badge b-saved">'+n+' saved</span>':'<span class="sri-badge b-new">New</span>')
+    +'</div>';
+  }).join('');
+  box.classList.add('show');
+}
+
+// ── DROPDOWN ──
+function buildDropdown(){
+  var letters={};
+  TRUSTS.forEach(function(t){
+    var l=t[0].toUpperCase();
+    if(!letters[l])letters[l]=[];
+    letters[l].push(t);
+  });
+  var html='';
+  Object.keys(letters).sort().forEach(function(l){
+    html+='<div class="dp-label">'+l+'</div>';
+    letters[l].forEach(function(t){
+      var n=db[t]&&db[t].s&&db[t].s.length;
+      html+='<div class="dp-item" onclick="pick(\''+t.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')">'
+        +'<span class="dp-name">'+esc(t)+'</span>'
+        +(n?'<span class="dp-count">'+n+'</span>':'')
+      +'</div>';
+    });
+    html+='<div class="dp-divider"></div>';
+  });
+  document.getElementById('dropdown-panel').innerHTML=html;
+}
+
+function toggleDropdown(){
+  var p=document.getElementById('dropdown-panel');
+  var b=document.getElementById('dropdown-btn');
+  var isOpen=p.classList.contains('show');
+  document.getElementById('search-results').classList.remove('show');
+  if(isOpen){p.classList.remove('show');b.classList.remove('open');}
+  else{buildDropdown();p.classList.add('show');b.classList.add('open');}
+}
+
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.search-box'))document.getElementById('search-results').classList.remove('show');
+  if(!e.target.closest('.dropdown-box')){document.getElementById('dropdown-panel').classList.remove('show');document.getElementById('dropdown-btn').classList.remove('open');}
+});
+
+// ── SELECT TRUST ──
+function pick(name){
+  currentTrust=name;filterBand='all';exp={};
+  document.getElementById('search-input').value=name;
+  document.getElementById('search-results').classList.remove('show');
+  document.getElementById('dropdown-panel').classList.remove('show');
+  document.getElementById('dropdown-btn').classList.remove('open');
+  renderTrust();updateStats();
+}
+
+// ── RENDER TRUST ──
+function renderTrust(){
+  if(!currentTrust)return;
+  if(!db[currentTrust])db[currentTrust]={s:[]};
+  var stmts=db[currentTrust].s||[];
+  var filtered=filterBand==='all'?stmts:stmts.filter(function(s){return s.band===filterBand;});
+
+  // Get unique bands for filter chips
+  var bands=['all'];
+  stmts.forEach(function(s){if(s.band&&!bands.includes(s.band))bands.push(s.band);});
+
+  var html='<div class="trust-card">'
+    +'<div class="trust-banner">'
+      +'<div class="trust-info">'
+        +'<h2>'+esc(currentTrust)+'</h2>'
+        +'<p>'+stmts.length+' of 10 statements saved</p>'
+        +(stmts.length?'<div class="trust-meta">'+[...new Set(stmts.map(function(s){return s.role;}).filter(Boolean))].map(function(r){return'<span class="tmeta-pill">'+esc(r)+'</span>';}).join('')+'</div>':'')
+      +'</div>'
+      +'<div class="trust-actions">'
+        +(stmts.length<10?'<button class="btn btn-add" onclick="openForm()">+ Add Statement</button>':'<span style="font-size:12px;color:rgba(255,255,255,.4)">Max 10 reached</span>')
+      +'</div>'
+    +'</div>'
+    +'<div class="stmts-area">'
+      // Filter chips
+      +(bands.length>2?'<div class="filter-row">'+bands.map(function(b){return'<button class="filter-chip'+(filterBand===b?' active':'')+'" onclick="setFilter(\''+b+'\')">'+( b==='all'?'All Bands':esc(b))+'</button>';}).join('')+'</div>':'')
+      // Statements
+      +(filtered.length?filtered.map(renderStmt).join('')
+        :'<div class="no-stmts"><div class="no-stmts-icon">&#128221;</div><p>'+(stmts.length&&filterBand!=='all'?'No statements for this band filter.':'No statements saved yet.<br/>Click "Add Statement" to save your first one.')+'</p></div>')
+    +'</div>'
+  +'</div>';
+
+  document.getElementById('content').innerHTML=html;
+}
+
+function setFilter(band){filterBand=band;renderTrust();}
+
+function renderStmt(s){
+  var isExp=exp[s.id];
+  return'<div class="sc">'
+    +'<div class="sc-head">'
+      +'<div class="sc-pills">'
+        +(s.role?'<span class="pill p-role">'+esc(s.role)+'</span>':'')
+        +(s.band?'<span class="pill p-band">'+esc(s.band)+'</span>':'')
+        +(s.date?'<span class="pill p-date">'+esc(s.date)+'</span>':'')
+      +'</div>'
+      +'<div class="sc-acts">'
+        +'<button class="btn btn-ghost btn-sm" onclick="openForm(\''+s.id+'\')">&#9999; Edit</button>'
+        +'<button class="btn btn-del btn-sm" onclick="delStmt(\''+s.id+'\')">&#10005;</button>'
+      +'</div>'
+    +'</div>'
+    +'<div class="sc-body">'
+      +(s.label?'<div class="sc-label">&#128204; '+esc(s.label)+'</div>':'')
+      +'<div class="sc-text'+(isExp?'':' clamp')+'" id="st-'+s.id+'">'+esc(s.text)+'</div>'
+      +(s.text&&s.text.length>300?'<button class="expand-btn" onclick="tog(\''+s.id+'\')">'
+        +(isExp?'&#9650; Show less':'&#9660; Read more')
+      +'</button>':'')
+    +'</div>'
+  +'</div>';
+}
+
+function tog(id){exp[id]=!exp[id];renderTrust();}
+
+// ── FORM ──
+function openForm(sid){
+  editId=sid||null;
+  document.getElementById('modal-title').textContent=sid?'Edit Statement':'Add Supporting Statement';
+  document.getElementById('modal-sub').textContent=sid?'Update your saved statement':'Save a winning statement for '+currentTrust;
+  if(sid){
+    var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){return x.id===sid;});
+    if(s){
+      document.getElementById('f-role').value=s.role||'';
+      document.getElementById('f-band').value=s.band||'';
+      document.getElementById('f-label').value=s.label||'';
+      document.getElementById('f-text').value=s.text||'';
+      updCC();
+    }
+  }else{
+    document.getElementById('f-role').value='';
+    document.getElementById('f-band').value='';
+    document.getElementById('f-label').value='';
+    document.getElementById('f-text').value='';
+    document.getElementById('cc').textContent='0 characters';
+  }
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeForm(){document.getElementById('overlay').classList.remove('open');editId=null;}
+function updCC(){document.getElementById('cc').textContent=document.getElementById('f-text').value.length+' characters';}
+
+function saveStmt(){
+  var role=document.getElementById('f-role').value.trim();
+  var band=document.getElementById('f-band').value;
+  var label=document.getElementById('f-label').value.trim();
+  var text=document.getElementById('f-text').value.trim();
+  if(!role){toast2('Please enter the role title','#ef4444');return;}
+  if(!text){toast2('Please enter your supporting statement','#ef4444');return;}
+  if(!db[currentTrust])db[currentTrust]={s:[]};
+  var arr=db[currentTrust].s;
+  if(editId){
+    var i=arr.findIndex(function(s){return s.id===editId;});
+    if(i>=0){arr[i].role=role;arr[i].band=band;arr[i].label=label;arr[i].text=text;sbUpdate(arr[i]);}
+    toast2('Statement updated','#22c55e');
+  }else{
+    if(arr.length>=10){toast2('Max 10 statements per trust reached','#ef4444');return;}
+    var newStmt={id:genId(),role:role,band:band,label:label,text:text,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+    arr.unshift(newStmt);
+    sbSave(newStmt,currentTrust);
+    toast2('Statement saved','#22c55e');
+  }
+  save();closeForm();renderTrust();updateStats();
+}
+
+function delStmt(id){
+  if(!confirm('Delete this statement? This cannot be undone.'))return;
+  if(db[currentTrust])db[currentTrust].s=db[currentTrust].s.filter(function(s){return s.id!==id;});
+  sbDelete(id);
+  save();renderTrust();updateStats();toast2('Deleted','#ef4444');
+}
+
+// ── STATS ──
+function updateStats(){
+  var trusts=Object.keys(db).filter(function(k){return db[k]&&db[k].s&&db[k].s.length;});
+  var total=trusts.reduce(function(s,k){return s+db[k].s.length;},0);
+  var roles=[];
+  trusts.forEach(function(k){db[k].s.forEach(function(s){if(s.role&&!roles.includes(s.role.toLowerCase()))roles.push(s.role.toLowerCase());});});
+  document.getElementById('h-trusts').textContent=trusts.length;
+  document.getElementById('h-stmts').textContent=total;
+  document.getElementById('h-roles').textContent=roles.length;
+  document.getElementById('n-trusts').textContent=trusts.length;
+  document.getElementById('n-stmts').textContent=total;
+}
+
+var tt;
+function toast2(msg,color){
+  document.getElementById('tmsg').textContent=msg;
+  document.getElementById('tdot').style.background=color;
+  var t=document.getElementById('toast');t.classList.add('show');
+  clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},2800);
+}
+
+load();updateStats();
+// Load from Supabase on startup
+sbLoadAll();
+</script>
+</body>
+</html>
