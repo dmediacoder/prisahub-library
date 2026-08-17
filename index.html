@@ -290,20 +290,32 @@ async function sbLoadAll(){
     var r=await fetch(SB_URL+'/rest/v1/library_statements?select=*&order=created_at.desc',{headers:SBH});
     if(!r.ok)return;
     var rows=await r.json();
-    // Rebuild db from Supabase rows
-    db={};
+    if(!rows||!rows.length)return; // Don't overwrite local data if Supabase is empty
+    // Merge Supabase data with local - Supabase wins for existing IDs
+    var sbIds={};
+    rows.forEach(function(row){sbIds[row.id]=true;});
+    // Rebuild from Supabase
+    var sbDb={};
     rows.forEach(function(row){
-      if(!db[row.trust_name])db[row.trust_name]={s:[]};
-      db[row.trust_name].s.push({
+      if(!sbDb[row.trust_name])sbDb[row.trust_name]={s:[]};
+      sbDb[row.trust_name].s.push({
         id:row.id,role:row.role||'',band:row.band||'',
         label:row.label||'',text:row.statement||'',
         date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''
       });
     });
-    save(); // also keep local backup
+    // Merge: keep local entries that aren't in Supabase yet
+    Object.keys(db).forEach(function(trust){
+      if(!sbDb[trust])sbDb[trust]={s:[]};
+      db[trust].s.forEach(function(s){
+        if(!sbIds[s.id])sbDb[trust].s.push(s);
+      });
+    });
+    db=sbDb;
+    save();
     updateStats();
     if(currentTrust)renderTrust();
-  }catch(e){console.error('Load error',e);}
+  }catch(e){console.log('Supabase unavailable, using local data');}
 }
 
 async function sbSave(stmt,trust){
