@@ -528,24 +528,30 @@ function setFilter(band){filterBand=band;renderTrust();}
 
 function renderStmt(s){
   var isExp=exp[s.id];
-  return'<div class="sc">'
+  var oLabels={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
+  var oCls={pending:'o-pending',interview:'o-interview',no:'o-no',offer:'o-offer'};
+  var outcome=s.outcome||'pending';
+  var sid=s.id;
+  return '<div class="sc" id="sc-'+sid+'">'
     +'<div class="sc-head">'
       +'<div class="sc-pills">'
         +(s.role?'<span class="pill p-role">'+esc(s.role)+'</span>':'')
         +(s.band?'<span class="pill p-band">'+esc(s.band)+'</span>':'')
         +(s.date?'<span class="pill p-date">'+esc(s.date)+'</span>':'')
+        +'<button class="outcome-pill '+oCls[outcome]+'" onclick="cycleOutcome(this,'+JSON.stringify(sid)+')">'+oLabels[outcome]+'</button>'
       +'</div>'
       +'<div class="sc-acts">'
-        +'<button class="btn btn-ghost btn-sm" onclick="openForm(\''+s.id+'\')">&#9999; Edit</button>'
-        +'<button class="btn btn-del btn-sm" onclick="delStmt(\''+s.id+'\')">&#10005;</button>'
+        +'<button class="btn btn-ghost btn-sm" title="Copy" onclick="copyStmt('+JSON.stringify(sid)+')">&#128203;</button>'
+        +'<button class="btn btn-sm" style="background:#faf5ff;color:#7c3aed;border:1.5px solid #ede9fe" title="AI Rewrite" onclick="openAI('+JSON.stringify(sid)+')">&#10024;</button>'
+        +'<button class="btn btn-ghost btn-sm" title="Duplicate" onclick="dupStmt('+JSON.stringify(sid)+')">&#128471;</button>'
+        +'<button class="btn btn-ghost btn-sm" onclick="openForm('+JSON.stringify(sid)+')">&#9999; Edit</button>'
+        +'<button class="btn btn-del btn-sm" onclick="delStmt('+JSON.stringify(sid)+')">&#10005;</button>'
       +'</div>'
     +'</div>'
     +'<div class="sc-body">'
       +(s.label?'<div class="sc-label">&#128204; '+esc(s.label)+'</div>':'')
-      +'<div class="sc-text'+(isExp?'':' clamp')+'" id="st-'+s.id+'">'+esc(s.text)+'</div>'
-      +(s.text&&s.text.length>300?'<button class="expand-btn" onclick="tog(\''+s.id+'\')">'
-        +(isExp?'&#9650; Show less':'&#9660; Read more')
-      +'</button>':'')
+      +'<div class="sc-text'+(isExp?'':' clamp')+'" id="st-'+sid+'">'+esc(s.text)+'</div>'
+      +(s.text&&s.text.length>300?'<button class="expand-btn" onclick="tog('+JSON.stringify(sid)+')">'+(isExp?'&#9650; Show less':'&#9660; Read more')+'</button>':'')
     +'</div>'
   +'</div>';
 }
@@ -640,13 +646,17 @@ function dupStmt(id){
 
 // ── OUTCOME ──
 var OUTCOMES=['pending','interview','no','offer'];
-function cycleOutcome(id){
+function cycleOutcome(btn,id){
   var arr=db[currentTrust]&&db[currentTrust].s||[];
   var s=arr.find(function(x){return x.id===id;});
   if(!s)return;
-  var idx=OUTCOMES.indexOf(s.outcome||'pending');
-  s.outcome=OUTCOMES[(idx+1)%OUTCOMES.length];
-  sbUpdate(s);save();renderTrust();
+  var i=OUTCOMES.indexOf(s.outcome||'pending');
+  s.outcome=OUTCOMES[(i+1)%OUTCOMES.length];
+  var oLabels={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
+  var oCls={pending:'o-pending',interview:'o-interview',no:'o-no',offer:'o-offer'};
+  btn.textContent=oLabels[s.outcome];
+  btn.className='outcome-pill '+oCls[s.outcome];
+  sbUpdate(s);save();
 }
 
 // ── SEARCH WITHIN STATEMENTS ──
