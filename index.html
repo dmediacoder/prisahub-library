@@ -164,7 +164,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .search-stmts:focus{border-color:var(--blue)}
 .highlight{background:#fef9c3;border-radius:2px}
 
-.toast{position:fixed;bottom:24px;left:50%;.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:400;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:400;display:flex;align-items:center;gap:10px;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
@@ -473,6 +473,7 @@ function toggleDropdown(){
   if(isOpen){p.classList.remove('show');b.classList.remove('open');}
   else{buildDropdown();p.classList.add('show');b.classList.add('open');}
 }
+window.toggleDropdown=toggleDropdown;
 
 document.addEventListener('click',function(e){
   if(!e.target.closest('.search-box'))document.getElementById('search-results').classList.remove('show');
@@ -690,8 +691,13 @@ function closeAI(){document.getElementById('ai-overlay').classList.remove('open'
 
 async function runAI(){
   if(!aiSourceId)return;
-  var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){return x.id===aiSourceId;});
+
+  var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){
+    return x.id===aiSourceId;
+  });
+
   if(!s)return;
+
   var newRole=document.getElementById('ai-role').value.trim()||s.role;
   var newBand=document.getElementById('ai-band').value||s.band;
   var newTrust=document.getElementById('ai-trust').value.trim()||currentTrust;
@@ -699,58 +705,99 @@ async function runAI(){
 
   document.getElementById('ai-result').style.display='none';
   document.getElementById('ai-loading').style.display='flex';
+  document.getElementById('ai-loading-msg').textContent='AI is rewriting your statement...';
   document.getElementById('ai-run-btn').disabled=true;
 
-  var prompt='You are an expert NHS job application writer.
-
-'
-    +'ORIGINAL STATEMENT (written for: '+s.role+', '+s.band+' at '+currentTrust+'):
-'+s.text+'
-
-'
-    +'REWRITE THIS STATEMENT FOR:
-'
-    +'- Role: '+newRole+'
-'
-    +'- Band: '+newBand+'
-'
-    +'- Trust: '+newTrust+'
-'
-    +(spec?'- Person specification/requirements:
-'+spec+'
-
-':'')
-    +'
-INSTRUCTIONS:
-'
-    +'1. Keep the candidate's real experience and achievements intact
-'
-    +'2. Adjust language and emphasis to match the new role requirements
-'
-    +'3. Ensure NHS values (care, compassion, commitment, courage, competence, communication) are evident
-'
-    +'4. Match the tone and length of the original
-'
-    +'5. Return ONLY the rewritten statement, no preamble or explanation';
+  var prompt =
+    'You are an expert NHS job application writer.\\n\\n' +
+    'ORIGINAL STATEMENT (written for: ' + s.role + ', ' + s.band + ' at ' + currentTrust + '):\\n' +
+    s.text + '\\n\\n' +
+    'REWRITE THIS STATEMENT FOR:\\n' +
+    '- Role: ' + newRole + '\\n' +
+    '- Band: ' + newBand + '\\n' +
+    '- Trust: ' + newTrust + '\\n' +
+    (spec
+      ? '- Person specification/requirements:\\n' + spec + '\\n\\n'
+      : '') +
+    'INSTRUCTIONS:\\n' +
+    '1. Keep the candidate\'s real experience and achievements intact.\\n' +
+    '2. Adjust language and emphasis to match the new role requirements.\\n' +
+    '3. Ensure NHS values (care, compassion, commitment, courage, competence, communication) are evident.\\n' +
+    '4. Match the tone and length of the original.\\n' +
+    '5. Return ONLY the rewritten statement, no preamble or explanation.';
 
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
+    /*
+     * SECURITY NOTE:
+     * Do NOT put a real Anthropic secret API key into this HTML file.
+     * For production, point AI_ENDPOINT at your own backend/serverless
+     * function and keep the Anthropic key on the server.
+     *
+     * The default endpoint below is intentionally blank so the application
+     * does not expose a secret key in the browser.
+     */
+    var AI_ENDPOINT='';
+
+    if(!AI_ENDPOINT){
+      throw new Error(
+        'AI service is not configured. Set AI_ENDPOINT to your secure backend endpoint.'
+      );
+    }
+
+    var r=await fetch(AI_ENDPOINT,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1500,
+        messages:[
+          {
+            role:'user',
+            content:prompt
+          }
+        ]
+      })
     });
+
     var d=await r.json();
+
+    if(!r.ok){
+      throw new Error(
+        d.error&&d.error.message
+          ? d.error.message
+          : 'AI request failed with status '+r.status
+      );
+    }
+
     aiResult=d.content&&d.content[0]&&d.content[0].text;
-    if(!aiResult)throw new Error('No response');
+
+    /*
+     * Supports both:
+     * 1. Anthropic-style response: {content:[{text:"..."}]}
+     * 2. Simple proxy response: {text:"..."} or {output:"..."}
+     */
+    if(!aiResult){
+      aiResult=d.text||d.output||d.result||'';
+    }
+
+    if(!aiResult){
+      throw new Error('No response from AI');
+    }
+
     document.getElementById('ai-output').textContent=aiResult;
     document.getElementById('ai-result').style.display='block';
     document.getElementById('ai-loading').style.display='none';
     document.getElementById('ai-run-btn').disabled=false;
-    // Store metadata for saving
+
     document.getElementById('ai-run-btn').dataset.role=newRole;
     document.getElementById('ai-run-btn').dataset.band=newBand;
+
   }catch(e){
-    document.getElementById('ai-loading').innerHTML='<span style="color:#dc2626">&#10005; Error: '+e.message+'</span>';
+    document.getElementById('ai-loading').innerHTML=
+      '<span style="color:#dc2626">&#10005; Error: '+esc(e.message)+'</span>';
+
     document.getElementById('ai-run-btn').disabled=false;
   }
 }
@@ -799,6 +846,27 @@ function toast2(msg,color){
   var t=document.getElementById('toast');t.classList.add('show');
   clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},2800);
 }
+
+/* Explicitly expose functions used by inline HTML event handlers. */
+window.onSearch=onSearch;
+window.toggleDropdown=toggleDropdown;
+window.pick=pick;
+window.openForm=openForm;
+window.closeForm=closeForm;
+window.updCC=updCC;
+window.saveStmt=saveStmt;
+window.delStmt=delStmt;
+window.copyStmt=copyStmt;
+window.dupStmt=dupStmt;
+window.cycleOutcome=cycleOutcome;
+window.filterStmts=filterStmts;
+window.setFilter=setFilter;
+window.openAI=openAI;
+window.closeAI=closeAI;
+window.runAI=runAI;
+window.saveRewritten=saveRewritten;
+window.copyRewritten=copyRewritten;
+window.tog=tog;
 
 load();updateStats();
 // Load from Supabase on startup
