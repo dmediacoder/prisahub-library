@@ -150,7 +150,21 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .modal-foot{padding:16px 26px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:#fff;position:sticky;bottom:0}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:400;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.copy-flash{animation:flash .4s ease}
+@keyframes flash{0%,100%{background:var(--card)}50%{background:#d1fae5}}
+.outcome-pill{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:8px;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.o-pending{background:#f1f5f9;color:#64748b}
+.o-interview{background:#dbeafe;color:#1d4ed8}
+.o-no{background:#fee2e2;color:#dc2626}
+.o-offer{background:#d1fae5;color:#065f46}
+.ai-loading{display:flex;align-items:center;gap:10px;padding:16px;background:#f8fafc;border-radius:10px;font-size:13px;color:#64748b}
+.ai-spinner{width:20px;height:20px;border:2px solid #e2e8f0;border-top-color:#6366f1;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.search-stmts{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;color:var(--text);background:#fff;outline:none;margin-bottom:14px;transition:border-color .15s}
+.search-stmts:focus{border-color:var(--blue)}
+.highlight{background:#fef9c3;border-radius:2px}
+
+.toast{position:fixed;bottom:24px;left:50%;.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:400;display:flex;align-items:center;gap:10px;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
@@ -275,6 +289,55 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   </div>
 </div>
 
+<!-- AI REWRITER MODAL -->
+<div class="overlay" id="ai-overlay" onclick="if(event.target===this)closeAI()" style="z-index:400">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-head">
+      <div>
+        <h2>&#x2728; AI Statement Rewriter</h2>
+        <p id="ai-sub">Adapting your statement for a new role or trust</p>
+      </div>
+      <button class="btn-close" onclick="closeAI()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        <div class="field"><label>New Role Title</label><input type="text" id="ai-role" placeholder="e.g. Ward Administrator"/></div>
+        <div class="field"><label>New Band</label>
+          <select id="ai-band">
+            <option value="">Same band</option>
+            <option>Band 2</option><option>Band 3</option><option>Band 4</option>
+            <option>Band 5</option><option>Band 6</option><option>Band 7</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Target Trust <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional)</span></label>
+        <input type="text" id="ai-trust" placeholder="e.g. Different NHS Trust name"/>
+      </div>
+      <div class="field"><label>Person Specification / Key Requirements <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional but recommended)</span></label>
+        <textarea id="ai-spec" placeholder="Paste the person specification or key requirements from the job advert..." style="min-height:100px"></textarea>
+      </div>
+      <div id="ai-result" style="display:none">
+        <div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Rewritten Statement</div>
+        <div id="ai-output" style="background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:14px;font-size:13.5px;line-height:1.75;color:#1e293b;white-space:pre-wrap;max-height:300px;overflow-y:auto"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-blue btn-sm" onclick="saveRewritten()">&#10003; Save as New Statement</button>
+          <button class="btn btn-ghost btn-sm" onclick="copyRewritten()">&#128203; Copy</button>
+        </div>
+      </div>
+      <div id="ai-loading" style="display:none" class="ai-loading">
+        <div class="ai-spinner"></div>
+        <span id="ai-loading-msg">AI is rewriting your statement...</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeAI()">Cancel</button>
+      <button class="btn btn-blue" onclick="runAI()" id="ai-run-btn">
+        &#x2728; Rewrite Statement
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="tdot" id="tdot"></span><span id="tmsg"></span></div>
 
 <script>
@@ -301,7 +364,8 @@ async function sbLoadAll(){
       sbDb[row.trust_name].s.push({
         id:row.id,role:row.role||'',band:row.band||'',
         label:row.label||'',text:row.statement||'',
-        date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''
+        date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'',
+        outcome:row.outcome||'pending'
       });
     });
     // Merge: keep local entries that aren't in Supabase yet
@@ -323,7 +387,7 @@ async function sbSave(stmt,trust){
     var r=await fetch(SB_URL+'/rest/v1/library_statements',{
       method:'POST',
       headers:{...SBH,'Prefer':'resolution=merge-duplicates,return=representation'},
-      body:JSON.stringify({id:stmt.id,trust_name:trust,role:stmt.role||'',band:stmt.band||'',label:stmt.label||'',statement:stmt.text||''})
+      body:JSON.stringify({id:stmt.id,trust_name:trust,role:stmt.role||'',band:stmt.band||'',label:stmt.label||'',statement:stmt.text||'',outcome:stmt.outcome||'pending'})
     });
     if(!r.ok){
       var err=await r.text();
@@ -341,7 +405,7 @@ async function sbUpdate(stmt){
     await fetch(SB_URL+'/rest/v1/library_statements?id=eq.'+stmt.id,{
       method:'PATCH',
       headers:SBH,
-      body:JSON.stringify({role:stmt.role,band:stmt.band,label:stmt.label,statement:stmt.text})
+      body:JSON.stringify({role:stmt.role,band:stmt.band,label:stmt.label,statement:stmt.text,outcome:stmt.outcome||'pending'})
     });
   }catch(e){console.error('Update error',e);}
 }
@@ -448,6 +512,7 @@ function renderTrust(){
       +'</div>'
     +'</div>'
     +'<div class="stmts-area">'
+      +'<input class="search-stmts" id="stmt-search" placeholder="&#128269; Search within statements..." oninput="filterStmts(this.value)"/>'
       // Filter chips
       +(bands.length>2?'<div class="filter-row">'+bands.map(function(b){return'<button class="filter-chip'+(filterBand===b?' active':'')+'" onclick="setFilter(\''+b+'\')">'+( b==='all'?'All Bands':esc(b))+'</button>';}).join('')+'</div>':'')
       // Statements
@@ -545,6 +610,166 @@ function delStmt(id){
 }
 
 // ── STATS ──
+// ── COPY ──
+function copyStmt(id){
+  var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){return x.id===id;});
+  if(!s)return;
+  navigator.clipboard.writeText(s.text).then(function(){
+    var el=document.getElementById('sc-'+id);
+    if(el)el.classList.add('copy-flash');
+    setTimeout(function(){if(el)el.classList.remove('copy-flash');},400);
+    toast2('Copied to clipboard','#22c55e');
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=s.text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    toast2('Copied to clipboard','#22c55e');
+  });
+}
+
+// ── DUPLICATE ──
+function dupStmt(id){
+  var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){return x.id===id;});
+  if(!s)return;
+  if(!db[currentTrust])db[currentTrust]={s:[]};
+  if(db[currentTrust].s.length>=10){toast2('Max 10 statements per trust','#ef4444');return;}
+  var copy={id:genId(),role:s.role,band:s.band,label:(s.label?s.label+' (copy)':'Copy'),text:s.text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+  db[currentTrust].s.unshift(copy);
+  sbSave(copy,currentTrust);
+  save();renderTrust();updateStats();
+  toast2('Statement duplicated','#22c55e');
+}
+
+// ── OUTCOME ──
+var OUTCOMES=['pending','interview','no','offer'];
+function cycleOutcome(id){
+  var arr=db[currentTrust]&&db[currentTrust].s||[];
+  var s=arr.find(function(x){return x.id===id;});
+  if(!s)return;
+  var idx=OUTCOMES.indexOf(s.outcome||'pending');
+  s.outcome=OUTCOMES[(idx+1)%OUTCOMES.length];
+  sbUpdate(s);save();renderTrust();
+}
+
+// ── SEARCH WITHIN STATEMENTS ──
+function filterStmts(val){
+  var cards=document.querySelectorAll('.sc');
+  var low=val.toLowerCase();
+  cards.forEach(function(card){
+    var text=card.textContent.toLowerCase();
+    card.style.display=(!val||text.includes(low))?'':'none';
+  });
+}
+
+// ── AI REWRITER ──
+var aiSourceId=null,aiResult=null;
+
+function openAI(id){
+  aiSourceId=id;aiResult=null;
+  var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){return x.id===id;});
+  if(!s)return;
+  document.getElementById('ai-sub').textContent='Rewriting: '+esc(s.role||'statement')+' for '+esc(currentTrust);
+  document.getElementById('ai-role').value=s.role||'';
+  document.getElementById('ai-band').value=s.band||'';
+  document.getElementById('ai-trust').value='';
+  document.getElementById('ai-spec').value='';
+  document.getElementById('ai-result').style.display='none';
+  document.getElementById('ai-loading').style.display='none';
+  document.getElementById('ai-overlay').classList.add('open');
+}
+
+function closeAI(){document.getElementById('ai-overlay').classList.remove('open');aiSourceId=null;}
+
+async function runAI(){
+  if(!aiSourceId)return;
+  var s=(db[currentTrust]&&db[currentTrust].s||[]).find(function(x){return x.id===aiSourceId;});
+  if(!s)return;
+  var newRole=document.getElementById('ai-role').value.trim()||s.role;
+  var newBand=document.getElementById('ai-band').value||s.band;
+  var newTrust=document.getElementById('ai-trust').value.trim()||currentTrust;
+  var spec=document.getElementById('ai-spec').value.trim();
+
+  document.getElementById('ai-result').style.display='none';
+  document.getElementById('ai-loading').style.display='flex';
+  document.getElementById('ai-run-btn').disabled=true;
+
+  var prompt='You are an expert NHS job application writer.
+
+'
+    +'ORIGINAL STATEMENT (written for: '+s.role+', '+s.band+' at '+currentTrust+'):
+'+s.text+'
+
+'
+    +'REWRITE THIS STATEMENT FOR:
+'
+    +'- Role: '+newRole+'
+'
+    +'- Band: '+newBand+'
+'
+    +'- Trust: '+newTrust+'
+'
+    +(spec?'- Person specification/requirements:
+'+spec+'
+
+':'')
+    +'
+INSTRUCTIONS:
+'
+    +'1. Keep the candidate's real experience and achievements intact
+'
+    +'2. Adjust language and emphasis to match the new role requirements
+'
+    +'3. Ensure NHS values (care, compassion, commitment, courage, competence, communication) are evident
+'
+    +'4. Match the tone and length of the original
+'
+    +'5. Return ONLY the rewritten statement, no preamble or explanation';
+
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})
+    });
+    var d=await r.json();
+    aiResult=d.content&&d.content[0]&&d.content[0].text;
+    if(!aiResult)throw new Error('No response');
+    document.getElementById('ai-output').textContent=aiResult;
+    document.getElementById('ai-result').style.display='block';
+    document.getElementById('ai-loading').style.display='none';
+    document.getElementById('ai-run-btn').disabled=false;
+    // Store metadata for saving
+    document.getElementById('ai-run-btn').dataset.role=newRole;
+    document.getElementById('ai-run-btn').dataset.band=newBand;
+  }catch(e){
+    document.getElementById('ai-loading').innerHTML='<span style="color:#dc2626">&#10005; Error: '+e.message+'</span>';
+    document.getElementById('ai-run-btn').disabled=false;
+  }
+}
+
+function saveRewritten(){
+  if(!aiResult)return;
+  var role=document.getElementById('ai-run-btn').dataset.role||document.getElementById('ai-role').value;
+  var band=document.getElementById('ai-band').value;
+  var trust=document.getElementById('ai-trust').value.trim()||currentTrust;
+  if(!db[trust])db[trust]={s:[]};
+  if(db[trust].s.length>=10){toast2('Max 10 statements for '+trust,'#ef4444');return;}
+  var newStmt={id:genId(),role:role,band:band,label:'AI Rewrite',text:aiResult,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+  db[trust].s.unshift(newStmt);
+  sbSave(newStmt,trust);
+  save();
+  if(trust===currentTrust)renderTrust();
+  updateStats();
+  closeAI();
+  toast2('Rewritten statement saved','#22c55e');
+}
+
+function copyRewritten(){
+  if(!aiResult)return;
+  navigator.clipboard.writeText(aiResult).catch(function(){
+    var ta=document.createElement('textarea');ta.value=aiResult;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  });
+  toast2('Copied to clipboard','#22c55e');
+}
+
 function updateStats(){
   var trusts=Object.keys(db).filter(function(k){return db[k]&&db[k].s&&db[k].s.length;});
   var total=trusts.reduce(function(s,k){return s+db[k].s.length;},0);
