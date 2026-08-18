@@ -400,35 +400,35 @@ function renderS(s){
   var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
   var oC={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
   var oc=s.outcome||'pending';
-  var id=JSON.stringify(s.id);
-  return '<div class="sc" id="sc-'+esc(s.id)+'">'
+  var d='data-id="'+s.id+'"';
+  return '<div class="sc" id="sc-'+s.id+'">'
     +'<div class="sch">'
       +'<div class="scpills">'
         +(s.role?'<span class="pill p-role">'+esc(s.role)+'</span>':'')
         +(s.band?'<span class="pill p-band">'+esc(s.band)+'</span>':'')
         +(s.date?'<span class="pill p-date">'+esc(s.date)+'</span>':'')
-        +'<button class="opill '+oC[oc]+'" onclick="cycleO(this,'+id+')">'+oL[oc]+'</button>'
+        +'<button class="opill '+oC[oc]+'" '+d+' onclick="cycleO(this)">'+oL[oc]+'</button>'
       +'</div>'
       +'<div class="scacts">'
-        +'<button class="btn btn-ghost btn-sm" title="Copy to clipboard" onclick="copyS('+id+')">&#128203;</button>'
-        +'<button class="btn btn-purple btn-sm" title="AI Rewrite" onclick="openAI('+id+')">&#10024;</button>'
-        +'<button class="btn btn-ghost btn-sm" title="Duplicate" onclick="dupS('+id+')">&#128471;</button>'
-        +'<button class="btn btn-ghost btn-sm" onclick="openForm('+id+')">&#9999;</button>'
-        +'<button class="btn btn-del btn-sm" onclick="delS('+id+')">&#10005;</button>'
+        +'<button class="btn btn-ghost btn-sm" '+d+' onclick="copyS(this)" title="Copy">&#128203;</button>'
+        +'<button class="btn btn-purple btn-sm" '+d+' onclick="openAI(this)" title="AI Rewrite">&#10024;</button>'
+        +'<button class="btn btn-ghost btn-sm" '+d+' onclick="dupS(this)" title="Duplicate">&#128471;</button>'
+        +'<button class="btn btn-ghost btn-sm" '+d+' onclick="openForm(this)">&#9999;</button>'
+        +'<button class="btn btn-del btn-sm" '+d+' onclick="delS(this)">&#10005;</button>'
       +'</div>'
     +'</div>'
     +'<div class="scb">'
       +(s.label?'<div class="sclbl">'+esc(s.label)+'</div>':'')
-      +'<div class="sctxt'+(isX?'':' clamp')+'" id="tx-'+esc(s.id)+'">'+esc(s.text)+'</div>'
-      +(s.text&&s.text.length>280?'<button class="xbtn" onclick="togX('+id+')">'+(isX?'&#9650; Show less':'&#9660; Read more')+'</button>':'')
+      +'<div class="sctxt'+(isX?'':' clamp')+'" id="tx-'+s.id+'">'+esc(s.text)+'</div>'
+      +(s.text&&s.text.length>280?'<button class="xbtn" '+d+' onclick="togX(this)">'+(isX?'&#9650; Show less':'&#9660; Read more')+'</button>':'')
     +'</div>'
   +'</div>';
 }
-
-function togX(id){xp[id]=!xp[id];renderTrust();}
+function togX(btn){var id=btn.getAttribute('data-id');xp[id]=!xp[id];renderTrust();}
 
 // COPY
-function copyS(id){
+function copyS(btn){
+  var id=btn.getAttribute('data-id');
   var s=getS(id);if(!s)return;
   copyText(s.text);
   var el=document.getElementById('sc-'+id);
@@ -442,7 +442,8 @@ function copyText(txt){
 function fallbackCopy(txt){var t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}
 
 // DUPLICATE
-function dupS(id){
+function dupS(btn){
+  var id=btn.getAttribute('data-id');
   var s=getS(id);if(!s)return;
   if((db[cur].s||[]).length>=10){toast('Max 10 statements per trust','#ef4444');return;}
   var ns={id:gid(),role:s.role,band:s.band,label:(s.label?s.label+' (copy)':'Copy'),text:s.text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
@@ -453,18 +454,20 @@ function dupS(id){
 
 // OUTCOME CYCLE
 var OC=['pending','interview','no','offer'];
-function cycleO(btn,id){
+function cycleO(btn){
+  var id=btn.getAttribute('data-id');
   var s=getS(id);if(!s)return;
   var i=OC.indexOf(s.outcome||'pending');
   s.outcome=OC[(i+1)%OC.length];
   var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
-  var oC={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
-  btn.textContent=oL[s.outcome];btn.className='opill '+oC[s.outcome];
+  var oC2={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
+  btn.textContent=oL[s.outcome];btn.className='opill '+oC2[s.outcome];
   save();sbPatch(s);
 }
 
 // FORM
-function openForm(id){
+function openForm(btn){
+  var id=btn&&btn.getAttribute?btn.getAttribute('data-id'):null;
   editId=id;
   document.getElementById('mt').textContent=id?'Edit Statement':'Add Supporting Statement';
   document.getElementById('ms').textContent=id?'Update your saved statement':'Save a winning statement for '+cur;
@@ -500,14 +503,16 @@ function saveStmt(){
   save();closeForm();renderTrust();updateStats();
 }
 
-function delS(id){
+function delS(btn){
+  var id=btn.getAttribute('data-id');
   if(!confirm('Delete this statement?'))return;
   if(db[cur])db[cur].s=(db[cur].s||[]).filter(function(s){return s.id!==id;});
   save();sbDel(id);renderTrust();updateStats();toast('Deleted','#ef4444');
 }
 
 // AI REWRITER
-function openAI(id){
+function openAI(btn){
+  var id=btn.getAttribute('data-id');
   aiId=id;aiResult=null;
   var s=getS(id);if(!s)return;
   document.getElementById('ai-sub').textContent='Rewriting: '+(s.role||'statement')+' at '+cur;
