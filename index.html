@@ -379,50 +379,82 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 
 // ── SUPABASE ──
 async function sbLoad(){
-  // Show loading indicator
-  document.getElementById('h-s').textContent='...';
   try{
     var r=await fetch(SB+'/rest/v1/library_statements?select=*&order=created_at.desc',{headers:SH});
-    if(!r.ok)throw new Error('Supabase error: '+r.status);
+    if(!r.ok)throw new Error('Supabase error '+r.status);
     var rows=await r.json();
-    // Supabase is the master - rebuild db entirely from it
-    db={};
+
     if(rows&&rows.length){
+      // Build fresh db from Supabase
+      var sbDb={};
       rows.forEach(function(row){
-        if(!db[row.trust_name])db[row.trust_name]={s:[]};
-        db[row.trust_name].s.push({
-          id:row.id,
-          role:row.role||'',
-          band:row.band||'',
-          label:row.label||'',
-          text:row.statement||'',
+        if(!sbDb[row.trust_name])sbDb[row.trust_name]={s:[]};
+        sbDb[row.trust_name].s.push({
+          id:row.id,role:row.role||'',band:row.band||'',
+          label:row.label||'',text:row.statement||'',
           outcome:row.outcome||'pending',
           date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''
         });
       });
+      // Merge any local items not yet in Supabase
+      var sbIds={};rows.forEach(function(row){sbIds[row.id]=1;});
+      Object.keys(db).forEach(function(trust){
+        if(!sbDb[trust])sbDb[trust]={s:[]};
+        (db[trust].s||[]).forEach(function(s){
+          if(!sbIds[s.id]){sbDb[trust].s.push(s);sbSave(s,trust);}
+        });
+      });
+      db=sbDb;
+    } else {
+      // Supabase empty - push all local data up
+      var pushed=0;
+      var localTrusts=Object.keys(db);
+      for(var t=0;t<localTrusts.length;t++){
+        var trust=localTrusts[t];
+        var stmts=(db[trust].s||[]);
+        for(var i=0;i<stmts.length;i++){
+          var ok=await sbSave(stmts[i],trust);
+          if(ok)pushed++;
+        }
+      }
+      if(pushed>0){toast(pushed+' statements synced to cloud','#22c55e');}
     }
-    // Update localStorage cache with fresh Supabase data
     lsave();
     updateStats();
     if(cur)renderTrust();
   }catch(e){
-    console.log('Could not reach Supabase - showing cached data');
-    // Fall back to localStorage cache if offline
+    console.log('Supabase unavailable, using local data:',e.message);
     updateStats();
     if(cur)renderTrust();
   }
 }
 async function sbSave(s,trust){
-  try{await fetch(SB+'/rest/v1/library_statements',{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({id:s.id,trust_name:trust,role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});}
-  catch(e){}
+  try{
+    var r=await fetch(SB+'/rest/v1/library_statements',{
+      method:'POST',
+      headers:{...SH,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({id:s.id,trust_name:trust,role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})
+    });
+    if(!r.ok){
+      var err=await r.text();
+      console.error('sbSave failed:',err);
+      return false;
+    }
+    return true;
+  }catch(e){console.error('sbSave error:',e);return false;}
 }
 async function sbPatch(s){
-  try{await fetch(SB+'/rest/v1/library_statements?id=eq.'+s.id,{method:'PATCH',headers:SH,body:JSON.stringify({role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});}
-  catch(e){}
+  try{
+    var r=await fetch(SB+'/rest/v1/library_statements?id=eq.'+s.id,{method:'PATCH',headers:SH,body:JSON.stringify({role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});
+    if(!r.ok){var e=await r.text();console.error('sbPatch failed:',e);return false;}
+    return true;
+  }catch(e){console.error('sbPatch error:',e);return false;}
 }
 async function sbDel(id){
-  try{await fetch(SB+'/rest/v1/library_statements?id=eq.'+id,{method:'DELETE',headers:SH});}
-  catch(e){}
+  try{
+    var r=await fetch(SB+'/rest/v1/library_statements?id=eq.'+id,{method:'DELETE',headers:SH});
+    if(!r.ok){var e=await r.text();console.error('sbDel failed:',e);}
+  }catch(e){console.error('sbDel error:',e);}
 }
 
 // ── SEARCH ──
@@ -625,7 +657,7 @@ function openForm(id){
 }
 function closeForm(){document.getElementById('ov1').classList.remove('open');editId=null;}
 
-function saveStmt(){
+async function saveStmt(){
   var role=document.getElementById('f-role').value.trim();
   var band=document.getElementById('f-band').value;
   var label=document.getElementById('f-label').value.trim();
@@ -633,16 +665,40 @@ function saveStmt(){
   if(!role){toast('Please enter the role title','#ef4444');return;}
   if(!text){toast('Please enter your supporting statement','#ef4444');return;}
   if(!db[cur])db[cur]={s:[]};
+
+  // Disable save button to prevent double submit
+  var saveBtn=document.getElementById('m1sv');
+  saveBtn.disabled=true;
+  saveBtn.textContent='Saving...';
+
   if(editId){
-    var s=getS(editId);if(s){s.role=role;s.band=band;s.label=label;s.text=text;sbPatch(s);}
-    toast('Statement updated','#22c55e');
+    var s=getS(editId);
+    if(s){s.role=role;s.band=band;s.label=label;s.text=text;}
+    // Save to localStorage immediately
+    lsave();
+    // Then sync to Supabase
+    if(s){
+      var ok=await sbPatch(s);
+      if(ok){toast('Statement updated and synced','#22c55e');}
+      else{toast('Updated locally. Sync failed - check console','#f59e0b');}
+    }
   }else{
-    if(db[cur].s.length>=10){toast('Max 10 statements per trust','#ef4444');return;}
+    if(db[cur].s.length>=10){toast('Max 10 statements per trust','#ef4444');saveBtn.disabled=false;saveBtn.textContent='Save Statement';return;}
     var ns={id:gid(),role:role,band:band,label:label,text:text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
-    db[cur].s.unshift(ns);sbSave(ns,cur);
-    toast('Statement saved','#22c55e');
+    db[cur].s.unshift(ns);
+    // Save to localStorage immediately
+    lsave();
+    // Then sync to Supabase
+    var ok=await sbSave(ns,cur);
+    if(ok){toast('Statement saved and synced to cloud','#22c55e');}
+    else{toast('Saved locally only. Cloud sync failed - check console','#f59e0b');}
   }
-  lsave();closeForm();renderTrust();updateStats();
+
+  saveBtn.disabled=false;
+  saveBtn.textContent='Save Statement';
+  closeForm();
+  renderTrust();
+  updateStats();
 }
 
 // ── COMPARE ──
