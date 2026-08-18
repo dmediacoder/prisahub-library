@@ -241,39 +241,85 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 <!-- COMPARE MODAL -->
 <div class="overlay" id="ov2">
-  <div class="modal" style="max-width:660px">
+  <div class="modal" style="max-width:720px">
     <div class="mh">
-      <div><h2>&#128270; Person Spec Comparison</h2><p id="m2s">Check your statement covers the new job requirements</p></div>
+      <div><h2>&#128270; Reusability Checker</h2><p id="m2s">Check if your statement is suitable for a new role</p></div>
       <button class="mcl" id="m2cl">&#10005;</button>
     </div>
     <div class="mb">
-      <div class="field">
-        <label>Paste Person Specification / Job Requirements</label>
-        <textarea id="cmp-spec" placeholder="Paste the essential and desirable criteria from the job advert here..." style="min-height:130px"></textarea>
-      </div>
-      <div class="cld" id="cmp-ld"><div class="spin"></div><span>Analysing your statement against the person spec...</span></div>
-      <div id="cmp-res" style="display:none">
-        <div style="background:#f8fafc;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid #e2e8f0">
-          <div style="position:relative;width:60px;height:60px;flex-shrink:0">
-            <svg width="60" height="60" viewBox="0 0 60 60" style="transform:rotate(-90deg)">
-              <circle cx="30" cy="30" r="24" fill="none" stroke="#e2e8f0" stroke-width="6"/>
-              <circle id="cmp-ring" cx="30" cy="30" r="24" fill="none" stroke="#22c55e" stroke-width="6" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" style="transition:stroke-dashoffset .8s ease"/>
-            </svg>
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800" id="cmp-pct">0%</div>
+
+      <!-- STEP 1: Role similarity check -->
+      <div id="cmp-step1">
+        <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Step 1 — New Job Details</div>
+          <div class="frow2">
+            <div class="field" style="margin-bottom:10px"><label>New Role Title</label><input type="text" id="cmp-role" placeholder="e.g. IT Service Delivery Manager"/></div>
+            <div class="field" style="margin-bottom:10px"><label>New Band</label>
+              <select id="cmp-band">
+                <option value="">Select...</option>
+                <option>Band 2</option><option>Band 3</option><option>Band 4</option>
+                <option>Band 5</option><option>Band 6</option><option>Band 7</option>
+                <option>Band 8a</option><option>Band 8b</option><option>Other</option>
+              </select></div>
           </div>
-          <div>
-            <div id="cmp-verdict" style="font-size:14px;font-weight:800;margin-bottom:3px"></div>
-            <div id="cmp-summary" style="font-size:12.5px;color:#64748b;line-height:1.5"></div>
+          <div id="role-warning" style="display:none;background:#fef3c7;border:1px solid #fde68a;border-radius:9px;padding:10px 14px;font-size:13px;color:#92400e;margin-top:4px">
+            &#9888; <strong>Warning:</strong> <span id="role-warning-msg"></span>
           </div>
         </div>
-        <div id="cmp-covered"></div>
-        <div id="cmp-gaps"></div>
-        <div id="cmp-tips"></div>
+
+        <!-- STEP 2: Paste person spec -->
+        <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Step 2 — Paste Person Specification</div>
+          <textarea id="cmp-spec" placeholder="Paste all the essential and desirable criteria from the job advert here, one per line..." style="width:100%;min-height:120px;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:13px;resize:vertical;outline:none;background:#fff;line-height:1.6"></textarea>
+          <div style="font-size:11.5px;color:#94a3b8;margin-top:5px">Tip: Copy directly from the NHS Jobs advert. Each criterion on its own line works best.</div>
+        </div>
+
+        <button class="btn btn-blue" id="m2run" style="width:100%;justify-content:center">&#128270; Check Each Criterion</button>
       </div>
+
+      <!-- STEP 3: Checklist -->
+      <div id="cmp-step2" style="display:none">
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#1e40af;line-height:1.6">
+          <strong>&#128221; How to use this checklist:</strong> Read each criterion carefully. Read your statement (shown below). Tick each criterion your statement genuinely covers with specific evidence. Be honest — this is for your benefit.
+        </div>
+
+        <!-- Statement preview -->
+        <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:16px;max-height:160px;overflow-y:auto">
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Your Statement</div>
+          <div id="stmt-preview" style="font-size:13px;color:#1e293b;line-height:1.7;white-space:pre-wrap"></div>
+        </div>
+
+        <!-- Criteria checklist -->
+        <div id="cmp-checklist" style="margin-bottom:16px"></div>
+
+        <!-- Score -->
+        <div id="cmp-score-area" style="display:none;background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="position:relative;width:70px;height:70px;flex-shrink:0">
+              <svg width="70" height="70" viewBox="0 0 70 70" style="transform:rotate(-90deg)">
+                <circle cx="35" cy="35" r="28" fill="none" stroke="#e2e8f0" stroke-width="7"/>
+                <circle id="cmp-ring" cx="35" cy="35" r="28" fill="none" stroke="#22c55e" stroke-width="7" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round" style="transition:stroke-dashoffset .8s ease"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900" id="cmp-pct">0%</div>
+            </div>
+            <div style="flex:1">
+              <div id="cmp-verdict" style="font-size:16px;font-weight:800;margin-bottom:4px"></div>
+              <div id="cmp-summary" style="font-size:13px;color:#64748b;line-height:1.5"></div>
+            </div>
+          </div>
+          <div id="cmp-recommendation" style="margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.5"></div>
+          <div id="cmp-gaps-list" style="margin-top:12px"></div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" id="cmp-back">&#8592; Back</button>
+          <button class="btn btn-blue" id="cmp-calc" style="flex:1;justify-content:center">Calculate My Score</button>
+        </div>
+      </div>
+
     </div>
     <div class="mf">
       <button class="btn btn-ghost" id="m2cl2">Close</button>
-      <button class="btn btn-blue" id="m2run">&#128270; Compare Now</button>
     </div>
   </div>
 </div>
@@ -547,145 +593,196 @@ function saveStmt(){
 // ── COMPARE ──
 function openCompare(id){
   cmpId=id;var s=getS(id);if(!s)return;
-  document.getElementById('m2s').textContent=(s.role||'Your statement')+' vs new person specification';
+  // Reset to step 1
+  document.getElementById('cmp-step1').style.display='block';
+  document.getElementById('cmp-step2').style.display='none';
+  document.getElementById('cmp-score-area').style.display='none';
+  document.getElementById('role-warning').style.display='none';
+  document.getElementById('cmp-role').value='';
+  document.getElementById('cmp-band').value=s.band||'';
   document.getElementById('cmp-spec').value='';
-  document.getElementById('cmp-res').style.display='none';
-  document.getElementById('cmp-ld').style.display='none';
+  document.getElementById('m2s').textContent=(s.role||'Your statement')+' — Reusability Checker';
   document.getElementById('ov2').classList.add('open');
 }
 function closeCompare(){document.getElementById('ov2').classList.remove('open');cmpId=null;}
 
+// Role similarity check
+var CLINICAL_WORDS='nurse nursing rmn rnld mental health ward clinical care patient psychiatric psychology therapist occupational physiotherapy radiograph midwif doctor physician surgeon paramedic ambulance dental pharmacist dietitian speech'.split(' ');
+var ADMIN_WORDS='admin administration clerical receptionist secretary coordinator administrator office data entry typing booking scheduling'.split(' ');
+var IT_WORDS='it information technology software hardware network infrastructure service desk itil sla incident server database digital systems analyst developer'.split(' ');
+var MANAGEMENT_WORDS='manager management director lead leadership head senior operations strategy finance hr human resources procurement commissioning'.split(' ');
+
+function getRoleType(title){
+  var t=(title||'').toLowerCase();
+  if(CLINICAL_WORDS.some(function(w){return t.includes(w);}))return 'clinical';
+  if(IT_WORDS.some(function(w){return t.includes(w);}))return 'it';
+  if(ADMIN_WORDS.some(function(w){return t.includes(w);}))return 'admin';
+  if(MANAGEMENT_WORDS.some(function(w){return t.includes(w);}))return 'management';
+  return 'other';
+}
+
+function checkRoleSimilarity(){
+  var s=getS(cmpId);if(!s)return;
+  var origRole=s.role||'';
+  var origBand=s.band||'';
+  var newRole=document.getElementById('cmp-role').value.trim();
+  var newBand=document.getElementById('cmp-band').value;
+  var warnings=[];
+
+  if(newRole){
+    var origType=getRoleType(origRole);
+    var newType=getRoleType(newRole);
+    if(origType!=='other'&&newType!=='other'&&origType!==newType){
+      warnings.push('Your statement was written for a '+origType+' role but this job appears to be '+newType+'. These are very different specialisms — your statement is unlikely to be reusable without major changes.');
+    }
+  }
+  if(origBand&&newBand&&origBand!==newBand){
+    var origNum=parseInt((origBand||'').replace(/[^0-9]/g,''))||0;
+    var newNum=parseInt((newBand||'').replace(/[^0-9]/g,''))||0;
+    if(Math.abs(origNum-newNum)>=2){
+      warnings.push('Band difference of '+(Math.abs(origNum-newNum))+' bands detected. Higher bands require significantly more senior evidence — your statement may not meet the expectations for '+newBand+'.');
+    } else if(origNum!==newNum){
+      warnings.push('Band difference detected ('+origBand+' vs '+newBand+'). Review whether your evidence reflects the right level of responsibility.');
+    }
+  }
+
+  var warnEl=document.getElementById('role-warning');
+  if(warnings.length){
+    document.getElementById('role-warning-msg').textContent=warnings.join(' ');
+    warnEl.style.display='block';
+  } else {
+    warnEl.style.display='none';
+  }
+}
+
 function runCompare(){
   var s=getS(cmpId);if(!s)return;
   var spec=document.getElementById('cmp-spec').value.trim();
+  var newRole=document.getElementById('cmp-role').value.trim();
+  var newBand=document.getElementById('cmp-band').value;
   if(!spec){toast('Please paste the person specification first','#ef4444');return;}
 
-  document.getElementById('cmp-res').style.display='none';
-  document.getElementById('cmp-ld').style.display='flex';
-  document.getElementById('m2run').disabled=true;
+  // Extract criteria lines
+  var lines=spec.split(/\n|\r/)
+    .map(function(l){return l.replace(/^[\s\-\*\u2022\u2013\u2014\d\.\)\(]+/,'').trim();})
+    .filter(function(l){return l.length>10;});
 
-  // Extract criteria lines from person spec
-  // Split on newlines, bullets, numbers
-  var lines=spec.split(/\n|\r/).map(function(l){return l.replace(/^[\s\-\*\u2022\u2013\u2014\d\.\)]+/,'').trim();}).filter(function(l){return l.length>10;});
+  if(!lines.length){toast('Could not read criteria. Paste each criterion on its own line.','#ef4444');return;}
 
-  // Stem/normalise a word to its root for fuzzy matching
-  function stem(w){
-    w=w.toLowerCase().replace(/[^a-z]/g,'');
-    // Common suffixes
-    if(w.length>6){
-      if(w.endsWith('ing'))return w.slice(0,-3);
-      if(w.endsWith('tion'))return w.slice(0,-4);
-      if(w.endsWith('ed'))return w.slice(0,-2);
-      if(w.endsWith('ly'))return w.slice(0,-2);
-      if(w.endsWith('ment'))return w.slice(0,-4);
-      if(w.endsWith('ness'))return w.slice(0,-4);
-      if(w.endsWith('able'))return w.slice(0,-4);
-      if(w.endsWith('ical'))return w.slice(0,-4);
-      if(w.endsWith('ity'))return w.slice(0,-3);
-      if(w.endsWith('ies'))return w.slice(0,-3)+'y';
-      if(w.endsWith('es')&&w.length>5)return w.slice(0,-2);
-      if(w.endsWith('s')&&w.length>5)return w.slice(0,-1);
-    }
-    return w;
+  // Show statement preview
+  document.getElementById('stmt-preview').textContent=s.text;
+
+  // Build checklist
+  var html='<div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Person Specification Criteria — Tick what your statement covers</div>';
+  
+  // Check role similarity first and add banner if warning
+  var origType=getRoleType(s.role||'');
+  var newType=getRoleType(newRole);
+  var roleMismatch=newRole&&origType!=='other'&&newType!=='other'&&origType!==newType;
+  
+  if(roleMismatch){
+    html+='<div style="background:#fee2e2;border:1px solid #fecaca;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#991b1b;font-weight:600">&#128721; Role Type Mismatch: Your statement was written for a <strong>'+origType+'</strong> role. This job is <strong>'+newType+'</strong>. It is very unlikely this statement will be reusable. Proceed with caution.</div>';
   }
 
-  // Stop words to ignore
-  var STOP=['the','and','or','to','in','of','a','an','for','with','that','is','are','be','on','at','as','by','it','its','this','their','have','has','can','will','which','who','from','all','not','you','they','we','our','your'];
+  lines.forEach(function(line,i){
+    html+='<label style="display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .15s;background:#fff" id="cl-row-'+i+'">'
+      +'<input type="checkbox" class="crit-check" data-index="'+i+'" style="margin-top:3px;width:16px;height:16px;accent-color:#2563eb;flex-shrink:0"/>'
+      +'<div style="flex:1">'
+        +'<div style="font-size:13px;color:#1e293b;line-height:1.6">'+esc(line)+'</div>'
+        +'<div class="crit-verdict" id="cv-'+i+'" style="font-size:11.5px;margin-top:4px;color:#94a3b8">Not ticked — will count as a gap</div>'
+      +'</div>'
+    +'</label>';
+  });
+  
+  document.getElementById('cmp-checklist').innerHTML=html;
 
-  // Get stemmed keywords from a text
-  function getKeywords(txt){
-    var words=txt.toLowerCase().split(/[^a-z]+/).filter(function(w){return w.length>3&&STOP.indexOf(w)<0;});
-    return words.map(stem);
-  }
-
-  var stmtKeywords=getKeywords(s.text);
-  var stmtText=s.text.toLowerCase();
-
-  // For each criterion, check if statement covers it
-  var covered=[];
-  var gaps=[];
-
-  lines.forEach(function(line){
-    var lineKeywords=getKeywords(line);
-    if(lineKeywords.length===0)return;
-
-    // Count how many key words from this criterion appear in the statement
-    var matchCount=0;
-    var totalKey=0;
-
-    lineKeywords.forEach(function(kw){
-      if(kw.length<3)return;
-      totalKey++;
-      // Check stemmed match
-      if(stmtKeywords.some(function(sw){return sw===kw||sw.startsWith(kw)||kw.startsWith(sw);}))matchCount++;
+  // Add checkbox listeners
+  document.querySelectorAll('.crit-check').forEach(function(cb){
+    cb.addEventListener('change',function(){
+      var i=this.getAttribute('data-index');
+      var row=document.getElementById('cl-row-'+i);
+      var verdict=document.getElementById('cv-'+i);
+      if(this.checked){
+        row.style.borderColor='#22c55e';row.style.background='#f0fdf4';
+        verdict.textContent='Ticked — counts as covered';verdict.style.color='#166534';
+      } else {
+        row.style.borderColor='#e2e8f0';row.style.background='#fff';
+        verdict.textContent='Not ticked — will count as a gap';verdict.style.color='#94a3b8';
+      }
     });
-
-    // Also check for exact phrase fragments (2+ word sequences)
-    var lineWords=line.toLowerCase().split(/\s+/);
-    var phraseMatch=false;
-    for(var i=0;i<lineWords.length-1;i++){
-      var phrase=lineWords[i]+' '+lineWords[i+1];
-      if(phrase.length>6&&stmtText.includes(phrase)){phraseMatch=true;break;}
-    }
-
-    var coverage=totalKey>0?matchCount/totalKey:0;
-    if(phraseMatch||coverage>=0.45){
-      covered.push(line);
-    } else {
-      gaps.push({line:line,coverage:coverage,match:matchCount,total:totalKey});
-    }
   });
 
-  // Score
-  var total=covered.length+gaps.length;
-  var score=total>0?Math.round((covered.length/total)*100):0;
-
-  // Generate tips for top gaps
-  var tips=[];
-  var topGaps=gaps.slice(0,3);
-  topGaps.forEach(function(g){
-    var words=g.line.split(' ').slice(0,6).join(' ');
-    tips.push('Add specific evidence addressing: "'+words+'..."');
-  });
-  if(covered.length>0&&gaps.length>0)tips.push('Your statement covers '+covered.length+' of '+total+' criteria. Focus edits on the '+gaps.length+' gap'+(gaps.length>1?'s':'')+'.');
-  if(score>=75)tips.push('Strong match overall. Review the gaps above and add 1-2 sentences to address each.');
-
-  showCmpResult({
-    score:score,
-    covered:covered,
-    gaps:gaps.map(function(g){return g.line;}),
-    tips:tips
-  });
-
-  document.getElementById('cmp-ld').style.display='none';
-  document.getElementById('m2run').disabled=false;
+  // Switch to step 2
+  document.getElementById('cmp-step1').style.display='none';
+  document.getElementById('cmp-step2').style.display='block';
+  document.getElementById('cmp-score-area').style.display='none';
 }
 
-function showCmpResult(res){
-  document.getElementById('cmp-ld').style.display='none';
-  document.getElementById('cmp-res').style.display='block';
-  var sc=Math.max(0,Math.min(100,res.score||0));
-  var circ=150.8,off=circ-(sc/100)*circ;
-  var col=sc>=75?'#22c55e':sc>=50?'#f59e0b':'#ef4444';
-  var vrd=sc>=75?'Strong Match':sc>=50?'Partial Match':'Needs Work';
-  var sum=sc>=75?'Covers most criteria. Minor tweaks should be enough.'
-    :sc>=50?'Some criteria covered well. Address the gaps before submitting.'
-    :'Needs significant additions to match this person specification.';
+function calcScore(){
+  var checks=document.querySelectorAll('.crit-check');
+  var total=checks.length,ticked=0,gaps=[];
+  checks.forEach(function(cb,i){
+    if(cb.checked){ticked++;}
+    else{
+      var row=document.getElementById('cl-row-'+i);
+      var txt=row?row.querySelector('div').textContent:'';
+      if(txt)gaps.push(txt);
+    }
+  });
+
+  if(total===0)return;
+  var score=Math.round((ticked/total)*100);
+  var circ=175.9,off=circ-(score/100)*circ;
+  var col=score>=75?'#22c55e':score>=50?'#f59e0b':'#ef4444';
+
   document.getElementById('cmp-ring').style.strokeDashoffset=off;
   document.getElementById('cmp-ring').style.stroke=col;
-  document.getElementById('cmp-pct').textContent=sc+'%';document.getElementById('cmp-pct').style.color=col;
-  document.getElementById('cmp-verdict').textContent=vrd;document.getElementById('cmp-verdict').style.color=col;
-  document.getElementById('cmp-summary').textContent=sum;
-  var cov='';
-  if(res.covered&&res.covered.length){cov='<div class="csec" style="color:#166534">&#10003; Already Covered ('+res.covered.length+')</div>';cov+=res.covered.map(function(x){return'<div class="cov cov-ok"><span class="cov-i">&#10003;</span><span>'+esc(x)+'</span></div>';}).join('');}
-  document.getElementById('cmp-covered').innerHTML=cov;
-  var gap='';
-  if(res.gaps&&res.gaps.length){gap='<div class="csec" style="color:#9a3412">&#9888; Gaps to Address ('+res.gaps.length+')</div>';gap+=res.gaps.map(function(x){return'<div class="cov cov-gap"><span class="cov-i">&#9888;</span><span>'+esc(x)+'</span></div>';}).join('');}
-  document.getElementById('cmp-gaps').innerHTML=gap;
-  var tip='';
-  if(res.tips&&res.tips.length){tip='<div class="tipbox"><strong>&#128161; Before you submit:</strong><ul>'+res.tips.map(function(x){return'<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';}
-  document.getElementById('cmp-tips').innerHTML=tip;
+  document.getElementById('cmp-pct').textContent=score+'%';
+  document.getElementById('cmp-pct').style.color=col;
+
+  var verdict,summary,rec,recColor;
+  if(score>=80){
+    verdict='Strong Match — Reusable';
+    summary='You confirmed your statement covers '+ticked+' of '+total+' criteria.';
+    rec='&#10003; Your statement is suitable for reuse. Make minor edits to address the '+gaps.length+' gap'+(gaps.length!==1?'s':'')+' you identified.';
+    recColor='f0fdf4;border-color:#bbf7d0;color:#166534';
+  } else if(score>=50){
+    verdict='Partial Match — Needs Work';
+    summary='You confirmed your statement covers '+ticked+' of '+total+' criteria.';
+    rec='&#9888; Your statement is partially reusable but needs significant additions. Address all '+gaps.length+' gaps before submitting.';
+    recColor='fef3c7;border-color:#fde68a;color:#92400e';
+  } else {
+    verdict='Poor Match — Not Recommended';
+    summary='Only '+ticked+' of '+total+' criteria are covered by your statement.';
+    rec='&#128721; Your statement is NOT suitable for reuse as-is. Consider writing a new statement tailored to this specific role and person specification.';
+    recColor='fee2e2;border-color:#fecaca;color:#991b1b';
+  }
+
+  document.getElementById('cmp-verdict').textContent=verdict;
+  document.getElementById('cmp-verdict').style.color=col;
+  document.getElementById('cmp-summary').textContent=summary;
+
+  var recEl=document.getElementById('cmp-recommendation');
+  recEl.innerHTML=rec;
+  var rcStyles={
+    'f0fdf4;border-color:#bbf7d0;color:#166534':'background:#f0fdf4;border:1px solid #bbf7d0;color:#166534',
+    'fef3c7;border-color:#fde68a;color:#92400e':'background:#fef3c7;border:1px solid #fde68a;color:#92400e',
+    'fee2e2;border-color:#fecaca;color:#991b1b':'background:#fee2e2;border:1px solid #fecaca;color:#991b1b'
+  };
+  var styleKey=recColor;
+  recEl.style.cssText='margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.5;'+(rcStyles[styleKey]||'background:#f8fafc;border:1px solid #e2e8f0;color:#374151');
+
+  var gapsHtml='';
+  if(gaps.length){
+    gapsHtml='<div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Criteria You Need to Address ('+gaps.length+')</div>';
+    gapsHtml+=gaps.slice(0,8).map(function(g){return'<div style="display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-radius:9px;margin-bottom:6px;background:#fff7ed;border:1px solid #fed7aa;font-size:13px;color:#9a3412"><span style="flex-shrink:0">&#9888;</span><span>'+esc(g)+'</span></div>';}).join('');
+    if(gaps.length>8)gapsHtml+='<div style="font-size:12px;color:#94a3b8;padding:6px 0">...and '+(gaps.length-8)+' more gaps</div>';
+  }
+  document.getElementById('cmp-gaps-list').innerHTML=gapsHtml;
+  document.getElementById('cmp-score-area').style.display='block';
+  document.getElementById('cmp-score-area').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+
 
 // ── STATS ──
 function updateStats(){
@@ -714,6 +811,14 @@ document.getElementById('m1sv').addEventListener('click',saveStmt);
 document.getElementById('m2cl').addEventListener('click',closeCompare);
 document.getElementById('m2cl2').addEventListener('click',closeCompare);
 document.getElementById('m2run').addEventListener('click',runCompare);
+document.getElementById('cmp-back').addEventListener('click',function(){
+  document.getElementById('cmp-step1').style.display='block';
+  document.getElementById('cmp-step2').style.display='none';
+  document.getElementById('cmp-score-area').style.display='none';
+});
+document.getElementById('cmp-calc').addEventListener('click',calcScore);
+document.getElementById('cmp-role').addEventListener('input',checkRoleSimilarity);
+document.getElementById('cmp-band').addEventListener('change',checkRoleSimilarity);
 document.getElementById('ov1').addEventListener('click',function(e){if(e.target===this)closeForm();});
 document.getElementById('ov2').addEventListener('click',function(e){if(e.target===this)closeCompare();});
 document.getElementById('f-text').addEventListener('input',function(){document.getElementById('f-cc').textContent=this.value.length+' characters';});
