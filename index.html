@@ -7,107 +7,116 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0a0f1e;--blue:#2563eb;--bluel:#3b82f6;--purple:#7c3aed;--green:#059669;--red:#dc2626;--bg:#f0f2f8;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b}
+:root{--navy:#0a0f1e;--blue:#2563eb;--bluel:#3b82f6;--purple:#7c3aed;--bg:#f0f2f8;--border:#e2e8f0;--text:#0f172a;--muted:#64748b}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+/* NAV */
 .nav{background:var(--navy);height:60px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
 .nav-brand{display:flex;align-items:center;gap:10px}
-.nav-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
+.nav-icon{width:34px;height:34px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
 .nav-name{font-size:16px;font-weight:900;color:#fff;letter-spacing:-.4px}
 .nav-name span{color:#60a5fa}
 .nav-sep{width:1px;height:20px;background:rgba(255,255,255,.12);margin:0 14px}
 .nav-sub{font-size:12px;font-weight:600;color:rgba(255,255,255,.35);letter-spacing:.05em}
 .nav-right{margin-left:auto;font-size:12px;font-weight:700;color:rgba(255,255,255,.4)}
 .nav-right span{color:#60a5fa}
-.hero{background:linear-gradient(135deg,var(--navy) 0%,#0d1b3e 60%,#1a0533 100%);padding:40px 24px 32px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-50%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.12),transparent 70%);pointer-events:none}
+/* HERO */
+.hero{background:linear-gradient(135deg,#0a0f1e 0%,#0d1b3e 60%,#1a0533 100%);padding:40px 24px 32px;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%);pointer-events:none}
 .hi{max-width:960px;margin:0 auto;position:relative}
 .hero h1{font-size:clamp(22px,4vw,34px);font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:8px}
 .hero h1 span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:13.5px;color:rgba(255,255,255,.45);margin-bottom:24px;line-height:1.6;max-width:480px}
 .hstats{display:flex;gap:12px;flex-wrap:wrap}
 .hstat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 18px;min-width:90px;text-align:center}
-.hstat-val{font-size:22px;font-weight:900;color:#fff}
-.hstat-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
-.search-area{background:var(--navy);padding:0 24px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.hstat-v{font-size:22px;font-weight:900;color:#fff}
+.hstat-l{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+/* SEARCH AREA */
+.sa{background:var(--navy);padding:0 24px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
 .si{max-width:960px;margin:0 auto}
-.srow{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.srow{display:flex;gap:10px;flex-wrap:wrap}
 .sbox{flex:1;min-width:240px;position:relative}
 .sinput{width:100%;padding:13px 16px 13px 44px;border:2px solid rgba(255,255,255,.1);border-radius:12px;font-family:inherit;font-size:14px;color:#fff;background:rgba(255,255,255,.07);outline:none;transition:all .2s}
 .sinput::placeholder{color:rgba(255,255,255,.3)}
-.sinput:focus{border-color:var(--bluel);background:rgba(255,255,255,.1)}
+.sinput:focus{border-color:#3b82f6;background:rgba(255,255,255,.1)}
 .sico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);pointer-events:none;font-size:17px}
 .dbtn{padding:13px 16px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.1);border-radius:12px;color:rgba(255,255,255,.65);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;white-space:nowrap;flex-shrink:0}
-.dbtn:hover,.dbtn.open{border-color:var(--bluel);background:rgba(59,130,246,.15);color:#fff}
+.dbtn:hover,.dbtn.on{border-color:#3b82f6;background:rgba(59,130,246,.15);color:#fff}
 .sres{background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-top:6px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.4);max-height:280px;overflow-y:auto;display:none;position:absolute;left:0;right:0;z-index:50}
 .sres.show{display:block}
 .sri{padding:11px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);transition:background .1s}
 .sri:hover{background:rgba(59,130,246,.15)}
-.sri-name{font-size:13px;font-weight:600;color:#e2e8f0}
-.badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:8px}
-.b-saved{background:rgba(37,99,235,.3);color:#93c5fd}
-.b-new{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35)}
-.dpanel{position:absolute;top:calc(100% + 8px);right:0;background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);width:320px;max-height:400px;overflow-y:auto;display:none;z-index:200}
+.sri-n{font-size:13px;font-weight:600;color:#e2e8f0}
+.bdg{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:8px}
+.bsaved{background:rgba(37,99,235,.3);color:#93c5fd}
+.bnew{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35)}
+.dpanel{position:absolute;top:calc(100%+8px);right:0;background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);width:320px;max-height:400px;overflow-y:auto;display:none;z-index:200}
 .dpanel.show{display:block}
-.dp-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.12em;padding:8px 14px 4px}
-.dp-item{padding:9px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
-.dp-item:hover{background:rgba(59,130,246,.15)}
-.dp-name{font-size:13px;font-weight:500;color:#e2e8f0}
-.dp-cnt{font-size:11px;font-weight:700;color:#60a5fa}
-.dp-div{height:1px;background:rgba(255,255,255,.06);margin:4px 0}
+.dplbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.12em;padding:8px 14px 4px}
+.dpi{padding:9px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+.dpi:hover{background:rgba(59,130,246,.15)}
+.dpin{font-size:13px;font-weight:500;color:#e2e8f0}
+.dpic{font-size:11px;font-weight:700;color:#60a5fa}
+.dpd{height:1px;background:rgba(255,255,255,.06);margin:4px 0}
 .dbox{position:relative;flex-shrink:0}
+/* CONTENT */
 .content{max-width:960px;margin:0 auto;padding:20px 24px}
-.welcome{text-align:center;padding:56px 20px;background:var(--card);border-radius:18px;border:1px solid var(--border)}
-.w-icon{width:72px;height:72px;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
+/* WELCOME */
+.welcome{text-align:center;padding:56px 20px;background:#fff;border-radius:18px;border:1px solid var(--border)}
+.wi{width:72px;height:72px;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
 .welcome h2{font-size:20px;font-weight:800;margin-bottom:8px}
 .welcome p{color:var(--muted);font-size:13.5px;line-height:1.7;max-width:380px;margin:0 auto}
-.trust-card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid var(--border)}
-.tbanner{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+/* TRUST CARD */
+.tcard{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid var(--border)}
+.tbanner{background:linear-gradient(135deg,#0a0f1e,#1e3a5f);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .tinfo h2{font-size:16px;font-weight:800;color:#fff;margin-bottom:3px}
 .tinfo p{font-size:12px;color:rgba(255,255,255,.4)}
 .troles{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .trole{font-size:11px;font-weight:600;padding:2px 9px;border-radius:7px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
-.tacts{display:flex;gap:8px;flex-shrink:0}
-.btn{padding:8px 16px;border:none;border-radius:9px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+/* BUTTONS */
+.btn{padding:8px 14px;border:none;border-radius:9px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
 .btn-add{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
 .btn-add:hover{background:rgba(255,255,255,.22)}
-.btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+.btn-blue{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff}
 .btn-blue:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.35)}
 .btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
 .btn-ghost:hover{border-color:#94a3b8;color:var(--text)}
-.btn-del{background:#fff1f2;color:var(--red);border:none}
+.btn-del{background:#fff1f2;color:#dc2626;border:none}
 .btn-del:hover{background:#fee2e2}
 .btn-purple{background:#faf5ff;color:#7c3aed;border:1.5px solid #ede9fe}
 .btn-purple:hover{background:#f3e8ff}
-.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:8px}
+.btn-sm{padding:5px 10px;font-size:11.5px;border-radius:8px}
+/* STATEMENTS */
 .sarea{padding:16px 20px}
-.ssearch{width:100%;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;color:var(--text);background:#fafbff;outline:none;margin-bottom:12px;transition:border-color .15s}
-.ssearch:focus{border-color:var(--blue)}
+.ssearch{width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;color:var(--text);background:#fafbff;outline:none;margin-bottom:12px;transition:border-color .15s}
+.ssearch:focus{border-color:#2563eb}
 .frow{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .fc{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
-.fc:hover{border-color:var(--bluel);color:var(--blue)}
-.fc.on{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
-.no-s{text-align:center;padding:36px;color:var(--muted);font-size:13px}
-.no-s-i{font-size:36px;margin-bottom:10px;opacity:.4}
+.fc:hover{border-color:#3b82f6;color:#2563eb}
+.fc.on{border-color:#2563eb;background:#eff6ff;color:#2563eb}
+.nos{text-align:center;padding:36px;color:var(--muted);font-size:13px}
+.nos-i{font-size:36px;margin-bottom:10px;opacity:.4}
+/* STATEMENT CARD */
 .sc{border:1.5px solid var(--border);border-radius:13px;margin-bottom:11px;overflow:hidden;transition:all .18s}
 .sc:hover{border-color:#bfdbfe;box-shadow:0 4px 14px rgba(37,99,235,.07)}
-.sc.flash{background:#d1fae5;transition:background .1s}
+.sc.flash{background:#d1fae5}
 .sch{padding:11px 14px;background:#fafbff;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .scpills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px}
-.p-role{background:#eff6ff;color:#1d4ed8}
-.p-band{background:#f0fdf4;color:#166534}
-.p-date{background:#f8fafc;color:#64748b;font-weight:500}
+.pr{background:#eff6ff;color:#1d4ed8}
+.pb{background:#f0fdf4;color:#166534}
+.pd{background:#f8fafc;color:#64748b;font-weight:500}
 .opill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
-.o-p{background:#f1f5f9;color:#64748b}
-.o-i{background:#dbeafe;color:#1d4ed8}
-.o-n{background:#fee2e2;color:#dc2626}
-.o-o{background:#d1fae5;color:#065f46}
+.op{background:#f1f5f9;color:#64748b}
+.oi{background:#dbeafe;color:#1d4ed8}
+.on2{background:#fee2e2;color:#dc2626}
+.oo{background:#d1fae5;color:#065f46}
 .scacts{display:flex;gap:5px;flex-shrink:0}
 .scb{padding:13px 15px}
-.sclbl{font-size:11.5px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.sclbl{font-size:11.5px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
 .sctxt{font-size:13.5px;color:#1e293b;line-height:1.75;white-space:pre-wrap;word-break:break-word}
 .sctxt.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.xbtn{font-size:12px;color:var(--blue);font-weight:600;cursor:pointer;margin-top:7px;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:inherit;padding:0}
+.xbtn{font-size:12px;color:#2563eb;font-weight:600;cursor:pointer;margin-top:7px;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:inherit;padding:0}
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(10,15,30,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
 .overlay.open{opacity:1;pointer-events:all}
 .modal{background:#fff;border-radius:20px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:all .22s;box-shadow:0 30px 80px rgba(0,0,0,.25)}
@@ -115,29 +124,38 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .mh{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
 .mh h2{font-size:16px;font-weight:800}
 .mh p{font-size:12px;color:var(--muted);margin-top:2px}
-.mclose{width:30px;height:30px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:14px}
-.mclose:hover{background:#e2e8f0}
+.mcl{width:30px;height:30px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:14px;font-family:inherit}
+.mcl:hover{background:#e2e8f0}
 .mb{padding:20px 24px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:11.5px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
 .field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13.5px;color:var(--text);background:#fafbff;outline:none;transition:all .15s;-webkit-appearance:none;appearance:none}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08);background:#fff}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08);background:#fff}
 .field textarea{min-height:190px;resize:vertical;line-height:1.75}
 .frow2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .cc{font-size:11.5px;color:var(--muted);text-align:right;margin-top:4px}
 .mf{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:#fff;position:sticky;bottom:0}
-.ai-spin{width:20px;height:20px;border:2px solid #e2e8f0;border-top-color:#7c3aed;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ai-ld{display:none;align-items:center;gap:10px;padding:14px;background:#faf5ff;border-radius:10px;font-size:13px;color:#7c3aed;border:1px solid #ede9fe}
-.ai-out{background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:14px;font-size:13.5px;line-height:1.75;color:#1e293b;white-space:pre-wrap;max-height:280px;overflow-y:auto}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:9px;white-space:nowrap}
+/* COMPARE */
+.spin{width:18px;height:18px;border:2px solid #bfdbfe;border-top-color:#2563eb;border-radius:50%;animation:sp .6s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+.cld{display:none;align-items:center;gap:10px;padding:13px;background:#eff6ff;border-radius:10px;font-size:13px;color:#1d4ed8;border:1px solid #bfdbfe;margin-top:12px}
+.cov{display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-radius:10px;margin-bottom:6px;font-size:13px;line-height:1.5}
+.cov-ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.cov-gap{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}
+.cov-i{font-size:15px;flex-shrink:0;margin-top:1px}
+.csec{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin:12px 0 7px}
+.tipbox{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:13px;font-size:13px;color:#1e40af;line-height:1.6;margin-top:12px}
+.tipbox ul{margin-top:7px;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:#0a0f1e;color:#fff;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:9px;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-@media(max-width:600px){.tbanner{padding:14px 16px}.sarea{padding:12px 14px}.mb,.mh,.mf{padding-left:16px;padding-right:16px}.frow2{grid-template-columns:1fr}.dpanel{width:260px}.srow{flex-direction:column}}
+@media(max-width:600px){.frow2{grid-template-columns:1fr}.dpanel{width:260px}.srow{flex-direction:column}.tbanner{padding:14px 16px}.sarea{padding:12px 14px}.mb,.mh,.mf{padding-left:16px;padding-right:16px}}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav class="nav">
   <div class="nav-brand">
     <div class="nav-icon">P</div>
@@ -148,41 +166,42 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   <div class="nav-right"><span id="n-t">0</span> trusts &nbsp;·&nbsp; <span id="n-s">0</span> statements</div>
 </nav>
 
+<!-- HERO -->
 <div class="hero">
   <div class="hi">
     <h1>Your NHS <span>Winning Statements</span><br/>All in One Place</h1>
     <p class="hero-sub">Search any NHS Trust, view your saved supporting statements by role and band, and apply faster with confidence.</p>
     <div class="hstats">
-      <div class="hstat"><div class="hstat-val" id="h-t">0</div><div class="hstat-lbl">Trusts Saved</div></div>
-      <div class="hstat"><div class="hstat-val" id="h-s">0</div><div class="hstat-lbl">Statements</div></div>
-      <div class="hstat"><div class="hstat-val" id="h-r">0</div><div class="hstat-lbl">Unique Roles</div></div>
-      <div class="hstat"><div class="hstat-val">215</div><div class="hstat-lbl">NHS Trusts</div></div>
+      <div class="hstat"><div class="hstat-v" id="h-t">0</div><div class="hstat-l">Trusts Saved</div></div>
+      <div class="hstat"><div class="hstat-v" id="h-s">0</div><div class="hstat-l">Statements</div></div>
+      <div class="hstat"><div class="hstat-v" id="h-r">0</div><div class="hstat-l">Unique Roles</div></div>
+      <div class="hstat"><div class="hstat-v">215</div><div class="hstat-l">NHS Trusts</div></div>
     </div>
   </div>
 </div>
 
-<div class="search-area">
+<!-- SEARCH -->
+<div class="sa">
   <div class="si">
     <div class="srow">
       <div class="sbox">
         <span class="sico">&#9906;</span>
-        <input class="sinput" id="sinput" placeholder="Search NHS Trust name..." autocomplete="off" oninput="onSearch(this.value)" onfocus="onSearch(this.value)"/>
+        <input class="sinput" id="sinput" placeholder="Search NHS Trust name..." autocomplete="off"/>
         <div class="sres" id="sres"></div>
       </div>
       <div class="dbox">
-        <button class="dbtn" id="dbtn" onclick="toggleDropdown()">
-          &#9776; Browse All Trusts &#9660;
-        </button>
+        <button class="dbtn" id="dbtn">&#9776; Browse All Trusts &#9660;</button>
         <div class="dpanel" id="dpanel"></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- MAIN -->
 <div class="content">
   <div id="content">
     <div class="welcome">
-      <div class="w-icon">&#127973;</div>
+      <div class="wi">&#127973;</div>
       <h2>Find Your NHS Trust</h2>
       <p>Search or browse 215 NHS Trusts above. Select a trust to view saved statements or add new ones. Save up to 10 statements per trust.</p>
     </div>
@@ -190,11 +209,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 </div>
 
 <!-- ADD/EDIT MODAL -->
-<div class="overlay" id="ov1" onclick="if(event.target===this)closeForm()">
+<div class="overlay" id="ov1">
   <div class="modal">
     <div class="mh">
-      <div><h2 id="mt">Add Supporting Statement</h2><p id="ms">Save a winning statement</p></div>
-      <button class="mclose" onclick="closeForm()">&#10005;</button>
+      <div><h2 id="m1t">Add Supporting Statement</h2><p id="m1s">Save a winning statement</p></div>
+      <button class="mcl" id="m1cl">&#10005;</button>
     </div>
     <div class="mb">
       <div class="frow2">
@@ -210,32 +229,32 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <div class="field"><label>Label <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional)</span></label>
         <input type="text" id="f-label" placeholder="e.g. NHS Values, Why I applied, Experience"/></div>
       <div class="field"><label>Supporting Statement</label>
-        <textarea id="f-text" placeholder="Paste your supporting statement here..." oninput="document.getElementById('fcc').textContent=this.value.length+' characters'"></textarea>
-        <div class="cc" id="fcc">0 characters</div></div>
+        <textarea id="f-text" placeholder="Paste your supporting statement here..."></textarea>
+        <div class="cc" id="f-cc">0 characters</div></div>
     </div>
     <div class="mf">
-      <button class="btn btn-ghost" onclick="closeForm()">Cancel</button>
-      <button class="btn btn-blue" onclick="saveStmt()">&#10003; Save Statement</button>
+      <button class="btn btn-ghost" id="m1cn">Cancel</button>
+      <button class="btn btn-blue" id="m1sv">&#10003; Save Statement</button>
     </div>
   </div>
 </div>
 
 <!-- COMPARE MODAL -->
-<div class="overlay" id="ov2" onclick="if(event.target===this)closeCompare()" style="z-index:400">
-  <div class="modal" style="max-width:680px">
+<div class="overlay" id="ov2">
+  <div class="modal" style="max-width:660px">
     <div class="mh">
-      <div><h2>&#128270; Person Spec Comparison</h2><p id="cmp-sub">Check how well your statement covers the new job requirements</p></div>
-      <button class="mclose" onclick="closeCompare()">&#10005;</button>
+      <div><h2>&#128270; Person Spec Comparison</h2><p id="m2s">Check your statement covers the new job requirements</p></div>
+      <button class="mcl" id="m2cl">&#10005;</button>
     </div>
     <div class="mb">
       <div class="field">
         <label>Paste Person Specification / Job Requirements</label>
-        <textarea id="cmp-spec" placeholder="Paste the essential and desirable criteria from the job advert here..." style="min-height:140px"></textarea>
+        <textarea id="cmp-spec" placeholder="Paste the essential and desirable criteria from the job advert here..." style="min-height:130px"></textarea>
       </div>
-      <div class="ai-ld" id="cmp-ld"><div class="ai-spin"></div><span>Analysing your statement against the person spec...</span></div>
+      <div class="cld" id="cmp-ld"><div class="spin"></div><span>Analysing your statement against the person spec...</span></div>
       <div id="cmp-res" style="display:none">
-        <div id="cmp-score-bar" style="background:#f8fafc;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;border:1px solid #e2e8f0">
-          <div id="cmp-dial" style="width:60px;height:60px;position:relative;flex-shrink:0">
+        <div style="background:#f8fafc;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;border:1px solid #e2e8f0">
+          <div style="position:relative;width:60px;height:60px;flex-shrink:0">
             <svg width="60" height="60" viewBox="0 0 60 60" style="transform:rotate(-90deg)">
               <circle cx="30" cy="30" r="24" fill="none" stroke="#e2e8f0" stroke-width="6"/>
               <circle id="cmp-ring" cx="30" cy="30" r="24" fill="none" stroke="#22c55e" stroke-width="6" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" style="transition:stroke-dashoffset .8s ease"/>
@@ -247,14 +266,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
             <div id="cmp-summary" style="font-size:12.5px;color:#64748b;line-height:1.5"></div>
           </div>
         </div>
-        <div id="cmp-covered" style="margin-bottom:14px"></div>
-        <div id="cmp-gaps" style="margin-bottom:14px"></div>
+        <div id="cmp-covered"></div>
+        <div id="cmp-gaps"></div>
         <div id="cmp-tips"></div>
       </div>
     </div>
     <div class="mf">
-      <button class="btn btn-ghost" onclick="closeCompare()">Close</button>
-      <button class="btn btn-blue" id="cmp-run" onclick="runCompare()">&#128270; Compare Now</button>
+      <button class="btn btn-ghost" id="m2cl2">Close</button>
+      <button class="btn btn-blue" id="m2run">&#128270; Compare Now</button>
     </div>
   </div>
 </div>
@@ -262,223 +281,245 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <div class="toast" id="toast"><span class="tdot" id="tdot"></span><span id="tmsg"></span></div>
 
 <script>
+// ── CONFIG ──
 var SB='https://opntstuzymdqkcddfjfn.supabase.co';
 var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wbnRzdHV6eW1kcWtjZGRmamZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NjU1NTcsImV4cCI6MjEwMDI0MTU1N30.vTj7S4Mt0fjBAmIBgSo2yYI0l9atcgoQQ35-Cl9NjoE';
 var SH={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json'};
 
-var db={},cur=null,editId=null,cmpId=null,xp={},fb='all';
+// ── STATE ──
+var db={}, cur=null, editId=null, cmpId=null, xp={}, fb='all';
 
+// ── TRUSTS ──
 var TR=["Airedale NHS Foundation Trust","Alder Hey Children's NHS Foundation Trust","Ashford and St Peter's Hospitals NHS Foundation Trust","Avon and Wiltshire Mental Health Partnership NHS Trust","Barking, Havering and Redbridge University Hospitals NHS Trust","Barnet Enfield and Haringey Mental Health NHS Trust","Barnsley Hospital NHS Foundation Trust","Bath NHS Trust","Bedfordshire Hospitals NHS Foundation Trust","Berkshire Healthcare NHS Foundation Trust","Bridgewater Community Healthcare NHS Foundation Trust","Birmingham and Solihull Mental Health NHS Foundation Trust","Birmingham Community Healthcare NHS Foundation Trust","Birmingham Women's and Children's NHS Foundation Trust","Black Country Healthcare NHS Foundation Trust","Blackpool Teaching Hospitals NHS Foundation Trust","Bradford District Care NHS Foundation Trust","Bradford Teaching Hospitals NHS Foundation Trust","Buckinghamshire Healthcare NHS Trust","Calderdale and Huddersfield NHS Foundation Trust","Cambridge University Hospitals NHS Foundation Trust","Cambridgeshire and Peterborough NHS Foundation Trust","Cambridgeshire Community Services NHS Trust","Central and North West London NHS Foundation Trust","Central London Community Healthcare NHS Trust","Chelsea and Westminster Hospital NHS Foundation Trust","Cheshire and Wirral Partnership NHS Foundation Trust","Chesterfield Royal Hospital NHS Foundation Trust","Cornwall Partnership NHS Foundation Trust","Countess of Chester Hospital NHS Foundation Trust","County Durham and Darlington NHS Foundation Trust","Coventry and Warwickshire Partnership NHS Trust","Croydon Health Services NHS Trust","Cumbria, Northumberland, Tyne and Wear NHS Foundation Trust","Dartford and Gravesham NHS Trust","Derbyshire Community Health Services NHS Foundation Trust","Derbyshire Healthcare NHS Foundation Trust","Devon Partnership NHS Trust","Doncaster and Bassetlaw Teaching Hospitals NHS Foundation Trust","Dorset County Hospital NHS Foundation Trust","Dorset HealthCare University NHS Foundation Trust","Dudley Integrated Health and Care NHS Trust","East Cheshire NHS Trust","East and North Hertfordshire Teaching NHS Trust","East Kent Hospitals University NHS Foundation Trust","East Lancashire Hospitals NHS Trust","East London NHS Foundation Trust","East Midlands Ambulance Service NHS Trust","East of England Ambulance Service NHS Trust","East Suffolk and North Essex NHS Foundation Trust","East Sussex NHS Trust","Epsom and St Helier University Hospitals NHS Trust","Essex Partnership University NHS Foundation Trust","Frimley Health NHS Foundation Trust","Gateshead Health NHS Foundation Trust","George Eliot Hospital NHS Trust","Gloucestershire Health and Care NHS Foundation Trust","Gloucestershire Hospitals NHS Foundation Trust","Great Ormond Street Hospital For Children NHS Foundation Trust","Great Western Hospitals NHS Foundation Trust","Greater Manchester Mental Health NHS Foundation Trust","Guy's and St Thomas' NHS Foundation Trust","Hampshire Hospitals NHS Foundation Trust","Hampshire and Isle of Wight Healthcare NHS Foundation Trust","Harrogate and District NHS Foundation Trust","Herefordshire and Worcestershire Health and Care NHS Trust","Hertfordshire Community NHS Trust","Hertfordshire Partnership University NHS Foundation Trust","Homerton Healthcare NHS Foundation Trust","Humber Teaching NHS Foundation Trust","Imperial College Healthcare NHS Trust","Isle of Wight NHS Trust","James Paget University Hospitals NHS Foundation Trust","Kent and Medway NHS and Social Care Partnership Trust","Kent Community Health NHS Foundation Trust","Kettering General Hospital NHS Foundation Trust","King's College Hospital NHS Foundation Trust","Kingston and Richmond NHS Foundation Trust","Lancashire and South Cumbria NHS Foundation Trust","Leeds Community Healthcare NHS Trust","Leeds Teaching Hospitals NHS Trust","Leicestershire Partnership NHS Trust","Lincolnshire Community Health Services NHS Trust","Lincolnshire Partnership NHS Foundation Trust","Liverpool Heart and Chest Hospital NHS Foundation Trust","Liverpool University Hospitals NHS Foundation Trust","Liverpool Women's NHS Foundation Trust","London Ambulance Service NHS Trust","London North West University Healthcare NHS Trust","Maidstone and Tunbridge Wells NHS Trust","Manchester University NHS Foundation Trust","Medway NHS Foundation Trust","Mersey and West Lancashire Teaching Hospitals NHS Trust","Mid and South Essex NHS Foundation Trust","Mid Cheshire Hospitals NHS Foundation Trust","Mid Yorkshire Hospitals NHS Trust","Midlands Partnership University NHS Foundation Trust","Milton Keynes University Hospital NHS Foundation Trust","Moorfields Eye Hospital NHS Foundation Trust","Norfolk and Norwich University Hospitals NHS Foundation Trust","Norfolk and Suffolk NHS Foundation Trust","North Bristol NHS Trust","North Cumbria Integrated Care NHS Foundation Trust","North East Ambulance Service NHS Foundation Trust","North East London NHS Foundation Trust","North Middlesex University Hospital NHS Trust","North Staffordshire Combined Healthcare NHS Trust","North Tees and Hartlepool NHS Foundation Trust","North West Ambulance Service NHS Trust","North West Boroughs Healthcare NHS Foundation Trust","Northampton General Hospital NHS Trust","Northamptonshire Healthcare NHS Foundation Trust","Northern Care Alliance NHS Foundation Trust","Northern Lincolnshire and Goole NHS Foundation Trust","Northumbria Healthcare NHS Foundation Trust","Nottingham University Hospitals NHS Trust","Nottinghamshire Healthcare NHS Foundation Trust","Oxleas NHS Foundation Trust","Oxford Health NHS Foundation Trust","Oxford University Hospitals NHS Foundation Trust","Pennine Care NHS Foundation Trust","Portsmouth Hospitals University NHS Trust","Queen Victoria Hospital NHS Foundation Trust","Rotherham Doncaster and South Humber NHS Foundation Trust","Royal Berkshire NHS Foundation Trust","Royal Cornwall Hospitals NHS Trust","Royal Devon University Healthcare NHS Foundation Trust","Royal Free London NHS Foundation Trust","Royal National Orthopaedic Hospital NHS Trust","Royal Papworth Hospital NHS Foundation Trust","Royal Surrey NHS Foundation Trust","Royal United Hospitals Bath NHS Foundation Trust","Royal Wolverhampton NHS Trust","Salisbury NHS Foundation Trust","Sandwell and West Birmingham Hospitals NHS Foundation Trust","Sheffield Children's NHS Foundation Trust","Sheffield Health and Social Care NHS Foundation Trust","Sheffield Teaching Hospitals NHS Foundation Trust","Sherwood Forest Hospitals NHS Foundation Trust","Shrewsbury and Telford Hospital NHS Trust","Solent NHS Trust","Somerset NHS Foundation Trust","South Central Ambulance Service NHS Foundation Trust","South East Coast Ambulance Service NHS Foundation Trust","South London and Maudsley NHS Foundation Trust","South Tees Hospitals NHS Foundation Trust","South Tyneside and Sunderland NHS Foundation Trust","South Warwickshire University NHS Foundation Trust","South West Yorkshire Partnership NHS Foundation Trust","South Western Ambulance Service NHS Foundation Trust","Southport and Ormskirk Hospital NHS Trust","Stockport NHS Foundation Trust","Surrey and Borders Partnership NHS Foundation Trust","Sussex Community NHS Foundation Trust","Sussex Partnership NHS Foundation Trust","Tameside and Glossop Integrated Care NHS Foundation Trust","Taunton and Somerset NHS Foundation Trust","Tees Esk and Wear Valleys NHS Foundation Trust","The Christie NHS Foundation Trust","The Clatterbridge Cancer Centre NHS Foundation Trust","The Dudley Group NHS Foundation Trust","The Hillingdon Hospitals NHS Foundation Trust","The Newcastle Upon Tyne Hospitals NHS Foundation Trust","The Princess Alexandra Hospital NHS Trust","The Queen Elizabeth Hospital King's Lynn NHSFT","The Robert Jones and Agnes Hunt Orthopaedic Hospital NHS Foundation Trust","The Rotherham NHS Foundation Trust","The Royal Orthopaedic Hospital NHS Foundation Trust","The Royal Marsden NHS Foundation Trust","The Walton Centre NHS Foundation Trust","University College London Hospitals NHS Foundation Trust","United Lincolnshire Hospitals NHS Trust","University Hospital Southampton NHS Foundation Trust","University Hospitals Birmingham NHS Foundation Trust","University Hospitals Bristol and Weston NHS Foundation Trust","University Hospitals Coventry and Warwickshire NHS Trust","University Hospitals of Derby and Burton NHS Foundation Trust","University Hospitals Dorset NHS Foundation Trust","University Hospitals of Leicester NHS Trust","University Hospitals of Morecambe Bay NHS Foundation Trust","University Hospitals of North Midlands NHS Trust","University Hospitals Plymouth NHS Trust","University Hospitals Sussex NHS Foundation Trust","Walsall Healthcare NHS Trust","West Hertfordshire Teaching Hospitals NHS Trust","West London NHS Trust","West Midlands Ambulance Service NHS Trust","West Suffolk NHS Foundation Trust","Whittington Health NHS Trust","Wirral Community NHS Foundation Trust","Wirral University Teaching Hospital NHS Foundation Trust","Worcestershire Acute Hospitals NHS Trust","Worcestershire Health and Care NHS Trust","Wye Valley NHS Trust","York and Scarborough Teaching Hospitals NHS Foundation Trust","Yorkshire Ambulance Service NHS Trust"];
 
-function load(){try{var s=localStorage.getItem('ph_lib2');if(s)db=JSON.parse(s);}catch(e){db={};}}
-function save(){try{localStorage.setItem('ph_lib2',JSON.stringify(db));}catch(e){}}
+// ── STORAGE ──
+function lload(){try{var s=localStorage.getItem('ph_lib3');if(s)db=JSON.parse(s);}catch(e){db={};}}
+function lsave(){try{localStorage.setItem('ph_lib3',JSON.stringify(db));}catch(e){}}
 function gid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// SUPABASE
+// ── SUPABASE ──
 async function sbLoad(){
   try{
     var r=await fetch(SB+'/rest/v1/library_statements?select=*&order=created_at.desc',{headers:SH});
     if(!r.ok)return;
     var rows=await r.json();
     if(!rows||!rows.length)return;
-    var nd={};
-    rows.forEach(function(row){
-      if(!nd[row.trust_name])nd[row.trust_name]={s:[]};
-      nd[row.trust_name].s.push({id:row.id,role:row.role||'',band:row.band||'',label:row.label||'',text:row.statement||'',outcome:row.outcome||'pending',date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''});
-    });
-    // Merge - keep local items not in Supabase
-    var ids={};rows.forEach(function(r){ids[r.id]=1;});
-    Object.keys(db).forEach(function(t){
-      if(!nd[t])nd[t]={s:[]};
-      (db[t].s||[]).forEach(function(s){if(!ids[s.id])nd[t].s.push(s);});
-    });
-    db=nd;save();updateStats();if(cur)renderTrust();
-  }catch(e){console.log('Offline, using local data');}
+    var nd={},ids={};
+    rows.forEach(function(row){ids[row.id]=1;if(!nd[row.trust_name])nd[row.trust_name]={s:[]};nd[row.trust_name].s.push({id:row.id,role:row.role||'',band:row.band||'',label:row.label||'',text:row.statement||'',outcome:row.outcome||'pending',date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''});});
+    Object.keys(db).forEach(function(t){if(!nd[t])nd[t]={s:[]};(db[t].s||[]).forEach(function(s){if(!ids[s.id])nd[t].s.push(s);});});
+    db=nd;lsave();updateStats();if(cur)renderTrust();
+  }catch(e){console.log('Offline - using local data');}
 }
 async function sbSave(s,trust){
-  try{
-    var r=await fetch(SB+'/rest/v1/library_statements',{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({id:s.id,trust_name:trust,role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});
-    if(!r.ok){var e=await r.text();console.error('sbSave error:',e);}
-  }catch(e){console.error('sbSave:',e);}
+  try{await fetch(SB+'/rest/v1/library_statements',{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({id:s.id,trust_name:trust,role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});}
+  catch(e){}
 }
 async function sbPatch(s){
   try{await fetch(SB+'/rest/v1/library_statements?id=eq.'+s.id,{method:'PATCH',headers:SH,body:JSON.stringify({role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});}
-  catch(e){console.error('sbPatch:',e);}
+  catch(e){}
 }
 async function sbDel(id){
   try{await fetch(SB+'/rest/v1/library_statements?id=eq.'+id,{method:'DELETE',headers:SH});}
-  catch(e){console.error('sbDel:',e);}
+  catch(e){}
 }
 
-// SEARCH
-function onSearch(v){
-  var box=document.getElementById('sres');
-  document.getElementById('dpanel').classList.remove('show');
-  document.getElementById('dbtn').classList.remove('open');
+// ── SEARCH ──
+document.getElementById('sinput').addEventListener('input',function(){
+  var v=this.value,box=document.getElementById('sres');
+  closeDropdown();
   if(!v||v.length<1){box.classList.remove('show');return;}
   var low=v.toLowerCase();
   var m=TR.filter(function(t){return t.toLowerCase().includes(low);}).slice(0,14);
   if(!m.length){box.classList.remove('show');return;}
   box.innerHTML=m.map(function(t){
     var n=db[t]&&db[t].s&&db[t].s.length;
-    return '<div class="sri" onclick="pick(decodeURIComponent(\''+encodeURIComponent(t)+'\'))"><span class="sri-name">'+esc(t)+'</span>'+(n?'<span class="badge b-saved">'+n+' saved</span>':'<span class="badge b-new">New</span>')+'</div>';
+    return '<div class="sri"><span class="sri-n">'+esc(t)+'</span>'+(n?'<span class="bdg bsaved">'+n+' saved</span>':'<span class="bdg bnew">New</span>')+'</div>';
   }).join('');
+  // attach click listeners
+  box.querySelectorAll('.sri').forEach(function(el,i){el.addEventListener('click',function(){pick(m[i]);});});
   box.classList.add('show');
-}
+});
 
-// DROPDOWN
-function toggleDropdown(){
-  var p=document.getElementById('dpanel'),b=document.getElementById('dbtn');
+document.getElementById('sinput').addEventListener('focus',function(){
+  if(this.value.length>=1)document.getElementById('sres').classList.add('show');
+});
+
+// ── DROPDOWN ──
+document.getElementById('dbtn').addEventListener('click',function(){
+  var p=document.getElementById('dpanel');
+  if(p.classList.contains('show')){closeDropdown();return;}
   document.getElementById('sres').classList.remove('show');
-  if(p.classList.contains('show')){p.classList.remove('show');b.classList.remove('open');return;}
   var letters={};
   TR.forEach(function(t){var l=t[0];if(!letters[l])letters[l]=[];letters[l].push(t);});
   var html='';
   Object.keys(letters).sort().forEach(function(l){
-    html+='<div class="dp-lbl">'+l+'</div>';
-    letters[l].forEach(function(t){
-      var n=db[t]&&db[t].s&&db[t].s.length;
-      html+='<div class="dp-item" onclick="pick(decodeURIComponent(\''+encodeURIComponent(t)+'\'))"><span class="dp-name">'+esc(t)+'</span>'+(n?'<span class="dp-cnt">'+n+'</span>':'')+'</div>';
-    });
-    html+='<div class="dp-div"></div>';
+    html+='<div class="dplbl">'+l+'</div>';
+    letters[l].forEach(function(t){var n=db[t]&&db[t].s&&db[t].s.length;html+='<div class="dpi"><span class="dpin">'+esc(t)+'</span>'+(n?'<span class="dpic">'+n+'</span>':'')+'</div>';});
+    html+='<div class="dpd"></div>';
   });
-  p.innerHTML=html;p.classList.add('show');b.classList.add('open');
-}
+  p.innerHTML=html;
+  // attach listeners
+  var items=p.querySelectorAll('.dpi');
+  var allT=[];Object.keys(letters).sort().forEach(function(l){letters[l].forEach(function(t){allT.push(t);});});
+  items.forEach(function(el,i){el.addEventListener('click',function(){pick(allT[i]);closeDropdown();});});
+  p.classList.add('show');
+  document.getElementById('dbtn').classList.add('on');
+});
+
+function closeDropdown(){document.getElementById('dpanel').classList.remove('show');document.getElementById('dbtn').classList.remove('on');}
 
 document.addEventListener('click',function(e){
   if(!e.target.closest('.sbox'))document.getElementById('sres').classList.remove('show');
-  if(!e.target.closest('.dbox')){document.getElementById('dpanel').classList.remove('show');document.getElementById('dbtn').classList.remove('open');}
+  if(!e.target.closest('.dbox'))closeDropdown();
 });
 
-// PICK TRUST
+// ── PICK TRUST ──
 function pick(name){
   cur=name;fb='all';xp={};
   document.getElementById('sinput').value=name;
   document.getElementById('sres').classList.remove('show');
-  document.getElementById('dpanel').classList.remove('show');
-  document.getElementById('dbtn').classList.remove('open');
   if(!db[cur])db[cur]={s:[]};
   renderTrust();updateStats();
 }
 
-// RENDER TRUST
+// ── RENDER TRUST ──
 function renderTrust(){
   if(!cur)return;
-  var stmts=db[cur]&&db[cur].s||[];
+  var stmts=(db[cur]&&db[cur].s)||[];
   var filt=fb==='all'?stmts:stmts.filter(function(s){return s.band===fb;});
   var bands=['all'];
   stmts.forEach(function(s){if(s.band&&bands.indexOf(s.band)<0)bands.push(s.band);});
-  var roles=[...new Set(stmts.map(function(s){return s.role;}).filter(Boolean))];
+  var roles=[];
+  stmts.forEach(function(s){if(s.role&&roles.indexOf(s.role)<0)roles.push(s.role);});
 
-  document.getElementById('content').innerHTML=
-    '<div class="trust-card">'
+  var html='<div class="tcard">'
     +'<div class="tbanner">'
       +'<div class="tinfo"><h2>'+esc(cur)+'</h2><p>'+stmts.length+' of 10 statements saved</p>'
       +(roles.length?'<div class="troles">'+roles.map(function(r){return'<span class="trole">'+esc(r)+'</span>';}).join('')+'</div>':'')
       +'</div>'
-      +'<div class="tacts">'+(stmts.length<10?'<button class="btn btn-add" onclick="openForm(null)">+ Add Statement</button>':'<span style="font-size:12px;color:rgba(255,255,255,.4)">Max 10 reached</span>')+'</div>'
+      +'<div>'+(stmts.length<10?'<button class="btn btn-add" id="btn-add-stmt">+ Add Statement</button>':'<span style="font-size:12px;color:rgba(255,255,255,.4)">Max 10 reached</span>')+'</div>'
     +'</div>'
     +'<div class="sarea">'
-    +'<input class="ssearch" placeholder="&#128269; Search within statements..." oninput="filterLocal(this.value)"/>'
-    +(bands.length>2?'<div class="frow">'+bands.map(function(b){return'<button class="fc'+(fb===b?' on':'')+'" onclick="setFb(\''+b+'\')">'+( b==='all'?'All Bands':esc(b))+'</button>';}).join('')+'</div>':'')
-    +(filt.length?filt.map(renderS).join(''):'<div class="no-s"><div class="no-s-i">&#128221;</div><p>'+(stmts.length&&fb!=='all'?'No statements for this band.':'No statements saved yet. Click Add Statement.')+'</p></div>')
+      +'<input class="ssearch" id="ss" placeholder="&#128269; Search within statements..."/>'
+      +(bands.length>2?'<div class="frow" id="fbands">'+bands.map(function(b){return'<button class="fc'+(fb===b?' on':'')+'" data-band="'+esc(b)+'">'+(b==='all'?'All Bands':esc(b))+'</button>';}).join('')+'</div>':'')
+      +(filt.length?'<div id="sclist">'+filt.map(renderS).join('')+'</div>'
+        :'<div class="nos"><div class="nos-i">&#128221;</div><p>'+(stmts.length&&fb!=='all'?'No statements for this band.':'No statements yet. Click Add Statement to save your first one.')+'</p></div>')
     +'</div>'
-    +'</div>';
+  +'</div>';
+
+  document.getElementById('content').innerHTML=html;
+
+  // Attach event listeners (safe - no inline onclick)
+  var addBtn=document.getElementById('btn-add-stmt');
+  if(addBtn)addBtn.addEventListener('click',function(){openForm(null);});
+
+  var ss=document.getElementById('ss');
+  if(ss)ss.addEventListener('input',function(){
+    var v=this.value.toLowerCase();
+    document.querySelectorAll('.sc').forEach(function(c){c.style.display=(!v||c.textContent.toLowerCase().includes(v))?'':'none';});
+  });
+
+  var fbands=document.getElementById('fbands');
+  if(fbands)fbands.querySelectorAll('.fc').forEach(function(btn){
+    btn.addEventListener('click',function(){fb=this.getAttribute('data-band');renderTrust();});
+  });
+
+  // Statement buttons
+  document.querySelectorAll('.sc').forEach(function(card){
+    var id=card.getAttribute('data-id');
+    var copyBtn=card.querySelector('.s-copy');
+    var cmpBtn=card.querySelector('.s-cmp');
+    var dupBtn=card.querySelector('.s-dup');
+    var editBtn=card.querySelector('.s-edit');
+    var delBtn=card.querySelector('.s-del');
+    var xBtn=card.querySelector('.s-x');
+    var opBtn=card.querySelector('.s-op');
+
+    if(copyBtn)copyBtn.addEventListener('click',function(e){e.stopPropagation();doCopy(id);});
+    if(cmpBtn)cmpBtn.addEventListener('click',function(e){e.stopPropagation();openCompare(id);});
+    if(dupBtn)dupBtn.addEventListener('click',function(e){e.stopPropagation();doDup(id);});
+    if(editBtn)editBtn.addEventListener('click',function(e){e.stopPropagation();openForm(id);});
+    if(delBtn)delBtn.addEventListener('click',function(e){e.stopPropagation();doDel(id);});
+    if(xBtn)xBtn.addEventListener('click',function(e){e.stopPropagation();xp[id]=!xp[id];renderTrust();});
+    if(opBtn)opBtn.addEventListener('click',function(e){e.stopPropagation();cycleO(id,opBtn);});
+  });
 }
 
-function setFb(b){fb=b;renderTrust();}
-
-function filterLocal(v){
-  var cards=document.querySelectorAll('.sc');
-  var low=v.toLowerCase();
-  cards.forEach(function(c){c.style.display=(!v||c.textContent.toLowerCase().includes(low))?'':'none';});
-}
-
-// RENDER SINGLE STATEMENT
+// ── RENDER SINGLE STATEMENT ──
 function renderS(s){
   var isX=xp[s.id];
   var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
-  var oC={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
+  var oC={pending:'op',interview:'oi',no:'on2',offer:'oo'};
   var oc=s.outcome||'pending';
-  var d='data-id="'+s.id+'"';
-  return '<div class="sc" id="sc-'+s.id+'">'
+  return '<div class="sc" id="sc-'+esc(s.id)+'" data-id="'+esc(s.id)+'">'
     +'<div class="sch">'
       +'<div class="scpills">'
-        +(s.role?'<span class="pill p-role">'+esc(s.role)+'</span>':'')
-        +(s.band?'<span class="pill p-band">'+esc(s.band)+'</span>':'')
-        +(s.date?'<span class="pill p-date">'+esc(s.date)+'</span>':'')
-        +'<button class="opill '+oC[oc]+'" '+d+' onclick="cycleO(this)">'+oL[oc]+'</button>'
+        +(s.role?'<span class="pill pr">'+esc(s.role)+'</span>':'')
+        +(s.band?'<span class="pill pb">'+esc(s.band)+'</span>':'')
+        +(s.date?'<span class="pill pd">'+esc(s.date)+'</span>':'')
+        +'<button class="opill '+oC[oc]+' s-op">'+oL[oc]+'</button>'
       +'</div>'
       +'<div class="scacts">'
-        +'<button class="btn btn-ghost btn-sm" '+d+' onclick="copyS(this)" title="Copy">&#128203;</button>'
-        +'<button class="btn btn-purple btn-sm" '+d+' onclick="openCompare(this)" title="Compare with Person Spec">&#128270;</button>'
-        +'<button class="btn btn-ghost btn-sm" '+d+' onclick="dupS(this)" title="Duplicate">&#128471;</button>'
-        +'<button class="btn btn-ghost btn-sm" '+d+' onclick="openForm(this)">&#9999;</button>'
-        +'<button class="btn btn-del btn-sm" '+d+' onclick="delS(this)">&#10005;</button>'
+        +'<button class="btn btn-ghost btn-sm s-copy" title="Copy to clipboard">&#128203;</button>'
+        +'<button class="btn btn-purple btn-sm s-cmp" title="Compare with Person Spec">&#128270;</button>'
+        +'<button class="btn btn-ghost btn-sm s-dup" title="Duplicate">&#128471;</button>'
+        +'<button class="btn btn-ghost btn-sm s-edit">&#9999;</button>'
+        +'<button class="btn btn-del btn-sm s-del">&#10005;</button>'
       +'</div>'
     +'</div>'
     +'<div class="scb">'
       +(s.label?'<div class="sclbl">'+esc(s.label)+'</div>':'')
-      +'<div class="sctxt'+(isX?'':' clamp')+'" id="tx-'+s.id+'">'+esc(s.text)+'</div>'
-      +(s.text&&s.text.length>280?'<button class="xbtn" '+d+' onclick="togX(this)">'+(isX?'&#9650; Show less':'&#9660; Read more')+'</button>':'')
+      +'<div class="sctxt'+(isX?'':' clamp')+'" id="tx-'+esc(s.id)+'">'+esc(s.text)+'</div>'
+      +(s.text&&s.text.length>280?'<button class="xbtn s-x">'+(isX?'&#9650; Show less':'&#9660; Read more')+'</button>':'')
     +'</div>'
   +'</div>';
 }
-function togX(btn){var id=btn.getAttribute('data-id');xp[id]=!xp[id];renderTrust();}
 
-// COPY
-function copyS(btn){
-  if(event)event.stopPropagation();
-  var id=btn.getAttribute('data-id');
+// ── HELPERS ──
+function getS(id){return((db[cur]&&db[cur].s)||[]).find(function(s){return s.id===id;});}
+
+function doCopy(id){
   var s=getS(id);if(!s)return;
-  copyText(s.text);
-  var el=document.getElementById('sc-'+id);
-  if(el){el.classList.add('flash');setTimeout(function(){el.classList.remove('flash');},400);}
+  var txt=s.text;
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){flashCard(id);toast('Copied to clipboard','#22c55e');}).catch(function(){fallCopy(txt);});}
+  else{fallCopy(txt);}
 }
-function copyText(txt){
-  if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){fallbackCopy(txt);});}
-  else{fallbackCopy(txt);}
-  toast('Copied to clipboard','#22c55e');
-}
-function fallbackCopy(txt){var t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}
 
-// DUPLICATE
-function dupS(btn){
-  var id=btn.getAttribute('data-id');
+function fallCopy(txt){var t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);toast('Copied to clipboard','#22c55e');}
+function flashCard(id){var el=document.getElementById('sc-'+id);if(el){el.classList.add('flash');setTimeout(function(){el.classList.remove('flash');},500);}}
+
+function doDup(id){
   var s=getS(id);if(!s)return;
   if((db[cur].s||[]).length>=10){toast('Max 10 statements per trust','#ef4444');return;}
   var ns={id:gid(),role:s.role,band:s.band,label:(s.label?s.label+' (copy)':'Copy'),text:s.text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
-  db[cur].s.unshift(ns);
-  save();sbSave(ns,cur);renderTrust();updateStats();
-  toast('Statement duplicated','#22c55e');
+  db[cur].s.unshift(ns);lsave();sbSave(ns,cur);renderTrust();updateStats();toast('Statement duplicated','#22c55e');
 }
 
-// OUTCOME CYCLE
+function doDel(id){
+  if(!confirm('Delete this statement? This cannot be undone.'))return;
+  if(db[cur])db[cur].s=(db[cur].s||[]).filter(function(s){return s.id!==id;});
+  lsave();sbDel(id);renderTrust();updateStats();toast('Deleted','#ef4444');
+}
+
 var OC=['pending','interview','no','offer'];
-function cycleO(btn){
-  var id=btn.getAttribute('data-id');
+function cycleO(id,btn){
   var s=getS(id);if(!s)return;
   var i=OC.indexOf(s.outcome||'pending');
   s.outcome=OC[(i+1)%OC.length];
   var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
-  var oC2={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
-  btn.textContent=oL[s.outcome];btn.className='opill '+oC2[s.outcome];
-  save();sbPatch(s);
+  var oC={pending:'op',interview:'oi',no:'on2',offer:'oo'};
+  btn.textContent=oL[s.outcome];btn.className='opill '+oC[s.outcome]+' s-op';
+  lsave();sbPatch(s);
 }
 
-// FORM
-function openForm(btn){
-  var id=btn&&btn.getAttribute?btn.getAttribute('data-id'):null;
+// ── FORM ──
+function openForm(id){
   editId=id;
-  document.getElementById('mt').textContent=id?'Edit Statement':'Add Supporting Statement';
-  document.getElementById('ms').textContent=id?'Update your saved statement':'Save a winning statement for '+cur;
-  if(id){
-    var s=getS(id);
-    if(s){document.getElementById('f-role').value=s.role||'';document.getElementById('f-band').value=s.band||'';document.getElementById('f-label').value=s.label||'';document.getElementById('f-text').value=s.text||'';document.getElementById('fcc').textContent=(s.text||'').length+' characters';}
-  }else{
-    document.getElementById('f-role').value='';document.getElementById('f-band').value='';document.getElementById('f-label').value='';document.getElementById('f-text').value='';document.getElementById('fcc').textContent='0 characters';
-  }
+  document.getElementById('m1t').textContent=id?'Edit Statement':'Add Supporting Statement';
+  document.getElementById('m1s').textContent=id?'Update your saved statement':'Save a winning statement for '+cur;
+  if(id){var s=getS(id);if(s){document.getElementById('f-role').value=s.role||'';document.getElementById('f-band').value=s.band||'';document.getElementById('f-label').value=s.label||'';document.getElementById('f-text').value=s.text||'';document.getElementById('f-cc').textContent=(s.text||'').length+' characters';}}
+  else{document.getElementById('f-role').value='';document.getElementById('f-band').value='';document.getElementById('f-label').value='';document.getElementById('f-text').value='';document.getElementById('f-cc').textContent='0 characters';}
   document.getElementById('ov1').classList.add('open');
 }
 function closeForm(){document.getElementById('ov1').classList.remove('open');editId=null;}
@@ -491,41 +532,27 @@ function saveStmt(){
   if(!role){toast('Please enter the role title','#ef4444');return;}
   if(!text){toast('Please enter your supporting statement','#ef4444');return;}
   if(!db[cur])db[cur]={s:[]};
-  var arr=db[cur].s;
   if(editId){
-    var s=getS(editId);
-    if(s){s.role=role;s.band=band;s.label=label;s.text=text;sbPatch(s);}
+    var s=getS(editId);if(s){s.role=role;s.band=band;s.label=label;s.text=text;sbPatch(s);}
     toast('Statement updated','#22c55e');
   }else{
-    if(arr.length>=10){toast('Max 10 statements per trust','#ef4444');return;}
+    if(db[cur].s.length>=10){toast('Max 10 statements per trust','#ef4444');return;}
     var ns={id:gid(),role:role,band:band,label:label,text:text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
-    arr.unshift(ns);sbSave(ns,cur);
+    db[cur].s.unshift(ns);sbSave(ns,cur);
     toast('Statement saved','#22c55e');
   }
-  save();closeForm();renderTrust();updateStats();
+  lsave();closeForm();renderTrust();updateStats();
 }
 
-function delS(btn){
-  var id=btn.getAttribute('data-id');
-  if(!confirm('Delete this statement?'))return;
-  if(db[cur])db[cur].s=(db[cur].s||[]).filter(function(s){return s.id!==id;});
-  save();sbDel(id);renderTrust();updateStats();toast('Deleted','#ef4444');
-}
-
-// PERSON SPEC COMPARISON
-var cmpId=null;
-
-function openCompare(btn){
-  var id=btn.getAttribute('data-id');
-  cmpId=id;
-  var s=getS(id);if(!s)return;
-  document.getElementById('cmp-sub').textContent=(s.role||'Your statement')+' vs new person specification';
+// ── COMPARE ──
+function openCompare(id){
+  cmpId=id;var s=getS(id);if(!s)return;
+  document.getElementById('m2s').textContent=(s.role||'Your statement')+' vs new person specification';
   document.getElementById('cmp-spec').value='';
   document.getElementById('cmp-res').style.display='none';
   document.getElementById('cmp-ld').style.display='none';
   document.getElementById('ov2').classList.add('open');
 }
-
 function closeCompare(){document.getElementById('ov2').classList.remove('open');cmpId=null;}
 
 async function runCompare(){
@@ -534,74 +561,48 @@ async function runCompare(){
   if(!spec){toast('Please paste the person specification first','#ef4444');return;}
   document.getElementById('cmp-res').style.display='none';
   document.getElementById('cmp-ld').style.display='flex';
-  document.getElementById('cmp-run').disabled=true;
-  var prompt='You are an NHS recruitment expert. Compare this supporting statement against the person specification and return a JSON object only, no markdown, no explanation.
-
-STATEMENT:
-'+s.text+'
-
-PERSON SPECIFICATION:
-'+spec+'
-
-Return exactly this JSON:
-{"score":<0-100>,"covered":[<criteria the statement addresses>],"gaps":[<criteria missing or weak>],"tips":[<2-3 specific things to add before submitting>]}';
+  document.getElementById('m2run').disabled=true;
+  var prompt='You are an NHS recruitment expert. Compare this supporting statement against the person specification below.\n\nSTATEMENT:\n'+s.text+'\n\nPERSON SPECIFICATION:\n'+spec+'\n\nRespond with ONLY a JSON object in this exact format, no markdown:\n{"score":85,"covered":["criterion 1","criterion 2"],"gaps":["missing criterion 1"],"tips":["specific tip 1","specific tip 2"]}';
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     var d=await r.json();
     var txt=d.content&&d.content[0]&&d.content[0].text;
     if(!txt)throw new Error('No response');
-    txt=txt.replace(/```json
-?/g,'').replace(/```
-?/g,'').trim();
-    var s2=txt.indexOf('{'),e2=txt.lastIndexOf('}')+1;
-    if(s2>=0&&e2>s2)txt=txt.slice(s2,e2);
-    renderCmpResult(JSON.parse(txt));
-  }catch(e){
-    document.getElementById('cmp-ld').innerHTML='<span style="color:#dc2626">Error: '+e.message+'</span>';
-  }
-  document.getElementById('cmp-run').disabled=false;
+    txt=txt.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+    var i1=txt.indexOf('{'),i2=txt.lastIndexOf('}')+1;
+    if(i1>=0&&i2>i1)txt=txt.slice(i1,i2);
+    showCmpResult(JSON.parse(txt));
+  }catch(e){document.getElementById('cmp-ld').innerHTML='<span style="color:#dc2626">Error: '+esc(e.message)+'</span>';}
+  document.getElementById('m2run').disabled=false;
 }
 
-function renderCmpResult(res){
+function showCmpResult(res){
   document.getElementById('cmp-ld').style.display='none';
   document.getElementById('cmp-res').style.display='block';
-  var score=Math.max(0,Math.min(100,res.score||0));
-  var circ=150.8,offset=circ-(score/100)*circ;
-  var color=score>=75?'#22c55e':score>=50?'#f59e0b':'#ef4444';
-  var verdict=score>=75?'Strong Match':score>=50?'Partial Match':'Needs Work';
-  var summary=score>=75?'Your statement covers most criteria. Minor tweaks should be enough.'
-    :score>=50?'Some criteria covered well but gaps need addressing before submitting.'
-    :'Statement needs significant additions to match this person specification.';
-  document.getElementById('cmp-ring').style.strokeDashoffset=offset;
-  document.getElementById('cmp-ring').style.stroke=color;
-  document.getElementById('cmp-pct').textContent=score+'%';
-  document.getElementById('cmp-pct').style.color=color;
-  document.getElementById('cmp-verdict').textContent=verdict;
-  document.getElementById('cmp-verdict').style.color=color;
-  document.getElementById('cmp-summary').textContent=summary;
-  var covHtml='';
-  if(res.covered&&res.covered.length){
-    covHtml='<div class="cov-sec" style="color:#166534">Criteria Already Covered ('+res.covered.length+')</div>';
-    covHtml+=res.covered.map(function(x){return'<div class="cov-item cov-ok"><span class="cov-icon">&#10003;</span><span>'+esc(x)+'</span></div>';}).join('');
-  }
-  document.getElementById('cmp-covered').innerHTML=covHtml;
-  var gapHtml='';
-  if(res.gaps&&res.gaps.length){
-    gapHtml='<div class="cov-sec" style="color:#9a3412">Gaps to Address ('+res.gaps.length+')</div>';
-    gapHtml+=res.gaps.map(function(x){return'<div class="cov-item cov-gap"><span class="cov-icon">&#9888;</span><span>'+esc(x)+'</span></div>';}).join('');
-  }
-  document.getElementById('cmp-gaps').innerHTML=gapHtml;
-  var tipHtml='';
-  if(res.tips&&res.tips.length){
-    tipHtml='<div class="tip-box"><strong>Before you submit:</strong><ul style="margin-top:8px;padding-left:18px;display:flex;flex-direction:column;gap:6px">'+res.tips.map(function(x){return'<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
-  }
-  document.getElementById('cmp-tips').innerHTML=tipHtml;
+  var sc=Math.max(0,Math.min(100,res.score||0));
+  var circ=150.8,off=circ-(sc/100)*circ;
+  var col=sc>=75?'#22c55e':sc>=50?'#f59e0b':'#ef4444';
+  var vrd=sc>=75?'Strong Match':sc>=50?'Partial Match':'Needs Work';
+  var sum=sc>=75?'Covers most criteria. Minor tweaks should be enough.'
+    :sc>=50?'Some criteria covered well. Address the gaps before submitting.'
+    :'Needs significant additions to match this person specification.';
+  document.getElementById('cmp-ring').style.strokeDashoffset=off;
+  document.getElementById('cmp-ring').style.stroke=col;
+  document.getElementById('cmp-pct').textContent=sc+'%';document.getElementById('cmp-pct').style.color=col;
+  document.getElementById('cmp-verdict').textContent=vrd;document.getElementById('cmp-verdict').style.color=col;
+  document.getElementById('cmp-summary').textContent=sum;
+  var cov='';
+  if(res.covered&&res.covered.length){cov='<div class="csec" style="color:#166534">&#10003; Already Covered ('+res.covered.length+')</div>';cov+=res.covered.map(function(x){return'<div class="cov cov-ok"><span class="cov-i">&#10003;</span><span>'+esc(x)+'</span></div>';}).join('');}
+  document.getElementById('cmp-covered').innerHTML=cov;
+  var gap='';
+  if(res.gaps&&res.gaps.length){gap='<div class="csec" style="color:#9a3412">&#9888; Gaps to Address ('+res.gaps.length+')</div>';gap+=res.gaps.map(function(x){return'<div class="cov cov-gap"><span class="cov-i">&#9888;</span><span>'+esc(x)+'</span></div>';}).join('');}
+  document.getElementById('cmp-gaps').innerHTML=gap;
+  var tip='';
+  if(res.tips&&res.tips.length){tip='<div class="tipbox"><strong>&#128161; Before you submit:</strong><ul>'+res.tips.map(function(x){return'<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';}
+  document.getElementById('cmp-tips').innerHTML=tip;
 }
 
-
-// HELPERS
-function getS(id){return(db[cur]&&db[cur].s||[]).find(function(s){return s.id===id;});}
-
+// ── STATS ──
 function updateStats(){
   var trusts=Object.keys(db).filter(function(k){return db[k]&&db[k].s&&db[k].s.length;});
   var total=trusts.reduce(function(s,k){return s+(db[k].s||[]).length;},0);
@@ -614,15 +615,28 @@ function updateStats(){
   document.getElementById('n-s').textContent=total;
 }
 
+// ── TOAST ──
 var tt;
 function toast(msg,color){
-  document.getElementById('tmsg').textContent=msg;
-  document.getElementById('tdot').style.background=color||'#22c55e';
-  var t=document.getElementById('toast');t.classList.add('show');
-  clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},2500);
+  document.getElementById('tmsg').textContent=msg;document.getElementById('tdot').style.background=color||'#22c55e';
+  var t=document.getElementById('toast');t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},2500);
 }
 
-load();updateStats();sbLoad();
+// ── MODAL BUTTONS ──
+document.getElementById('m1cl').addEventListener('click',closeForm);
+document.getElementById('m1cn').addEventListener('click',closeForm);
+document.getElementById('m1sv').addEventListener('click',saveStmt);
+document.getElementById('m2cl').addEventListener('click',closeCompare);
+document.getElementById('m2cl2').addEventListener('click',closeCompare);
+document.getElementById('m2run').addEventListener('click',runCompare);
+document.getElementById('ov1').addEventListener('click',function(e){if(e.target===this)closeForm();});
+document.getElementById('ov2').addEventListener('click',function(e){if(e.target===this)closeCompare();});
+document.getElementById('f-text').addEventListener('input',function(){document.getElementById('f-cc').textContent=this.value.length+' characters';});
+
+// ── BOOT ──
+lload();updateStats();sbLoad();
+
+
 </script>
 </body>
 </html>
