@@ -1,4774 +1,592 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Prisahub — NHS Application Library</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-:root{
-  --navy:#0a0f1e;
-  --blue:#2563eb;
-  --blue-light:#3b82f6;
-  --purple:#7c3aed;
-  --green:#059669;
-  --red:#dc2626;
-  --bg:#f0f2f8;
-  --card:#fff;
-  --border:#e2e8f0;
-  --text:#0f172a;
-  --muted:#64748b;
-}
-
-body{
-  font-family:'Inter',system-ui,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  font-size:14px;
-}
-
-/* =========================
-   NAVIGATION
-========================= */
-
-.nav{
-  background:var(--navy);
-  min-height:60px;
-  display:flex;
-  align-items:center;
-  padding:0 28px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-.nav-brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.nav-icon{
-  width:34px;
-  height:34px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  border-radius:9px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:14px;
-  font-weight:900;
-  color:#fff;
-}
-
-.nav-name{
-  font-size:16px;
-  font-weight:900;
-  color:#fff;
-}
-
-.nav-name span{
-  color:#60a5fa;
-}
-
-.nav-divider{
-  width:1px;
-  height:20px;
-  background:rgba(255,255,255,.12);
-  margin:0 16px;
-}
-
-.nav-subtitle{
-  font-size:12px;
-  font-weight:600;
-  color:rgba(255,255,255,.4);
-  letter-spacing:.05em;
-}
-
-.nav-right{
-  margin-left:auto;
-}
-
-.nav-stat{
-  font-size:12px;
-  font-weight:700;
-  color:rgba(255,255,255,.5);
-}
-
-.nav-stat span{
-  color:#60a5fa;
-}
-
-/* =========================
-   HERO
-========================= */
-
-.hero{
-  background:linear-gradient(
-    135deg,
-    var(--navy) 0%,
-    #0d1b3e 60%,
-    #1a0533 100%
-  );
-  padding:48px 28px 40px;
-  position:relative;
-  overflow:hidden;
-}
-
-.hero::before{
-  content:'';
-  position:absolute;
-  top:-60%;
-  right:-20%;
-  width:600px;
-  height:600px;
-  background:radial-gradient(
-    circle,
-    rgba(99,102,241,.12) 0%,
-    transparent 70%
-  );
-  pointer-events:none;
-}
-
-.hero::after{
-  content:'';
-  position:absolute;
-  bottom:-40%;
-  left:-10%;
-  width:400px;
-  height:400px;
-  background:radial-gradient(
-    circle,
-    rgba(37,99,235,.1) 0%,
-    transparent 70%
-  );
-  pointer-events:none;
-}
-
-.hero-inner{
-  max-width:960px;
-  margin:0 auto;
-  position:relative;
-  z-index:1;
-}
-
-.hero h1{
-  font-size:clamp(24px,4vw,36px);
-  font-weight:900;
-  color:#fff;
-  letter-spacing:-.5px;
-  line-height:1.2;
-  margin-bottom:10px;
-}
-
-.hero h1 span{
-  background:linear-gradient(135deg,#60a5fa,#a78bfa);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.hero-sub{
-  font-size:14px;
-  color:rgba(255,255,255,.5);
-  margin-bottom:28px;
-  line-height:1.6;
-  max-width:520px;
-}
-
-.hero-stats{
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-}
-
-.hstat{
-  text-align:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  padding:14px 20px;
-  min-width:100px;
-}
-
-.hstat-val{
-  font-size:24px;
-  font-weight:900;
-  color:#fff;
-}
-
-.hstat-lbl{
-  font-size:10px;
-  font-weight:700;
-  color:rgba(255,255,255,.35);
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  margin-top:3px;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.search-area{
-  background:var(--navy);
-  padding:0 28px 24px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-.search-inner{
-  max-width:960px;
-  margin:0 auto;
-}
-
-.search-row{
-  display:flex;
-  gap:10px;
-  align-items:flex-start;
-}
-
-.search-box{
-  flex:1;
-  position:relative;
-}
-
-.search-input{
-  width:100%;
-  padding:14px 18px 14px 48px;
-  border:2px solid rgba(255,255,255,.1);
-  border-radius:12px;
-  font-family:inherit;
-  font-size:14px;
-  color:#fff;
-  background:rgba(255,255,255,.07);
-  outline:none;
-}
-
-.search-input::placeholder{
-  color:rgba(255,255,255,.3);
-}
-
-.search-input:focus{
-  border-color:var(--blue-light);
-  background:rgba(255,255,255,.1);
-  box-shadow:0 0 0 4px rgba(59,130,246,.15);
-}
-
-.search-icon-wrap{
-  position:absolute;
-  left:15px;
-  top:50%;
-  transform:translateY(-50%);
-  color:rgba(255,255,255,.4);
-  pointer-events:none;
-}
-
-.dropdown-box{
-  position:relative;
-}
-
-.dropdown-btn{
-  padding:14px 18px;
-  background:rgba(255,255,255,.07);
-  border:2px solid rgba(255,255,255,.1);
-  border-radius:12px;
-  color:rgba(255,255,255,.7);
-  font-family:inherit;
-  font-size:13px;
-  font-weight:600;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  white-space:nowrap;
-}
-
-.dropdown-btn:hover,
-.dropdown-btn.open{
-  border-color:var(--blue-light);
-  background:rgba(59,130,246,.15);
-  color:#fff;
-}
-
-.search-results{
-  background:#1e2d4a;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:12px;
-  margin-top:6px;
-  overflow:hidden;
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
-  max-height:280px;
-  overflow-y:auto;
-  display:none;
-  position:absolute;
-  width:100%;
-  z-index:500;
-}
-
-.search-results.show{
-  display:block;
-}
-
-.sri{
-  padding:12px 16px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-.sri:hover{
-  background:rgba(59,130,246,.15);
-}
-
-.sri-name{
-  font-size:13px;
-  font-weight:600;
-  color:#e2e8f0;
-}
-
-.sri-badge{
-  font-size:10.5px;
-  font-weight:700;
-  padding:2px 9px;
-  border-radius:8px;
-  flex-shrink:0;
-}
-
-.b-saved{
-  background:rgba(37,99,235,.3);
-  color:#93c5fd;
-}
-
-.b-new{
-  background:rgba(255,255,255,.08);
-  color:rgba(255,255,255,.4);
-}
-
-/* =========================
-   DROPDOWN
-========================= */
-
-.dropdown-panel{
-  position:absolute;
-  top:calc(100% + 8px);
-  right:0;
-  background:#1e2d4a;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:14px;
-  box-shadow:0 20px 50px rgba(0,0,0,.5);
-  width:340px;
-  max-height:420px;
-  overflow-y:auto;
-  display:none;
-  z-index:2000;
-}
-
-.dropdown-panel.show{
-  display:block;
-}
-
-.dp-label{
-  font-size:10px;
-  font-weight:700;
-  color:rgba(255,255,255,.25);
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  padding:10px 16px 5px;
-}
-
-.dp-item{
-  padding:10px 16px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.dp-item:hover{
-  background:rgba(59,130,246,.15);
-}
-
-.dp-name{
-  font-size:13px;
-  font-weight:500;
-  color:#e2e8f0;
-}
-
-.dp-count{
-  font-size:11px;
-  font-weight:700;
-  color:#60a5fa;
-}
-
-.dp-divider{
-  height:1px;
-  background:rgba(255,255,255,.06);
-  margin:4px 0;
-}
-
-/* =========================
-   MAIN
-========================= */
-
-.content-area{
-  max-width:960px;
-  margin:0 auto;
-  padding:24px 28px;
-}
-
-.welcome{
-  text-align:center;
-  padding:60px 20px;
-  background:var(--card);
-  border-radius:20px;
-  border:1px solid var(--border);
-}
-
-.welcome-gfx{
-  width:80px;
-  height:80px;
-  background:linear-gradient(135deg,#eff6ff,#f5f3ff);
-  border-radius:20px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:36px;
-  margin:0 auto 20px;
-}
-
-.welcome h2{
-  font-size:20px;
-  font-weight:800;
-  margin-bottom:8px;
-}
-
-.welcome p{
-  color:var(--muted);
-  font-size:13.5px;
-  line-height:1.7;
-  max-width:420px;
-  margin:auto;
-}
-
-/* =========================
-   TRUST CARD
-========================= */
-
-.trust-card{
-  background:var(--card);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 4px 20px rgba(0,0,0,.06);
-  border:1px solid var(--border);
-}
-
-.trust-banner{
-  background:linear-gradient(135deg,var(--navy),#1e3a5f);
-  padding:22px 26px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.trust-info h2{
-  font-size:17px;
-  font-weight:800;
-  color:#fff;
-  margin-bottom:4px;
-}
-
-.trust-info p{
-  font-size:12px;
-  color:rgba(255,255,255,.45);
-}
-
-.trust-meta{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-  flex-wrap:wrap;
-}
-
-.tmeta-pill{
-  font-size:11px;
-  font-weight:600;
-  padding:3px 10px;
-  border-radius:8px;
-  background:rgba(255,255,255,.1);
-  color:rgba(255,255,255,.7);
-}
-
-.trust-actions{
-  display:flex;
-  gap:8px;
-}
-
-.btn{
-  padding:9px 18px;
-  border:none;
-  border-radius:10px;
-  font-family:inherit;
-  font-size:12.5px;
-  font-weight:700;
-  cursor:pointer;
-  transition:all .18s;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-}
-
-.btn:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-.btn-add{
-  background:rgba(255,255,255,.12);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.2);
-}
-
-.btn-add:hover{
-  background:rgba(255,255,255,.22);
-}
-
-.btn-blue{
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  box-shadow:0 4px 12px rgba(37,99,235,.3);
-}
-
-.btn-blue:hover:not(:disabled){
-  transform:translateY(-1px);
-}
-
-.btn-ghost{
-  background:transparent;
-  color:var(--muted);
-  border:1.5px solid var(--border);
-}
-
-.btn-ghost:hover{
-  border-color:#94a3b8;
-  color:var(--text);
-  background:#f8fafc;
-}
-
-.btn-del{
-  background:#fff1f2;
-  color:var(--red);
-}
-
-.btn-del:hover{
-  background:#fee2e2;
-}
-
-.btn-sm{
-  padding:6px 12px;
-  font-size:11.5px;
-  border-radius:8px;
-}
-
-/* =========================
-   STATEMENTS
-========================= */
-
-.stmts-area{
-  padding:20px 24px;
-}
-
-.search-stmts{
-  width:100%;
-  padding:10px 14px;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  font-family:inherit;
-  font-size:13px;
-  color:var(--text);
-  background:#fff;
-  outline:none;
-  margin-bottom:14px;
-}
-
-.search-stmts:focus{
-  border-color:var(--blue);
-}
-
-.filter-row{
-  display:flex;
-  gap:8px;
-  margin-bottom:16px;
-  flex-wrap:wrap;
-}
-
-.filter-chip{
-  padding:6px 14px;
-  border-radius:20px;
-  border:1.5px solid var(--border);
-  background:#fff;
-  font-family:inherit;
-  font-size:12px;
-  font-weight:600;
-  color:var(--muted);
-  cursor:pointer;
-}
-
-.filter-chip:hover,
-.filter-chip.active{
-  border-color:var(--blue);
-  background:#eff6ff;
-  color:var(--blue);
-}
-
-.no-stmts{
-  text-align:center;
-  padding:40px 20px;
-  color:var(--muted);
-}
-
-.no-stmts-icon{
-  font-size:40px;
-  margin-bottom:12px;
-  opacity:.5;
-}
-
-/* =========================
-   STATEMENT CARD
-========================= */
-
-.sc{
-  border:1.5px solid var(--border);
-  border-radius:14px;
-  margin-bottom:12px;
-  overflow:hidden;
-  transition:all .18s;
-}
-
-.sc:hover{
-  border-color:#bfdbfe;
-  box-shadow:0 4px 16px rgba(37,99,235,.08);
-}
-
-.sc-head{
-  padding:13px 16px;
-  background:#fafbff;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.sc-pills{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-
-.pill{
-  font-size:11.5px;
-  font-weight:700;
-  padding:3px 11px;
-  border-radius:8px;
-  display:inline-flex;
-  align-items:center;
-}
-
-.p-role{
-  background:#eff6ff;
-  color:#1d4ed8;
-}
-
-.p-band{
-  background:#f0fdf4;
-  color:#166534;
-}
-
-.p-date{
-  background:#f8fafc;
-  color:#64748b;
-  font-weight:500;
-}
-
-.sc-acts{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  flex-shrink:0;
-}
-
-.action-btn{
-  min-width:34px;
-}
-
-.sc-body{
-  padding:14px 16px;
-}
-
-.sc-label{
-  font-size:12px;
-  font-weight:700;
-  color:var(--purple);
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  margin-bottom:6px;
-}
-
-.sc-text{
-  font-size:13.5px;
-  color:#1e293b;
-  line-height:1.75;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.sc-text.clamp{
-  display:-webkit-box;
-  -webkit-line-clamp:3;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-
-.expand-btn{
-  font-size:12px;
-  color:var(--blue);
-  font-weight:600;
-  cursor:pointer;
-  margin-top:8px;
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  background:none;
-  border:none;
-  font-family:inherit;
-}
-
-.outcome-pill{
-  font-size:10.5px;
-  font-weight:700;
-  padding:4px 9px;
-  border-radius:8px;
-  cursor:pointer;
-  border:none;
-  font-family:inherit;
-}
-
-.o-pending{
-  background:#f1f5f9;
-  color:#64748b;
-}
-
-.o-interview{
-  background:#dbeafe;
-  color:#1d4ed8;
-}
-
-.o-no{
-  background:#fee2e2;
-  color:#dc2626;
-}
-
-.o-offer{
-  background:#d1fae5;
-  color:#065f46;
-}
-
-/* =========================
-   MODAL
-========================= */
-
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(10,15,30,.6);
-  z-index:3000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:16px;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .2s;
-  backdrop-filter:blur(4px);
-}
-
-.overlay.open{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.modal{
-  background:#fff;
-  border-radius:20px;
-  width:100%;
-  max-width:600px;
-  max-height:92vh;
-  overflow-y:auto;
-  transform:translateY(20px) scale(.97);
-  transition:all .25s;
-  box-shadow:0 30px 80px rgba(0,0,0,.25);
-}
-
-.overlay.open .modal{
-  transform:translateY(0) scale(1);
-}
-
-.modal-head{
-  padding:22px 26px 18px;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  background:#fff;
-  z-index:2;
-}
-
-.modal-head h2{
-  font-size:17px;
-  font-weight:800;
-}
-
-.modal-head p{
-  font-size:12.5px;
-  color:var(--muted);
-  margin-top:2px;
-}
-
-.btn-close{
-  width:32px;
-  height:32px;
-  border:none;
-  background:#f1f5f9;
-  border-radius:8px;
-  cursor:pointer;
-  color:var(--muted);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.btn-close:hover{
-  background:#e2e8f0;
-}
-
-.modal-body{
-  padding:22px 26px;
-}
-
-.field{
-  margin-bottom:18px;
-}
-
-.field label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  color:#374151;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  margin-bottom:7px;
-}
-
-.field input,
-.field select,
-.field textarea{
-  width:100%;
-  padding:12px 14px;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  font-family:inherit;
-  font-size:14px;
-  color:var(--text);
-  background:#fafbff;
-  outline:none;
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus{
-  border-color:var(--blue);
-  box-shadow:0 0 0 3px rgba(37,99,235,.1);
-  background:#fff;
-}
-
-.field textarea{
-  min-height:200px;
-  resize:vertical;
-  line-height:1.75;
-}
-
-.field-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.char-info{
-  display:flex;
-  justify-content:space-between;
-  font-size:11.5px;
-  color:var(--muted);
-  margin-top:5px;
-}
-
-.modal-foot{
-  padding:16px 26px;
-  border-top:1px solid var(--border);
-  display:flex;
-  gap:8px;
-  justify-content:flex-end;
-  background:#fff;
-  position:sticky;
-  bottom:0;
-  z-index:2;
-}
-
-/* =========================
-   AI
-========================= */
-
-.ai-loading{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:16px;
-  background:#f8fafc;
-  border-radius:10px;
-  font-size:13px;
-  color:#64748b;
-}
-
-.ai-spinner{
-  width:20px;
-  height:20px;
-  border:2px solid #e2e8f0;
-  border-top-color:#6366f1;
-  border-radius:50%;
-  animation:spin .6s linear infinite;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
-
-/* =========================
-   TOAST
-========================= */
-
-.toast{
-  position:fixed;
-  bottom:24px;
-  left:50%;
-  transform:translateX(-50%) translateY(100px);
-  background:var(--navy);
-  color:#fff;
-  padding:12px 22px;
-  border-radius:12px;
-  font-size:13px;
-  font-weight:600;
-  box-shadow:0 12px 36px rgba(0,0,0,.25);
-  transition:transform .3s;
-  z-index:5000;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.toast.show{
-  transform:translateX(-50%) translateY(0);
-}
-
-.tdot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:640px){
-
-  .nav{
-    padding:0 16px;
-  }
-
-  .nav-divider,
-  .nav-subtitle{
-    display:none;
-  }
-
-  .nav-stat{
-    font-size:10px;
-  }
-
-  .hero{
-    padding:32px 16px 28px;
-  }
-
-  .search-area{
-    padding:0 16px 18px;
-  }
-
-  .search-row{
-    flex-direction:column;
-  }
-
-  .search-box,
-  .dropdown-box,
-  .dropdown-btn{
-    width:100%;
-  }
-
-  .dropdown-btn{
-    justify-content:center;
-  }
-
-  .dropdown-panel{
-    width:100%;
-  }
-
-  .content-area{
-    padding:16px;
-  }
-
-  .trust-banner{
-    padding:16px 18px;
-  }
-
-  .stmts-area{
-    padding:14px 16px;
-  }
-
-  .field-row{
-    grid-template-columns:1fr;
-  }
-
-  .modal-body,
-  .modal-head,
-  .modal-foot{
-    padding-left:18px;
-    padding-right:18px;
-  }
-
-  .sc-head{
-    align-items:flex-start;
-  }
-
-  .sc-acts{
-    width:100%;
-  }
-
-  .sc-acts .btn{
-    flex:1;
-  }
-}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0a0f1e;--blue:#2563eb;--bluel:#3b82f6;--purple:#7c3aed;--green:#059669;--red:#dc2626;--bg:#f0f2f8;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+.nav{background:var(--navy);height:60px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
+.nav-name{font-size:16px;font-weight:900;color:#fff;letter-spacing:-.4px}
+.nav-name span{color:#60a5fa}
+.nav-sep{width:1px;height:20px;background:rgba(255,255,255,.12);margin:0 14px}
+.nav-sub{font-size:12px;font-weight:600;color:rgba(255,255,255,.35);letter-spacing:.05em}
+.nav-right{margin-left:auto;font-size:12px;font-weight:700;color:rgba(255,255,255,.4)}
+.nav-right span{color:#60a5fa}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#0d1b3e 60%,#1a0533 100%);padding:40px 24px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.12),transparent 70%);pointer-events:none}
+.hi{max-width:960px;margin:0 auto;position:relative}
+.hero h1{font-size:clamp(22px,4vw,34px);font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:8px}
+.hero h1 span{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:13.5px;color:rgba(255,255,255,.45);margin-bottom:24px;line-height:1.6;max-width:480px}
+.hstats{display:flex;gap:12px;flex-wrap:wrap}
+.hstat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 18px;min-width:90px;text-align:center}
+.hstat-val{font-size:22px;font-weight:900;color:#fff}
+.hstat-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.search-area{background:var(--navy);padding:0 24px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.si{max-width:960px;margin:0 auto}
+.srow{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.sbox{flex:1;min-width:240px;position:relative}
+.sinput{width:100%;padding:13px 16px 13px 44px;border:2px solid rgba(255,255,255,.1);border-radius:12px;font-family:inherit;font-size:14px;color:#fff;background:rgba(255,255,255,.07);outline:none;transition:all .2s}
+.sinput::placeholder{color:rgba(255,255,255,.3)}
+.sinput:focus{border-color:var(--bluel);background:rgba(255,255,255,.1)}
+.sico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);pointer-events:none;font-size:17px}
+.dbtn{padding:13px 16px;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.1);border-radius:12px;color:rgba(255,255,255,.65);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;white-space:nowrap;flex-shrink:0}
+.dbtn:hover,.dbtn.open{border-color:var(--bluel);background:rgba(59,130,246,.15);color:#fff}
+.sres{background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-top:6px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.4);max-height:280px;overflow-y:auto;display:none;position:absolute;left:0;right:0;z-index:50}
+.sres.show{display:block}
+.sri{padding:11px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);transition:background .1s}
+.sri:hover{background:rgba(59,130,246,.15)}
+.sri-name{font-size:13px;font-weight:600;color:#e2e8f0}
+.badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:8px}
+.b-saved{background:rgba(37,99,235,.3);color:#93c5fd}
+.b-new{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35)}
+.dpanel{position:absolute;top:calc(100% + 8px);right:0;background:#1e2d4a;border:1px solid rgba(255,255,255,.1);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);width:320px;max-height:400px;overflow-y:auto;display:none;z-index:200}
+.dpanel.show{display:block}
+.dp-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.12em;padding:8px 14px 4px}
+.dp-item{padding:9px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+.dp-item:hover{background:rgba(59,130,246,.15)}
+.dp-name{font-size:13px;font-weight:500;color:#e2e8f0}
+.dp-cnt{font-size:11px;font-weight:700;color:#60a5fa}
+.dp-div{height:1px;background:rgba(255,255,255,.06);margin:4px 0}
+.dbox{position:relative;flex-shrink:0}
+.content{max-width:960px;margin:0 auto;padding:20px 24px}
+.welcome{text-align:center;padding:56px 20px;background:var(--card);border-radius:18px;border:1px solid var(--border)}
+.w-icon{width:72px;height:72px;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px}
+.welcome h2{font-size:20px;font-weight:800;margin-bottom:8px}
+.welcome p{color:var(--muted);font-size:13.5px;line-height:1.7;max-width:380px;margin:0 auto}
+.trust-card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06);border:1px solid var(--border)}
+.tbanner{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tinfo h2{font-size:16px;font-weight:800;color:#fff;margin-bottom:3px}
+.tinfo p{font-size:12px;color:rgba(255,255,255,.4)}
+.troles{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.trole{font-size:11px;font-weight:600;padding:2px 9px;border-radius:7px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.tacts{display:flex;gap:8px;flex-shrink:0}
+.btn{padding:8px 16px;border:none;border-radius:9px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn-add{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.btn-add:hover{background:rgba(255,255,255,.22)}
+.btn-blue{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+.btn-blue:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.35)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:#94a3b8;color:var(--text)}
+.btn-del{background:#fff1f2;color:var(--red);border:none}
+.btn-del:hover{background:#fee2e2}
+.btn-purple{background:#faf5ff;color:#7c3aed;border:1.5px solid #ede9fe}
+.btn-purple:hover{background:#f3e8ff}
+.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:8px}
+.sarea{padding:16px 20px}
+.ssearch{width:100%;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;color:var(--text);background:#fafbff;outline:none;margin-bottom:12px;transition:border-color .15s}
+.ssearch:focus{border-color:var(--blue)}
+.frow{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.fc{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.fc:hover{border-color:var(--bluel);color:var(--blue)}
+.fc.on{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
+.no-s{text-align:center;padding:36px;color:var(--muted);font-size:13px}
+.no-s-i{font-size:36px;margin-bottom:10px;opacity:.4}
+.sc{border:1.5px solid var(--border);border-radius:13px;margin-bottom:11px;overflow:hidden;transition:all .18s}
+.sc:hover{border-color:#bfdbfe;box-shadow:0 4px 14px rgba(37,99,235,.07)}
+.sc.flash{background:#d1fae5;transition:background .1s}
+.sch{padding:11px 14px;background:#fafbff;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.scpills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px}
+.p-role{background:#eff6ff;color:#1d4ed8}
+.p-band{background:#f0fdf4;color:#166534}
+.p-date{background:#f8fafc;color:#64748b;font-weight:500}
+.opill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.o-p{background:#f1f5f9;color:#64748b}
+.o-i{background:#dbeafe;color:#1d4ed8}
+.o-n{background:#fee2e2;color:#dc2626}
+.o-o{background:#d1fae5;color:#065f46}
+.scacts{display:flex;gap:5px;flex-shrink:0}
+.scb{padding:13px 15px}
+.sclbl{font-size:11.5px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.sctxt{font-size:13.5px;color:#1e293b;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.sctxt.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.xbtn{font-size:12px;color:var(--blue);font-weight:600;cursor:pointer;margin-top:7px;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:inherit;padding:0}
+.overlay{position:fixed;inset:0;background:rgba(10,15,30,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:all .22s;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.overlay.open .modal{transform:translateY(0) scale(1)}
+.mh{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
+.mh h2{font-size:16px;font-weight:800}
+.mh p{font-size:12px;color:var(--muted);margin-top:2px}
+.mclose{width:30px;height:30px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:14px}
+.mclose:hover{background:#e2e8f0}
+.mb{padding:20px 24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11.5px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:13.5px;color:var(--text);background:#fafbff;outline:none;transition:all .15s;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08);background:#fff}
+.field textarea{min-height:190px;resize:vertical;line-height:1.75}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cc{font-size:11.5px;color:var(--muted);text-align:right;margin-top:4px}
+.mf{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:#fff;position:sticky;bottom:0}
+.ai-spin{width:20px;height:20px;border:2px solid #e2e8f0;border-top-color:#7c3aed;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-ld{display:none;align-items:center;gap:10px;padding:14px;background:#faf5ff;border-radius:10px;font-size:13px;color:#7c3aed;border:1px solid #ede9fe}
+.ai-out{background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:14px;font-size:13.5px;line-height:1.75;color:#1e293b;white-space:pre-wrap;max-height:280px;overflow-y:auto}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--navy);color:#fff;padding:11px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:9px;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.tdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+@media(max-width:600px){.tbanner{padding:14px 16px}.sarea{padding:12px 14px}.mb,.mh,.mf{padding-left:16px;padding-right:16px}.frow2{grid-template-columns:1fr}.dpanel{width:260px}.srow{flex-direction:column}}
 </style>
 </head>
-
 <body>
-
-<!-- =========================
-     NAV
-========================= -->
 
 <nav class="nav">
   <div class="nav-brand">
-
     <div class="nav-icon">P</div>
-
-    <div class="nav-name">
-      Prisa<span>hub</span>
-    </div>
-
-    <div class="nav-divider"></div>
-
-    <div class="nav-subtitle">
-      APPLICATION LIBRARY
-    </div>
-
+    <div class="nav-name">Prisa<span>hub</span></div>
+    <div class="nav-sep"></div>
+    <div class="nav-sub">APPLICATION LIBRARY</div>
   </div>
-
-  <div class="nav-right">
-    <div class="nav-stat">
-      <span id="n-trusts">0</span> trusts
-      &nbsp;·&nbsp;
-      <span id="n-stmts">0</span> statements
-      &nbsp;·&nbsp;
-      <span style="color:#34d399">● Synced</span>
-    </div>
-  </div>
+  <div class="nav-right"><span id="n-t">0</span> trusts &nbsp;·&nbsp; <span id="n-s">0</span> statements</div>
 </nav>
 
-
-<!-- =========================
-     HERO
-========================= -->
-
-<section class="hero">
-
-  <div class="hero-inner">
-
-    <h1>
-      Your NHS
-      <span>Winning Statements</span>
-      <br>
-      All in One Place
-    </h1>
-
-    <p class="hero-sub">
-      Search any NHS Trust, view your saved supporting statements by role and band,
-      and apply faster with confidence.
-    </p>
-
-    <div class="hero-stats">
-
-      <div class="hstat">
-        <div class="hstat-val" id="h-trusts">0</div>
-        <div class="hstat-lbl">Trusts Saved</div>
-      </div>
-
-      <div class="hstat">
-        <div class="hstat-val" id="h-stmts">0</div>
-        <div class="hstat-lbl">Statements</div>
-      </div>
-
-      <div class="hstat">
-        <div class="hstat-val" id="h-roles">0</div>
-        <div class="hstat-lbl">Unique Roles</div>
-      </div>
-
-      <div class="hstat">
-        <div class="hstat-val">215</div>
-        <div class="hstat-lbl">NHS Trusts</div>
-      </div>
-
+<div class="hero">
+  <div class="hi">
+    <h1>Your NHS <span>Winning Statements</span><br/>All in One Place</h1>
+    <p class="hero-sub">Search any NHS Trust, view your saved supporting statements by role and band, and apply faster with confidence.</p>
+    <div class="hstats">
+      <div class="hstat"><div class="hstat-val" id="h-t">0</div><div class="hstat-lbl">Trusts Saved</div></div>
+      <div class="hstat"><div class="hstat-val" id="h-s">0</div><div class="hstat-lbl">Statements</div></div>
+      <div class="hstat"><div class="hstat-val" id="h-r">0</div><div class="hstat-lbl">Unique Roles</div></div>
+      <div class="hstat"><div class="hstat-val">215</div><div class="hstat-lbl">NHS Trusts</div></div>
     </div>
-
   </div>
+</div>
 
-</section>
-
-
-<!-- =========================
-     SEARCH
-========================= -->
-
-<section class="search-area">
-
-  <div class="search-inner">
-
-    <div class="search-row">
-
-      <div class="search-box">
-
-        <div class="search-icon-wrap">
-          <svg width="18" height="18"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2.5">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </div>
-
-        <input
-          class="search-input"
-          id="search-input"
-          placeholder="Search NHS Trust name..."
-          autocomplete="off"
-        >
-
-        <div
-          class="search-results"
-          id="search-results">
-        </div>
-
+<div class="search-area">
+  <div class="si">
+    <div class="srow">
+      <div class="sbox">
+        <span class="sico">&#9906;</span>
+        <input class="sinput" id="sinput" placeholder="Search NHS Trust name..." autocomplete="off" oninput="onSearch(this.value)" onfocus="onSearch(this.value)"/>
+        <div class="sres" id="sres"></div>
       </div>
-
-
-      <div class="dropdown-box">
-
-        <button
-          class="dropdown-btn"
-          id="dropdown-btn"
-          type="button">
-
-          <svg width="16" height="16"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2">
-            <line x1="8" y1="6" x2="21" y2="6"></line>
-            <line x1="8" y1="12" x2="21" y2="12"></line>
-            <line x1="8" y1="18" x2="21" y2="18"></line>
-            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-          </svg>
-
-          Browse All Trusts
-
-          <svg width="14" height="14"
-               viewBox="0 0 24 24"
-               fill="none"
-               stroke="currentColor"
-               stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-
+      <div class="dbox">
+        <button class="dbtn" id="dbtn" onclick="toggleDropdown()">
+          &#9776; Browse All Trusts &#9660;
         </button>
-
-        <div
-          class="dropdown-panel"
-          id="dropdown-panel">
-        </div>
-
+        <div class="dpanel" id="dpanel"></div>
       </div>
-
     </div>
-
   </div>
+</div>
 
-</section>
-
-
-<!-- =========================
-     CONTENT
-========================= -->
-
-<main class="content-area">
-
+<div class="content">
   <div id="content">
-
     <div class="welcome">
-
-      <div class="welcome-gfx">
-        🏥
-      </div>
-
-      <h2>
-        Find Your NHS Trust
-      </h2>
-
-      <p>
-        Search or browse 215 NHS Trusts above.
-        Select a trust to view your saved statements or add a new one.
-        Save up to 10 statements per trust.
-      </p>
-
+      <div class="w-icon">&#127973;</div>
+      <h2>Find Your NHS Trust</h2>
+      <p>Search or browse 215 NHS Trusts above. Select a trust to view saved statements or add new ones. Save up to 10 statements per trust.</p>
     </div>
-
   </div>
+</div>
 
-</main>
-
-
-<!-- =========================
-     ADD / EDIT MODAL
-========================= -->
-
-<div
-  class="overlay"
-  id="overlay">
-
+<!-- ADD/EDIT MODAL -->
+<div class="overlay" id="ov1" onclick="if(event.target===this)closeForm()">
   <div class="modal">
-
-    <div class="modal-head">
-
-      <div>
-        <h2 id="modal-title">
-          Add Supporting Statement
-        </h2>
-
-        <p id="modal-sub">
-          Save a winning statement for this trust
-        </p>
-      </div>
-
-      <button
-        class="btn-close"
-        type="button"
-        data-action="close-form">
-        ✕
-      </button>
-
+    <div class="mh">
+      <div><h2 id="mt">Add Supporting Statement</h2><p id="ms">Save a winning statement</p></div>
+      <button class="mclose" onclick="closeForm()">&#10005;</button>
     </div>
-
-
-    <div class="modal-body">
-
-      <div class="field-row">
-
-        <div class="field">
-
-          <label>
-            Role Title
-          </label>
-
-          <input
-            type="text"
-            id="f-role"
-            placeholder="e.g. Healthcare Support Worker"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Band
-          </label>
-
+    <div class="mb">
+      <div class="frow2">
+        <div class="field"><label>Role Title</label><input type="text" id="f-role" placeholder="e.g. Healthcare Support Worker"/></div>
+        <div class="field"><label>Band</label>
           <select id="f-band">
-
-            <option value="">
-              Select...
-            </option>
-
-            <option>Band 2</option>
-            <option>Band 3</option>
-            <option>Band 4</option>
-            <option>Band 5</option>
-            <option>Band 6</option>
-            <option>Band 7</option>
-            <option>Band 8a</option>
-            <option>Band 8b</option>
-            <option>Other</option>
-
-          </select>
-
-        </div>
-
+            <option value="">Select...</option>
+            <option>Band 2</option><option>Band 3</option><option>Band 4</option>
+            <option>Band 5</option><option>Band 6</option><option>Band 7</option>
+            <option>Band 8a</option><option>Band 8b</option><option>Other</option>
+          </select></div>
       </div>
-
-
-      <div class="field">
-
-        <label>
-          Statement Label
-          <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">
-            (optional)
-          </span>
-        </label>
-
-        <input
-          type="text"
-          id="f-label"
-          placeholder="e.g. NHS Values, Why I applied, Experience & Skills"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Supporting Statement
-        </label>
-
-        <textarea
-          id="f-text"
-          placeholder="Paste your supporting statement here..."
-        ></textarea>
-
-        <div class="char-info">
-
-          <span id="cc">
-            0 characters
-          </span>
-
-          <span>
-            No limit
-          </span>
-
-        </div>
-
-      </div>
-
+      <div class="field"><label>Label <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional)</span></label>
+        <input type="text" id="f-label" placeholder="e.g. NHS Values, Why I applied, Experience"/></div>
+      <div class="field"><label>Supporting Statement</label>
+        <textarea id="f-text" placeholder="Paste your supporting statement here..." oninput="document.getElementById('fcc').textContent=this.value.length+' characters'"></textarea>
+        <div class="cc" id="fcc">0 characters</div></div>
     </div>
-
-
-    <div class="modal-foot">
-
-      <button
-        class="btn btn-ghost"
-        type="button"
-        data-action="close-form">
-        Cancel
-      </button>
-
-      <button
-        class="btn btn-blue"
-        type="button"
-        data-action="save-statement">
-
-        ✓
-        Save Statement
-
-      </button>
-
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeForm()">Cancel</button>
+      <button class="btn btn-blue" onclick="saveStmt()">&#10003; Save Statement</button>
     </div>
-
   </div>
-
 </div>
 
-
-<!-- =========================
-     AI MODAL
-========================= -->
-
-<div
-  class="overlay"
-  id="ai-overlay">
-
-  <div
-    class="modal"
-    style="max-width:640px">
-
-    <div class="modal-head">
-
-      <div>
-
-        <h2>
-          ✨ AI Statement Rewriter
-        </h2>
-
-        <p id="ai-sub">
-          Adapting your statement for a new role or trust
-        </p>
-
-      </div>
-
-      <button
-        class="btn-close"
-        type="button"
-        data-action="close-ai">
-        ✕
-      </button>
-
+<!-- AI REWRITER MODAL -->
+<div class="overlay" id="ov2" onclick="if(event.target===this)closeAI()" style="z-index:400">
+  <div class="modal">
+    <div class="mh">
+      <div><h2>&#10024; AI Statement Rewriter</h2><p id="ai-sub">Adapting your statement for a new role</p></div>
+      <button class="mclose" onclick="closeAI()">&#10005;</button>
     </div>
-
-
-    <div class="modal-body">
-
-      <div
-        style="
-          display:grid;
-          grid-template-columns:1fr 1fr;
-          gap:14px;
-          margin-bottom:16px;
-        ">
-
-        <div class="field">
-
-          <label>
-            New Role Title
-          </label>
-
-          <input
-            type="text"
-            id="ai-role"
-            placeholder="e.g. Ward Administrator"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            New Band
-          </label>
-
+    <div class="mb">
+      <div class="frow2">
+        <div class="field"><label>New Role Title</label><input type="text" id="ai-role" placeholder="e.g. Ward Administrator"/></div>
+        <div class="field"><label>New Band</label>
           <select id="ai-band">
-
-            <option value="">
-              Same band
-            </option>
-
-            <option>Band 2</option>
-            <option>Band 3</option>
-            <option>Band 4</option>
-            <option>Band 5</option>
-            <option>Band 6</option>
-            <option>Band 7</option>
-
-          </select>
-
+            <option value="">Same band</option>
+            <option>Band 2</option><option>Band 3</option><option>Band 4</option>
+            <option>Band 5</option><option>Band 6</option><option>Band 7</option>
+          </select></div>
+      </div>
+      <div class="field"><label>Target Trust <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional)</span></label>
+        <input type="text" id="ai-trust" placeholder="Leave blank to use current trust"/></div>
+      <div class="field"><label>Person Spec / Key Requirements <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">(optional but recommended)</span></label>
+        <textarea id="ai-spec" placeholder="Paste person specification from the job advert..." style="min-height:90px"></textarea></div>
+      <div class="ai-ld" id="ai-ld"><div class="ai-spin"></div><span>AI is rewriting your statement...</span></div>
+      <div id="ai-res" style="display:none">
+        <div style="font-size:11.5px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Rewritten Statement</div>
+        <div class="ai-out" id="ai-out"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-blue btn-sm" onclick="saveRewritten()">&#10003; Save as New</button>
+          <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('ai-out').textContent)">&#128203; Copy</button>
         </div>
-
       </div>
-
-
-      <div class="field">
-
-        <label>
-          Target Trust
-          <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">
-            (optional)
-          </span>
-        </label>
-
-        <input
-          type="text"
-          id="ai-trust"
-          placeholder="e.g. Different NHS Trust name"
-        >
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Person Specification / Key Requirements
-          <span style="font-weight:400;text-transform:none;font-size:11px;color:#94a3b8">
-            (optional but recommended)
-          </span>
-        </label>
-
-        <textarea
-          id="ai-spec"
-          style="min-height:100px"
-          placeholder="Paste the person specification or key requirements from the job advert..."
-        ></textarea>
-
-      </div>
-
-
-      <div
-        id="ai-result"
-        style="display:none">
-
-        <div
-          style="
-            font-size:12px;
-            font-weight:700;
-            color:#374151;
-            text-transform:uppercase;
-            letter-spacing:.06em;
-            margin-bottom:8px;
-          ">
-          Rewritten Statement
-        </div>
-
-        <div
-          id="ai-output"
-          style="
-            background:#f8fafc;
-            border:1.5px solid var(--border);
-            border-radius:10px;
-            padding:14px;
-            font-size:13.5px;
-            line-height:1.75;
-            color:#1e293b;
-            white-space:pre-wrap;
-            max-height:300px;
-            overflow-y:auto;
-          ">
-        </div>
-
-
-        <div
-          style="
-            display:flex;
-            gap:8px;
-            margin-top:10px;
-          ">
-
-          <button
-            class="btn btn-blue btn-sm"
-            type="button"
-            data-action="save-rewritten">
-            ✓ Save as New Statement
-          </button>
-
-          <button
-            class="btn btn-ghost btn-sm"
-            type="button"
-            data-action="copy-rewritten">
-            📋 Copy
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="ai-loading"
-        style="display:none"
-        class="ai-loading">
-
-        <div class="ai-spinner"></div>
-
-        <span id="ai-loading-msg">
-          AI is rewriting your statement...
-        </span>
-
-      </div>
-
     </div>
-
-
-    <div class="modal-foot">
-
-      <button
-        class="btn btn-ghost"
-        type="button"
-        data-action="close-ai">
-        Cancel
-      </button>
-
-      <button
-        class="btn btn-blue"
-        type="button"
-        id="ai-run-btn"
-        data-action="run-ai">
-
-        ✨ Rewrite Statement
-
-      </button>
-
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeAI()">Cancel</button>
+      <button class="btn btn-purple" id="ai-run" onclick="runAI()">&#10024; Rewrite Statement</button>
     </div>
-
   </div>
-
 </div>
 
-
-<!-- =========================
-     TOAST
-========================= -->
-
-<div
-  class="toast"
-  id="toast">
-
-  <span
-    class="tdot"
-    id="tdot">
-  </span>
-
-  <span id="tmsg"></span>
-
-</div>
-
+<div class="toast" id="toast"><span class="tdot" id="tdot"></span><span id="tmsg"></span></div>
 
 <script>
+var SB='https://opntstuzymdqkcddfjfn.supabase.co';
+var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wbnRzdHV6eW1kcWtjZGRmamZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NjU1NTcsImV4cCI6MjEwMDI0MTU1N30.vTj7S4Mt0fjBAmIBgSo2yYI0l9atcgoQQ35-Cl9NjoE';
+var SH={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json'};
 
-/* =========================================================
-   DATABASE
-========================================================= */
+var db={},cur=null,editId=null,aiId=null,aiResult=null,xp={},fb='all';
 
-let db = {};
-let currentTrust = null;
-let editId = null;
-let filterBand = 'all';
-let expanded = {};
-let aiSourceId = null;
-let aiResult = null;
+var TR=["Airedale NHS Foundation Trust","Alder Hey Children's NHS Foundation Trust","Ashford and St Peter's Hospitals NHS Foundation Trust","Avon and Wiltshire Mental Health Partnership NHS Trust","Barking, Havering and Redbridge University Hospitals NHS Trust","Barnet Enfield and Haringey Mental Health NHS Trust","Barnsley Hospital NHS Foundation Trust","Bath NHS Trust","Bedfordshire Hospitals NHS Foundation Trust","Berkshire Healthcare NHS Foundation Trust","Bridgewater Community Healthcare NHS Foundation Trust","Birmingham and Solihull Mental Health NHS Foundation Trust","Birmingham Community Healthcare NHS Foundation Trust","Birmingham Women's and Children's NHS Foundation Trust","Black Country Healthcare NHS Foundation Trust","Blackpool Teaching Hospitals NHS Foundation Trust","Bradford District Care NHS Foundation Trust","Bradford Teaching Hospitals NHS Foundation Trust","Buckinghamshire Healthcare NHS Trust","Calderdale and Huddersfield NHS Foundation Trust","Cambridge University Hospitals NHS Foundation Trust","Cambridgeshire and Peterborough NHS Foundation Trust","Cambridgeshire Community Services NHS Trust","Central and North West London NHS Foundation Trust","Central London Community Healthcare NHS Trust","Chelsea and Westminster Hospital NHS Foundation Trust","Cheshire and Wirral Partnership NHS Foundation Trust","Chesterfield Royal Hospital NHS Foundation Trust","Cornwall Partnership NHS Foundation Trust","Countess of Chester Hospital NHS Foundation Trust","County Durham and Darlington NHS Foundation Trust","Coventry and Warwickshire Partnership NHS Trust","Croydon Health Services NHS Trust","Cumbria, Northumberland, Tyne and Wear NHS Foundation Trust","Dartford and Gravesham NHS Trust","Derbyshire Community Health Services NHS Foundation Trust","Derbyshire Healthcare NHS Foundation Trust","Devon Partnership NHS Trust","Doncaster and Bassetlaw Teaching Hospitals NHS Foundation Trust","Dorset County Hospital NHS Foundation Trust","Dorset HealthCare University NHS Foundation Trust","Dudley Integrated Health and Care NHS Trust","East Cheshire NHS Trust","East and North Hertfordshire Teaching NHS Trust","East Kent Hospitals University NHS Foundation Trust","East Lancashire Hospitals NHS Trust","East London NHS Foundation Trust","East Midlands Ambulance Service NHS Trust","East of England Ambulance Service NHS Trust","East Suffolk and North Essex NHS Foundation Trust","East Sussex NHS Trust","Epsom and St Helier University Hospitals NHS Trust","Essex Partnership University NHS Foundation Trust","Frimley Health NHS Foundation Trust","Gateshead Health NHS Foundation Trust","George Eliot Hospital NHS Trust","Gloucestershire Health and Care NHS Foundation Trust","Gloucestershire Hospitals NHS Foundation Trust","Great Ormond Street Hospital For Children NHS Foundation Trust","Great Western Hospitals NHS Foundation Trust","Greater Manchester Mental Health NHS Foundation Trust","Guy's and St Thomas' NHS Foundation Trust","Hampshire Hospitals NHS Foundation Trust","Hampshire and Isle of Wight Healthcare NHS Foundation Trust","Harrogate and District NHS Foundation Trust","Herefordshire and Worcestershire Health and Care NHS Trust","Hertfordshire Community NHS Trust","Hertfordshire Partnership University NHS Foundation Trust","Homerton Healthcare NHS Foundation Trust","Humber Teaching NHS Foundation Trust","Imperial College Healthcare NHS Trust","Isle of Wight NHS Trust","James Paget University Hospitals NHS Foundation Trust","Kent and Medway NHS and Social Care Partnership Trust","Kent Community Health NHS Foundation Trust","Kettering General Hospital NHS Foundation Trust","King's College Hospital NHS Foundation Trust","Kingston and Richmond NHS Foundation Trust","Lancashire and South Cumbria NHS Foundation Trust","Leeds Community Healthcare NHS Trust","Leeds Teaching Hospitals NHS Trust","Leicestershire Partnership NHS Trust","Lincolnshire Community Health Services NHS Trust","Lincolnshire Partnership NHS Foundation Trust","Liverpool Heart and Chest Hospital NHS Foundation Trust","Liverpool University Hospitals NHS Foundation Trust","Liverpool Women's NHS Foundation Trust","London Ambulance Service NHS Trust","London North West University Healthcare NHS Trust","Maidstone and Tunbridge Wells NHS Trust","Manchester University NHS Foundation Trust","Medway NHS Foundation Trust","Mersey and West Lancashire Teaching Hospitals NHS Trust","Mid and South Essex NHS Foundation Trust","Mid Cheshire Hospitals NHS Foundation Trust","Mid Yorkshire Hospitals NHS Trust","Midlands Partnership University NHS Foundation Trust","Milton Keynes University Hospital NHS Foundation Trust","Moorfields Eye Hospital NHS Foundation Trust","Norfolk and Norwich University Hospitals NHS Foundation Trust","Norfolk and Suffolk NHS Foundation Trust","North Bristol NHS Trust","North Cumbria Integrated Care NHS Foundation Trust","North East Ambulance Service NHS Foundation Trust","North East London NHS Foundation Trust","North Middlesex University Hospital NHS Trust","North Staffordshire Combined Healthcare NHS Trust","North Tees and Hartlepool NHS Foundation Trust","North West Ambulance Service NHS Trust","North West Boroughs Healthcare NHS Foundation Trust","Northampton General Hospital NHS Trust","Northamptonshire Healthcare NHS Foundation Trust","Northern Care Alliance NHS Foundation Trust","Northern Lincolnshire and Goole NHS Foundation Trust","Northumbria Healthcare NHS Foundation Trust","Nottingham University Hospitals NHS Trust","Nottinghamshire Healthcare NHS Foundation Trust","Oxleas NHS Foundation Trust","Oxford Health NHS Foundation Trust","Oxford University Hospitals NHS Foundation Trust","Pennine Care NHS Foundation Trust","Portsmouth Hospitals University NHS Trust","Queen Victoria Hospital NHS Foundation Trust","Rotherham Doncaster and South Humber NHS Foundation Trust","Royal Berkshire NHS Foundation Trust","Royal Cornwall Hospitals NHS Trust","Royal Devon University Healthcare NHS Foundation Trust","Royal Free London NHS Foundation Trust","Royal National Orthopaedic Hospital NHS Trust","Royal Papworth Hospital NHS Foundation Trust","Royal Surrey NHS Foundation Trust","Royal United Hospitals Bath NHS Foundation Trust","Royal Wolverhampton NHS Trust","Salisbury NHS Foundation Trust","Sandwell and West Birmingham Hospitals NHS Foundation Trust","Sheffield Children's NHS Foundation Trust","Sheffield Health and Social Care NHS Foundation Trust","Sheffield Teaching Hospitals NHS Foundation Trust","Sherwood Forest Hospitals NHS Foundation Trust","Shrewsbury and Telford Hospital NHS Trust","Solent NHS Trust","Somerset NHS Foundation Trust","South Central Ambulance Service NHS Foundation Trust","South East Coast Ambulance Service NHS Foundation Trust","South London and Maudsley NHS Foundation Trust","South Tees Hospitals NHS Foundation Trust","South Tyneside and Sunderland NHS Foundation Trust","South Warwickshire University NHS Foundation Trust","South West Yorkshire Partnership NHS Foundation Trust","South Western Ambulance Service NHS Foundation Trust","Southport and Ormskirk Hospital NHS Trust","Stockport NHS Foundation Trust","Surrey and Borders Partnership NHS Foundation Trust","Sussex Community NHS Foundation Trust","Sussex Partnership NHS Foundation Trust","Tameside and Glossop Integrated Care NHS Foundation Trust","Taunton and Somerset NHS Foundation Trust","Tees Esk and Wear Valleys NHS Foundation Trust","The Christie NHS Foundation Trust","The Clatterbridge Cancer Centre NHS Foundation Trust","The Dudley Group NHS Foundation Trust","The Hillingdon Hospitals NHS Foundation Trust","The Newcastle Upon Tyne Hospitals NHS Foundation Trust","The Princess Alexandra Hospital NHS Trust","The Queen Elizabeth Hospital King's Lynn NHSFT","The Robert Jones and Agnes Hunt Orthopaedic Hospital NHS Foundation Trust","The Rotherham NHS Foundation Trust","The Royal Orthopaedic Hospital NHS Foundation Trust","The Royal Marsden NHS Foundation Trust","The Walton Centre NHS Foundation Trust","University College London Hospitals NHS Foundation Trust","United Lincolnshire Hospitals NHS Trust","University Hospital Southampton NHS Foundation Trust","University Hospitals Birmingham NHS Foundation Trust","University Hospitals Bristol and Weston NHS Foundation Trust","University Hospitals Coventry and Warwickshire NHS Trust","University Hospitals of Derby and Burton NHS Foundation Trust","University Hospitals Dorset NHS Foundation Trust","University Hospitals of Leicester NHS Trust","University Hospitals of Morecambe Bay NHS Foundation Trust","University Hospitals of North Midlands NHS Trust","University Hospitals Plymouth NHS Trust","University Hospitals Sussex NHS Foundation Trust","Walsall Healthcare NHS Trust","West Hertfordshire Teaching Hospitals NHS Trust","West London NHS Trust","West Midlands Ambulance Service NHS Trust","West Suffolk NHS Foundation Trust","Whittington Health NHS Trust","Wirral Community NHS Foundation Trust","Wirral University Teaching Hospital NHS Foundation Trust","Worcestershire Acute Hospitals NHS Trust","Worcestershire Health and Care NHS Trust","Wye Valley NHS Trust","York and Scarborough Teaching Hospitals NHS Foundation Trust","Yorkshire Ambulance Service NHS Trust"];
 
+function load(){try{var s=localStorage.getItem('ph_lib2');if(s)db=JSON.parse(s);}catch(e){db={};}}
+function save(){try{localStorage.setItem('ph_lib2',JSON.stringify(db));}catch(e){}}
+function gid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SB_URL =
-  'https://opntstuzymdqkcddfjfn.supabase.co';
-
-const SB_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wbnRzdHV6eW1kcWdjZGRmamZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2NjU1NTcsImV4cCI6MjEwMDI0MTU1N30.vTj7S4Mt0fjBAmIBgSo2yYI0l9atcgoQQ35-Cl9NjoE';
-
-const SB_HEADERS = {
-  apikey: SB_KEY,
-  Authorization: 'Bearer ' + SB_KEY,
-  'Content-Type': 'application/json'
-};
-
-
-/* =========================================================
-   TRUST LIST
-========================================================= */
-
-const TRUSTS = [
-"Airedale NHS Foundation Trust",
-"Alder Hey Children's NHS Foundation Trust",
-"Ashford and St Peter's Hospitals NHS Foundation Trust",
-"Avon and Wiltshire Mental Health Partnership NHS Trust",
-"Barking, Havering and Redbridge University Hospitals NHS Trust",
-"Barnet Enfield and Haringey Mental Health NHS Trust",
-"Barnsley Hospital NHS Foundation Trust",
-"Bath NHS Trust",
-"Bedfordshire Hospitals NHS Foundation Trust",
-"Berkshire Healthcare NHS Foundation Trust",
-"Bridgewater Community Healthcare NHS Foundation Trust",
-"Birmingham and Solihull Mental Health NHS Foundation Trust",
-"Birmingham Community Healthcare NHS Foundation Trust",
-"Birmingham Women's and Children's NHS Foundation Trust",
-"Black Country Healthcare NHS Foundation Trust",
-"Blackpool Teaching Hospitals NHS Foundation Trust",
-"Bradford District Care NHS Foundation Trust",
-"Bradford Teaching Hospitals NHS Foundation Trust",
-"Buckinghamshire Healthcare NHS Trust",
-"Calderdale and Huddersfield NHS Foundation Trust",
-"Cambridge University Hospitals NHS Foundation Trust",
-"Cambridgeshire and Peterborough NHS Foundation Trust",
-"Cambridgeshire Community Services NHS Trust",
-"Central and North West London NHS Foundation Trust",
-"Central London Community Healthcare NHS Trust",
-"Chelsea and Westminster Hospital NHS Foundation Trust",
-"Cheshire and Wirral Partnership NHS Foundation Trust",
-"Chesterfield Royal Hospital NHS Foundation Trust",
-"Cornwall Partnership NHS Foundation Trust",
-"Countess of Chester Hospital NHS Foundation Trust",
-"County Durham and Darlington NHS Foundation Trust",
-"Coventry and Warwickshire Partnership NHS Trust",
-"Croydon Health Services NHS Trust",
-"Cumbria, Northumberland, Tyne and Wear NHS Foundation Trust",
-"Dartford and Gravesham NHS Trust",
-"Derbyshire Community Health Services NHS Foundation Trust",
-"Derbyshire Healthcare NHS Foundation Trust",
-"Devon Partnership NHS Trust",
-"Doncaster and Bassetlaw Teaching Hospitals NHS Foundation Trust",
-"Dorset County Hospital NHS Foundation Trust",
-"Dorset HealthCare University NHS Foundation Trust",
-"Dudley Integrated Health and Care NHS Trust",
-"East Cheshire NHS Trust",
-"East and North Hertfordshire Teaching NHS Trust",
-"East Kent Hospitals University NHS Foundation Trust",
-"East Lancashire Hospitals NHS Trust",
-"East London NHS Foundation Trust",
-"East Midlands Ambulance Service NHS Trust",
-"East of England Ambulance Service NHS Trust",
-"East Suffolk and North Essex NHS Foundation Trust",
-"East Sussex NHS Trust",
-"Epsom and St Helier University Hospitals NHS Trust",
-"Essex Partnership University NHS Foundation Trust",
-"Frimley Health NHS Foundation Trust",
-"Gateshead Health NHS Foundation Trust",
-"George Eliot Hospital NHS Trust",
-"Gloucestershire Health and Care NHS Foundation Trust",
-"Gloucestershire Hospitals NHS Foundation Trust",
-"Great Ormond Street Hospital For Children NHS Foundation Trust",
-"Great Western Hospitals NHS Foundation Trust",
-"Greater Manchester Mental Health NHS Foundation Trust",
-"Guy's and St Thomas' NHS Foundation Trust",
-"Hampshire Hospitals NHS Foundation Trust",
-"Hampshire and Isle of Wight Healthcare NHS Foundation Trust",
-"Harrogate and District NHS Foundation Trust",
-"Herefordshire and Worcestershire Health and Care NHS Trust",
-"Hertfordshire Community NHS Trust",
-"Hertfordshire Partnership University NHS Foundation Trust",
-"Homerton Healthcare NHS Foundation Trust",
-"Humber Teaching NHS Foundation Trust",
-"Imperial College Healthcare NHS Trust",
-"Isle of Wight NHS Trust",
-"James Paget University Hospitals NHS Foundation Trust",
-"Kent and Medway NHS and Social Care Partnership Trust",
-"Kent Community Health NHS Foundation Trust",
-"Kettering General Hospital NHS Foundation Trust",
-"King's College Hospital NHS Foundation Trust",
-"Kingston and Richmond NHS Foundation Trust",
-"Lancashire and South Cumbria NHS Foundation Trust",
-"Leeds Community Healthcare NHS Trust",
-"Leeds Teaching Hospitals NHS Trust",
-"Leicestershire Partnership NHS Trust",
-"Lincolnshire Community Health Services NHS Trust",
-"Lincolnshire Partnership NHS Foundation Trust",
-"Liverpool Heart and Chest Hospital NHS Foundation Trust",
-"Liverpool University Hospitals NHS Foundation Trust",
-"Liverpool Women's NHS Foundation Trust",
-"London Ambulance Service NHS Trust",
-"London North West University Healthcare NHS Trust",
-"Maidstone and Tunbridge Wells NHS Trust",
-"Manchester University NHS Foundation Trust",
-"Medway NHS Foundation Trust",
-"Mersey and West Lancashire Teaching Hospitals NHS Trust",
-"Mid and South Essex NHS Foundation Trust",
-"Mid Cheshire Hospitals NHS Foundation Trust",
-"Mid Yorkshire Hospitals NHS Trust",
-"Midlands Partnership University NHS Foundation Trust",
-"Milton Keynes University Hospital NHS Foundation Trust",
-"Moorfields Eye Hospital NHS Foundation Trust",
-"Norfolk and Norwich University Hospitals NHS Foundation Trust",
-"Norfolk and Suffolk NHS Foundation Trust",
-"North Bristol NHS Trust",
-"North Cumbria Integrated Care NHS Foundation Trust",
-"North East Ambulance Service NHS Foundation Trust",
-"North East London NHS Foundation Trust",
-"North Middlesex University Hospital NHS Trust",
-"North Staffordshire Combined Healthcare NHS Trust",
-"North Tees and Hartlepool NHS Foundation Trust",
-"North West Ambulance Service NHS Trust",
-"North West Boroughs Healthcare NHS Foundation Trust",
-"Northampton General Hospital NHS Trust",
-"Northamptonshire Healthcare NHS Foundation Trust",
-"Northern Care Alliance NHS Foundation Trust",
-"Northern Lincolnshire and Goole NHS Foundation Trust",
-"Northumbria Healthcare NHS Foundation Trust",
-"Nottingham University Hospitals NHS Trust",
-"Nottinghamshire Healthcare NHS Foundation Trust",
-"Oxleas NHS Foundation Trust",
-"Oxford Health NHS Foundation Trust",
-"Oxford University Hospitals NHS Foundation Trust",
-"Pennine Care NHS Foundation Trust",
-"Portsmouth Hospitals University NHS Trust",
-"Queen Victoria Hospital NHS Foundation Trust",
-"Rotherham Doncaster and South Humber NHS Foundation Trust",
-"Royal Berkshire NHS Foundation Trust",
-"Royal Cornwall Hospitals NHS Trust",
-"Royal Devon University Healthcare NHS Foundation Trust",
-"Royal Free London NHS Foundation Trust",
-"Royal National Orthopaedic Hospital NHS Trust",
-"Royal Papworth Hospital NHS Foundation Trust",
-"Royal Surrey NHS Foundation Trust",
-"Royal United Hospitals Bath NHS Foundation Trust",
-"Royal Wolverhampton NHS Trust",
-"Salisbury NHS Foundation Trust",
-"Sandwell and West Birmingham Hospitals NHS Foundation Trust",
-"Sheffield Children's NHS Foundation Trust",
-"Sheffield Health and Social Care NHS Foundation Trust",
-"Sheffield Teaching Hospitals NHS Foundation Trust",
-"Sherwood Forest Hospitals NHS Foundation Trust",
-"Shrewsbury and Telford Hospital NHS Trust",
-"Solent NHS Trust",
-"Somerset NHS Foundation Trust",
-"South Central Ambulance Service NHS Foundation Trust",
-"South East Coast Ambulance Service NHS Foundation Trust",
-"South London and Maudsley NHS Foundation Trust",
-"South Tees Hospitals NHS Foundation Trust",
-"South Tyneside and Sunderland NHS Foundation Trust",
-"South Warwickshire University NHS Foundation Trust",
-"South West Yorkshire Partnership NHS Foundation Trust",
-"South Western Ambulance Service NHS Foundation Trust",
-"Southport and Ormskirk Hospital NHS Trust",
-"Stockport NHS Foundation Trust",
-"Surrey and Borders Partnership NHS Foundation Trust",
-"Sussex Community NHS Foundation Trust",
-"Sussex Partnership NHS Foundation Trust",
-"Tameside and Glossop Integrated Care NHS Foundation Trust",
-"Taunton and Somerset NHS Foundation Trust",
-"Tees Esk and Wear Valleys NHS Foundation Trust",
-"The Christie NHS Foundation Trust",
-"The Clatterbridge Cancer Centre NHS Foundation Trust",
-"The Dudley Group NHS Foundation Trust",
-"The Hillingdon Hospitals NHS Foundation Trust",
-"The Newcastle Upon Tyne Hospitals NHS Foundation Trust",
-"The Princess Alexandra Hospital NHS Trust",
-"The Queen Elizabeth Hospital King's Lynn NHSFT",
-"The Robert Jones and Agnes Hunt Orthopaedic Hospital NHS Foundation Trust",
-"The Rotherham NHS Foundation Trust",
-"The Royal Orthopaedic Hospital NHS Foundation Trust",
-"The Royal Marsden NHS Foundation Trust",
-"The Walton Centre NHS Foundation Trust",
-"University College London Hospitals NHS Foundation Trust",
-"United Lincolnshire Hospitals NHS Trust",
-"University Hospital Southampton NHS Foundation Trust",
-"University Hospitals Birmingham NHS Foundation Trust",
-"University Hospitals Bristol and Weston NHS Foundation Trust",
-"University Hospitals Coventry and Warwickshire NHS Trust",
-"University Hospitals of Derby and Burton NHS Foundation Trust",
-"University Hospitals Dorset NHS Foundation Trust",
-"University Hospitals of Leicester NHS Trust",
-"University Hospitals of Morecambe Bay NHS Foundation Trust",
-"University Hospitals of North Midlands NHS Trust",
-"University Hospitals Plymouth NHS Trust",
-"University Hospitals Sussex NHS Foundation Trust",
-"Walsall Healthcare NHS Trust",
-"West Hertfordshire Teaching Hospitals NHS Trust",
-"West London NHS Trust",
-"West Midlands Ambulance Service NHS Trust",
-"West Suffolk NHS Foundation Trust",
-"Whittington Health NHS Trust",
-"Wirral Community NHS Foundation Trust",
-"Wirral University Teaching Hospital NHS Foundation Trust",
-"Worcestershire Acute Hospitals NHS Trust",
-"Worcestershire Health and Care NHS Trust",
-"Wye Valley NHS Trust",
-"York and Scarborough Teaching Hospitals NHS Foundation Trust",
-"Yorkshire Ambulance Service NHS Trust"
-];
-
-
-/* =========================================================
-   LOCAL STORAGE
-========================================================= */
-
-function loadLocal(){
-
+// SUPABASE
+async function sbLoad(){
   try{
-
-    const stored =
-      localStorage.getItem('prisahub_lib');
-
-    if(stored){
-      db = JSON.parse(stored);
-    }
-
-  }catch(error){
-
-    console.error(
-      'Could not load local library:',
-      error
-    );
-
-    db = {};
-
-  }
-
-}
-
-
-function saveLocal(){
-
-  try{
-
-    localStorage.setItem(
-      'prisahub_lib',
-      JSON.stringify(db)
-    );
-
-  }catch(error){
-
-    console.error(
-      'Could not save local library:',
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function genId(){
-
-  return (
-    Date.now().toString(36) +
-    Math.random().toString(36).slice(2)
-  );
-
-}
-
-
-function escapeHTML(value){
-
-  return String(value ?? '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
-
-}
-
-
-function getStatements(trust){
-
-  if(!db[trust]){
-    db[trust] = {
-      s:[]
-    };
-  }
-
-  if(!Array.isArray(db[trust].s)){
-    db[trust].s = [];
-  }
-
-  return db[trust].s;
-
-}
-
-
-function today(){
-
-  return new Date().toLocaleDateString(
-    'en-GB',
-    {
-      day:'numeric',
-      month:'short',
-      year:'numeric'
-    }
-  );
-
-}
-
-
-/* =========================================================
-   SUPABASE LOAD
-========================================================= */
-
-async function sbLoadAll(){
-
-  try{
-
-    const response =
-      await fetch(
-        SB_URL +
-        '/rest/v1/library_statements?select=*&order=created_at.desc',
-        {
-          headers:SB_HEADERS
-        }
-      );
-
-    if(!response.ok){
-
-      console.warn(
-        'Supabase load failed:',
-        response.status
-      );
-
-      return;
-    }
-
-    const rows =
-      await response.json();
-
-    if(!Array.isArray(rows) || rows.length === 0){
-      return;
-    }
-
-    const remoteDB = {};
-
+    var r=await fetch(SB+'/rest/v1/library_statements?select=*&order=created_at.desc',{headers:SH});
+    if(!r.ok)return;
+    var rows=await r.json();
+    if(!rows||!rows.length)return;
+    var nd={};
     rows.forEach(function(row){
-
-      if(!remoteDB[row.trust_name]){
-        remoteDB[row.trust_name] = {
-          s:[]
-        };
-      }
-
-      remoteDB[row.trust_name].s.push({
-
-        id:row.id,
-
-        role:row.role || '',
-
-        band:row.band || '',
-
-        label:row.label || '',
-
-        text:row.statement || '',
-
-        date:row.created_at
-          ? new Date(row.created_at)
-              .toLocaleDateString(
-                'en-GB',
-                {
-                  day:'numeric',
-                  month:'short',
-                  year:'numeric'
-                }
-              )
-          : '',
-
-        outcome:row.outcome || 'pending'
-
-      });
-
+      if(!nd[row.trust_name])nd[row.trust_name]={s:[]};
+      nd[row.trust_name].s.push({id:row.id,role:row.role||'',band:row.band||'',label:row.label||'',text:row.statement||'',outcome:row.outcome||'pending',date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''});
     });
-
-
-    /*
-      Keep local records which have not
-      reached Supabase yet.
-    */
-
-    Object.keys(db).forEach(function(trust){
-
-      if(!remoteDB[trust]){
-        remoteDB[trust] = {
-          s:[]
-        };
-      }
-
-      const remoteIDs =
-        new Set(
-          remoteDB[trust].s.map(
-            item => item.id
-          )
-        );
-
-      getStatements(trust).forEach(function(localStmt){
-
-        if(!remoteIDs.has(localStmt.id)){
-          remoteDB[trust].s.push(localStmt);
-        }
-
-      });
-
+    // Merge - keep local items not in Supabase
+    var ids={};rows.forEach(function(r){ids[r.id]=1;});
+    Object.keys(db).forEach(function(t){
+      if(!nd[t])nd[t]={s:[]};
+      (db[t].s||[]).forEach(function(s){if(!ids[s.id])nd[t].s.push(s);});
     });
-
-
-    db = remoteDB;
-
-    saveLocal();
-
-    updateStats();
-
-    if(currentTrust){
-      renderTrust();
-    }
-
-  }catch(error){
-
-    console.warn(
-      'Supabase unavailable. Using local storage.',
-      error
-    );
-
-  }
-
+    db=nd;save();updateStats();if(cur)renderTrust();
+  }catch(e){console.log('Offline, using local data');}
 }
-
-
-/* =========================================================
-   SUPABASE SAVE
-========================================================= */
-
-async function sbSave(stmt,trust){
-
+async function sbSave(s,trust){
   try{
-
-    const response =
-      await fetch(
-        SB_URL +
-        '/rest/v1/library_statements',
-        {
-          method:'POST',
-          headers:{
-            ...SB_HEADERS,
-            Prefer:'resolution=merge-duplicates,return=representation'
-          },
-          body:JSON.stringify({
-
-            id:stmt.id,
-
-            trust_name:trust,
-
-            role:stmt.role || '',
-
-            band:stmt.band || '',
-
-            label:stmt.label || '',
-
-            statement:stmt.text || '',
-
-            outcome:stmt.outcome || 'pending'
-
-          })
-        }
-      );
-
-
-    if(!response.ok){
-
-      const errorText =
-        await response.text();
-
-      console.error(
-        'Supabase save error:',
-        errorText
-      );
-
-      toast(
-        'Could not sync statement',
-        '#ef4444'
-      );
-
-    }
-
-  }catch(error){
-
-    console.error(
-      'Supabase save error:',
-      error
-    );
-
-  }
-
+    var r=await fetch(SB+'/rest/v1/library_statements',{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({id:s.id,trust_name:trust,role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});
+    if(!r.ok){var e=await r.text();console.error('sbSave error:',e);}
+  }catch(e){console.error('sbSave:',e);}
+}
+async function sbPatch(s){
+  try{await fetch(SB+'/rest/v1/library_statements?id=eq.'+s.id,{method:'PATCH',headers:SH,body:JSON.stringify({role:s.role||'',band:s.band||'',label:s.label||'',statement:s.text||'',outcome:s.outcome||'pending'})});}
+  catch(e){console.error('sbPatch:',e);}
+}
+async function sbDel(id){
+  try{await fetch(SB+'/rest/v1/library_statements?id=eq.'+id,{method:'DELETE',headers:SH});}
+  catch(e){console.error('sbDel:',e);}
 }
 
-
-/* =========================================================
-   SUPABASE UPDATE
-========================================================= */
-
-async function sbUpdate(stmt){
-
-  try{
-
-    const response =
-      await fetch(
-        SB_URL +
-        '/rest/v1/library_statements?id=eq.' +
-        encodeURIComponent(stmt.id),
-        {
-          method:'PATCH',
-          headers:SB_HEADERS,
-          body:JSON.stringify({
-
-            role:stmt.role,
-
-            band:stmt.band,
-
-            label:stmt.label,
-
-            statement:stmt.text,
-
-            outcome:stmt.outcome || 'pending'
-
-          })
-        }
-      );
-
-
-    if(!response.ok){
-
-      console.error(
-        'Supabase update failed:',
-        await response.text()
-      );
-
-    }
-
-  }catch(error){
-
-    console.error(
-      'Update error:',
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   SUPABASE DELETE
-========================================================= */
-
-async function sbDelete(id){
-
-  try{
-
-    const response =
-      await fetch(
-        SB_URL +
-        '/rest/v1/library_statements?id=eq.' +
-        encodeURIComponent(id),
-        {
-          method:'DELETE',
-          headers:SB_HEADERS
-        }
-      );
-
-    if(!response.ok){
-      console.error(
-        'Delete failed:',
-        await response.text()
-      );
-    }
-
-  }catch(error){
-
-    console.error(
-      'Delete error:',
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-function performTrustSearch(value){
-
-  const box =
-    document.getElementById(
-      'search-results'
-    );
-
-  const panel =
-    document.getElementById(
-      'dropdown-panel'
-    );
-
-  panel.classList.remove('show');
-
-  document
-    .getElementById('dropdown-btn')
-    .classList.remove('open');
-
-
-  const query =
-    value.trim().toLowerCase();
-
-
-  if(!query){
-
-    box.classList.remove('show');
-
-    return;
-  }
-
-
-  const matches =
-    TRUSTS
-      .filter(function(trust){
-
-        return trust
-          .toLowerCase()
-          .includes(query);
-
-      })
-      .slice(0,15);
-
-
-  if(matches.length === 0){
-
-    box.innerHTML =
-      '<div class="sri">' +
-      '<span class="sri-name">' +
-      'No NHS Trust found' +
-      '</span>' +
-      '</div>';
-
-    box.classList.add('show');
-
-    return;
-  }
-
-
-  box.innerHTML =
-    matches.map(function(trust){
-
-      const count =
-        getStatements(trust).length;
-
-      return `
-        <div
-          class="sri"
-          data-trust="${escapeHTML(trust)}">
-
-          <span class="sri-name">
-            ${escapeHTML(trust)}
-          </span>
-
-          ${
-            count
-              ? `<span class="sri-badge b-saved">
-                  ${count} saved
-                </span>`
-              : `<span class="sri-badge b-new">
-                  New
-                </span>`
-          }
-
-        </div>
-      `;
-
-    }).join('');
-
-
+// SEARCH
+function onSearch(v){
+  var box=document.getElementById('sres');
+  document.getElementById('dpanel').classList.remove('show');
+  document.getElementById('dbtn').classList.remove('open');
+  if(!v||v.length<1){box.classList.remove('show');return;}
+  var low=v.toLowerCase();
+  var m=TR.filter(function(t){return t.toLowerCase().includes(low);}).slice(0,14);
+  if(!m.length){box.classList.remove('show');return;}
+  box.innerHTML=m.map(function(t){
+    var n=db[t]&&db[t].s&&db[t].s.length;
+    return '<div class="sri" onclick="pick(decodeURIComponent(\''+encodeURIComponent(t)+'\'))"><span class="sri-name">'+esc(t)+'</span>'+(n?'<span class="badge b-saved">'+n+' saved</span>':'<span class="badge b-new">New</span>')+'</div>';
+  }).join('');
   box.classList.add('show');
-
 }
 
-
-function buildDropdown(){
-
-  const panel =
-    document.getElementById(
-      'dropdown-panel'
-    );
-
-  const groups = {};
-
-
-  TRUSTS.forEach(function(trust){
-
-    const letter =
-      trust.charAt(0).toUpperCase();
-
-    if(!groups[letter]){
-      groups[letter] = [];
-    }
-
-    groups[letter].push(trust);
-
-  });
-
-
-  let html = '';
-
-
-  Object.keys(groups)
-    .sort()
-    .forEach(function(letter){
-
-      html += `
-        <div class="dp-label">
-          ${letter}
-        </div>
-      `;
-
-
-      groups[letter].forEach(function(trust){
-
-        const count =
-          getStatements(trust).length;
-
-
-        html += `
-          <div
-            class="dp-item"
-            data-trust="${escapeHTML(trust)}">
-
-            <span class="dp-name">
-              ${escapeHTML(trust)}
-            </span>
-
-            ${
-              count
-                ? `<span class="dp-count">
-                    ${count}
-                  </span>`
-                : ''
-            }
-
-          </div>
-        `;
-
-      });
-
-
-      html += `
-        <div class="dp-divider"></div>
-      `;
-
+// DROPDOWN
+function toggleDropdown(){
+  var p=document.getElementById('dpanel'),b=document.getElementById('dbtn');
+  document.getElementById('sres').classList.remove('show');
+  if(p.classList.contains('show')){p.classList.remove('show');b.classList.remove('open');return;}
+  var letters={};
+  TR.forEach(function(t){var l=t[0];if(!letters[l])letters[l]=[];letters[l].push(t);});
+  var html='';
+  Object.keys(letters).sort().forEach(function(l){
+    html+='<div class="dp-lbl">'+l+'</div>';
+    letters[l].forEach(function(t){
+      var n=db[t]&&db[t].s&&db[t].s.length;
+      html+='<div class="dp-item" onclick="pick(decodeURIComponent(\''+encodeURIComponent(t)+'\'))"><span class="dp-name">'+esc(t)+'</span>'+(n?'<span class="dp-cnt">'+n+'</span>':'')+'</div>';
     });
-
-
-  panel.innerHTML = html;
-
+    html+='<div class="dp-div"></div>';
+  });
+  p.innerHTML=html;p.classList.add('show');b.classList.add('open');
 }
 
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.sbox'))document.getElementById('sres').classList.remove('show');
+  if(!e.target.closest('.dbox')){document.getElementById('dpanel').classList.remove('show');document.getElementById('dbtn').classList.remove('open');}
+});
 
-/* =========================================================
-   PICK TRUST
-========================================================= */
-
-function pickTrust(name){
-
-  currentTrust = name;
-
-  filterBand = 'all';
-
-  expanded = {};
-
-
-  document
-    .getElementById('search-input')
-    .value = name;
-
-
-  document
-    .getElementById('search-results')
-    .classList.remove('show');
-
-
-  document
-    .getElementById('dropdown-panel')
-    .classList.remove('show');
-
-
-  document
-    .getElementById('dropdown-btn')
-    .classList.remove('open');
-
-
-  renderTrust();
-
-  updateStats();
-
+// PICK TRUST
+function pick(name){
+  cur=name;fb='all';xp={};
+  document.getElementById('sinput').value=name;
+  document.getElementById('sres').classList.remove('show');
+  document.getElementById('dpanel').classList.remove('show');
+  document.getElementById('dbtn').classList.remove('open');
+  if(!db[cur])db[cur]={s:[]};
+  renderTrust();updateStats();
 }
 
-
-/* =========================================================
-   RENDER TRUST
-========================================================= */
-
+// RENDER TRUST
 function renderTrust(){
+  if(!cur)return;
+  var stmts=db[cur]&&db[cur].s||[];
+  var filt=fb==='all'?stmts:stmts.filter(function(s){return s.band===fb;});
+  var bands=['all'];
+  stmts.forEach(function(s){if(s.band&&bands.indexOf(s.band)<0)bands.push(s.band);});
+  var roles=[...new Set(stmts.map(function(s){return s.role;}).filter(Boolean))];
 
-  if(!currentTrust){
-    return;
-  }
-
-
-  const statements =
-    getStatements(currentTrust);
-
-
-  const filtered =
-    filterBand === 'all'
-      ? statements
-      : statements.filter(
-          stmt => stmt.band === filterBand
-        );
-
-
-  const bands = ['all'];
-
-
-  statements.forEach(function(stmt){
-
-    if(
-      stmt.band &&
-      !bands.includes(stmt.band)
-    ){
-      bands.push(stmt.band);
-    }
-
-  });
-
-
-  const roles =
-    [
-      ...new Set(
-        statements
-          .map(stmt => stmt.role)
-          .filter(Boolean)
-      )
-    ];
-
-
-  let html = `
-
-    <div class="trust-card">
-
-      <div class="trust-banner">
-
-        <div class="trust-info">
-
-          <h2>
-            ${escapeHTML(currentTrust)}
-          </h2>
-
-          <p>
-            ${statements.length} of 10 statements saved
-          </p>
-
-          ${
-            roles.length
-              ? `
-                <div class="trust-meta">
-
-                  ${roles.map(function(role){
-
-                    return `
-                      <span class="tmeta-pill">
-                        ${escapeHTML(role)}
-                      </span>
-                    `;
-
-                  }).join('')}
-
-                </div>
-              `
-              : ''
-          }
-
-        </div>
-
-
-        <div class="trust-actions">
-
-          ${
-            statements.length < 10
-              ? `
-                <button
-                  class="btn btn-add"
-                  type="button"
-                  data-action="add-statement">
-                  + Add Statement
-                </button>
-              `
-              : `
-                <span
-                  style="
-                    font-size:12px;
-                    color:rgba(255,255,255,.4)
-                  ">
-                  Max 10 reached
-                </span>
-              `
-          }
-
-        </div>
-
-      </div>
-
-
-      <div class="stmts-area">
-
-        <input
-          class="search-stmts"
-          id="stmt-search"
-          placeholder="🔍 Search within statements..."
-        >
-
-
-        ${
-          bands.length > 2
-            ? `
-              <div class="filter-row">
-
-                ${bands.map(function(band){
-
-                  return `
-                    <button
-                      type="button"
-                      class="filter-chip ${
-                        filterBand === band
-                          ? 'active'
-                          : ''
-                      }"
-                      data-filter-band="${escapeHTML(band)}">
-
-                      ${
-                        band === 'all'
-                          ? 'All Bands'
-                          : escapeHTML(band)
-                      }
-
-                    </button>
-                  `;
-
-                }).join('')}
-
-              </div>
-            `
-            : ''
-        }
-
-
-        <div id="statement-list">
-
-          ${
-            filtered.length
-              ? filtered
-                  .map(renderStatement)
-                  .join('')
-              : `
-                <div class="no-stmts">
-
-                  <div class="no-stmts-icon">
-                    📝
-                  </div>
-
-                  <p>
-                    ${
-                      statements.length &&
-                      filterBand !== 'all'
-                        ? 'No statements for this band filter.'
-                        : `
-                          No statements saved yet.<br>
-                          Click "Add Statement" to save your first one.
-                        `
-                    }
-                  </p>
-
-                </div>
-              `
-          }
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  document
-    .getElementById('content')
-    .innerHTML = html;
-
+  document.getElementById('content').innerHTML=
+    '<div class="trust-card">'
+    +'<div class="tbanner">'
+      +'<div class="tinfo"><h2>'+esc(cur)+'</h2><p>'+stmts.length+' of 10 statements saved</p>'
+      +(roles.length?'<div class="troles">'+roles.map(function(r){return'<span class="trole">'+esc(r)+'</span>';}).join('')+'</div>':'')
+      +'</div>'
+      +'<div class="tacts">'+(stmts.length<10?'<button class="btn btn-add" onclick="openForm(null)">+ Add Statement</button>':'<span style="font-size:12px;color:rgba(255,255,255,.4)">Max 10 reached</span>')+'</div>'
+    +'</div>'
+    +'<div class="sarea">'
+    +'<input class="ssearch" placeholder="&#128269; Search within statements..." oninput="filterLocal(this.value)"/>'
+    +(bands.length>2?'<div class="frow">'+bands.map(function(b){return'<button class="fc'+(fb===b?' on':'')+'" onclick="setFb(\''+b+'\')">'+( b==='all'?'All Bands':esc(b))+'</button>';}).join('')+'</div>':'')
+    +(filt.length?filt.map(renderS).join(''):'<div class="no-s"><div class="no-s-i">&#128221;</div><p>'+(stmts.length&&fb!=='all'?'No statements for this band.':'No statements saved yet. Click Add Statement.')+'</p></div>')
+    +'</div>'
+    +'</div>';
 }
 
+function setFb(b){fb=b;renderTrust();}
 
-/* =========================================================
-   RENDER STATEMENT
-========================================================= */
-
-function renderStatement(stmt){
-
-  const isExpanded =
-    !!expanded[stmt.id];
-
-  const outcome =
-    stmt.outcome || 'pending';
-
-
-  const outcomeLabels = {
-
-    pending:'Pending',
-
-    interview:'Got Interview',
-
-    no:'No Interview',
-
-    offer:'Got Offer'
-
-  };
-
-
-  const outcomeClasses = {
-
-    pending:'o-pending',
-
-    interview:'o-interview',
-
-    no:'o-no',
-
-    offer:'o-offer'
-
-  };
-
-
-  return `
-
-    <article
-      class="sc"
-      data-statement-id="${escapeHTML(stmt.id)}">
-
-
-      <div class="sc-head">
-
-        <div class="sc-pills">
-
-          ${
-            stmt.role
-              ? `
-                <span class="pill p-role">
-                  ${escapeHTML(stmt.role)}
-                </span>
-              `
-              : ''
-          }
-
-
-          ${
-            stmt.band
-              ? `
-                <span class="pill p-band">
-                  ${escapeHTML(stmt.band)}
-                </span>
-              `
-              : ''
-          }
-
-
-          ${
-            stmt.date
-              ? `
-                <span class="pill p-date">
-                  ${escapeHTML(stmt.date)}
-                </span>
-              `
-              : ''
-          }
-
-
-          <button
-            type="button"
-            class="outcome-pill ${outcomeClasses[outcome]}"
-            data-action="cycle-outcome"
-            data-id="${escapeHTML(stmt.id)}">
-
-            ${outcomeLabels[outcome]}
-
-          </button>
-
-        </div>
-
-
-        <div class="sc-acts">
-
-          <button
-            type="button"
-            class="btn btn-ghost btn-sm action-btn"
-            title="Copy statement"
-            data-action="copy-statement"
-            data-id="${escapeHTML(stmt.id)}">
-            📋
-          </button>
-
-
-          <button
-            type="button"
-            class="btn btn-sm action-btn"
-            title="AI Rewrite"
-            style="
-              background:#faf5ff;
-              color:#7c3aed;
-              border:1.5px solid #ede9fe;
-            "
-            data-action="ai-rewrite"
-            data-id="${escapeHTML(stmt.id)}">
-            ✨
-          </button>
-
-
-          <button
-            type="button"
-            class="btn btn-ghost btn-sm action-btn"
-            title="Duplicate"
-            data-action="duplicate-statement"
-            data-id="${escapeHTML(stmt.id)}">
-            🗗
-          </button>
-
-
-          <button
-            type="button"
-            class="btn btn-ghost btn-sm"
-            data-action="edit-statement"
-            data-id="${escapeHTML(stmt.id)}">
-            ✏ Edit
-          </button>
-
-
-          <button
-            type="button"
-            class="btn btn-del btn-sm action-btn"
-            title="Delete"
-            data-action="delete-statement"
-            data-id="${escapeHTML(stmt.id)}">
-            ✕
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="sc-body">
-
-        ${
-          stmt.label
-            ? `
-              <div class="sc-label">
-                📌 ${escapeHTML(stmt.label)}
-              </div>
-            `
-            : ''
-        }
-
-
-        <div
-          class="sc-text ${
-            isExpanded ? '' : 'clamp'
-          }">
-
-          ${escapeHTML(stmt.text)}
-
-        </div>
-
-
-        ${
-          stmt.text &&
-          stmt.text.length > 300
-            ? `
-              <button
-                type="button"
-                class="expand-btn"
-                data-action="toggle-expand"
-                data-id="${escapeHTML(stmt.id)}">
-
-                ${
-                  isExpanded
-                    ? '▲ Show less'
-                    : '▼ Read more'
-                }
-
-              </button>
-            `
-            : ''
-        }
-
-      </div>
-
-    </article>
-
-  `;
-
+function filterLocal(v){
+  var cards=document.querySelectorAll('.sc');
+  var low=v.toLowerCase();
+  cards.forEach(function(c){c.style.display=(!v||c.textContent.toLowerCase().includes(low))?'':'none';});
 }
 
+// RENDER SINGLE STATEMENT
+function renderS(s){
+  var isX=xp[s.id];
+  var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
+  var oC={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
+  var oc=s.outcome||'pending';
+  var id=JSON.stringify(s.id);
+  return '<div class="sc" id="sc-'+esc(s.id)+'">'
+    +'<div class="sch">'
+      +'<div class="scpills">'
+        +(s.role?'<span class="pill p-role">'+esc(s.role)+'</span>':'')
+        +(s.band?'<span class="pill p-band">'+esc(s.band)+'</span>':'')
+        +(s.date?'<span class="pill p-date">'+esc(s.date)+'</span>':'')
+        +'<button class="opill '+oC[oc]+'" onclick="cycleO(this,'+id+')">'+oL[oc]+'</button>'
+      +'</div>'
+      +'<div class="scacts">'
+        +'<button class="btn btn-ghost btn-sm" title="Copy to clipboard" onclick="copyS('+id+')">&#128203;</button>'
+        +'<button class="btn btn-purple btn-sm" title="AI Rewrite" onclick="openAI('+id+')">&#10024;</button>'
+        +'<button class="btn btn-ghost btn-sm" title="Duplicate" onclick="dupS('+id+')">&#128471;</button>'
+        +'<button class="btn btn-ghost btn-sm" onclick="openForm('+id+')">&#9999;</button>'
+        +'<button class="btn btn-del btn-sm" onclick="delS('+id+')">&#10005;</button>'
+      +'</div>'
+    +'</div>'
+    +'<div class="scb">'
+      +(s.label?'<div class="sclbl">'+esc(s.label)+'</div>':'')
+      +'<div class="sctxt'+(isX?'':' clamp')+'" id="tx-'+esc(s.id)+'">'+esc(s.text)+'</div>'
+      +(s.text&&s.text.length>280?'<button class="xbtn" onclick="togX('+id+')">'+(isX?'&#9650; Show less':'&#9660; Read more')+'</button>':'')
+    +'</div>'
+  +'</div>';
+}
 
-/* =========================================================
-   ADD / EDIT FORM
-========================================================= */
+function togX(id){xp[id]=!xp[id];renderTrust();}
 
-function openForm(statementId = null){
+// COPY
+function copyS(id){
+  var s=getS(id);if(!s)return;
+  copyText(s.text);
+  var el=document.getElementById('sc-'+id);
+  if(el){el.classList.add('flash');setTimeout(function(){el.classList.remove('flash');},400);}
+}
+function copyText(txt){
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){fallbackCopy(txt);});}
+  else{fallbackCopy(txt);}
+  toast('Copied to clipboard','#22c55e');
+}
+function fallbackCopy(txt){var t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}
 
-  editId = statementId;
+// DUPLICATE
+function dupS(id){
+  var s=getS(id);if(!s)return;
+  if((db[cur].s||[]).length>=10){toast('Max 10 statements per trust','#ef4444');return;}
+  var ns={id:gid(),role:s.role,band:s.band,label:(s.label?s.label+' (copy)':'Copy'),text:s.text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+  db[cur].s.unshift(ns);
+  save();sbSave(ns,cur);renderTrust();updateStats();
+  toast('Statement duplicated','#22c55e');
+}
 
+// OUTCOME CYCLE
+var OC=['pending','interview','no','offer'];
+function cycleO(btn,id){
+  var s=getS(id);if(!s)return;
+  var i=OC.indexOf(s.outcome||'pending');
+  s.outcome=OC[(i+1)%OC.length];
+  var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
+  var oC={pending:'o-p',interview:'o-i',no:'o-n',offer:'o-o'};
+  btn.textContent=oL[s.outcome];btn.className='opill '+oC[s.outcome];
+  save();sbPatch(s);
+}
 
-  document.getElementById(
-    'modal-title'
-  ).textContent =
-    statementId
-      ? 'Edit Statement'
-      : 'Add Supporting Statement';
-
-
-  document.getElementById(
-    'modal-sub'
-  ).textContent =
-    statementId
-      ? 'Update your saved statement'
-      : 'Save a winning statement for ' +
-        currentTrust;
-
-
-  if(statementId){
-
-    const stmt =
-      getStatements(currentTrust)
-        .find(
-          item => item.id === statementId
-        );
-
-
-    if(!stmt){
-      return;
-    }
-
-
-    document.getElementById('f-role').value =
-      stmt.role || '';
-
-    document.getElementById('f-band').value =
-      stmt.band || '';
-
-    document.getElementById('f-label').value =
-      stmt.label || '';
-
-    document.getElementById('f-text').value =
-      stmt.text || '';
-
+// FORM
+function openForm(id){
+  editId=id;
+  document.getElementById('mt').textContent=id?'Edit Statement':'Add Supporting Statement';
+  document.getElementById('ms').textContent=id?'Update your saved statement':'Save a winning statement for '+cur;
+  if(id){
+    var s=getS(id);
+    if(s){document.getElementById('f-role').value=s.role||'';document.getElementById('f-band').value=s.band||'';document.getElementById('f-label').value=s.label||'';document.getElementById('f-text').value=s.text||'';document.getElementById('fcc').textContent=(s.text||'').length+' characters';}
   }else{
-
-    document.getElementById('f-role').value =
-      '';
-
-    document.getElementById('f-band').value =
-      '';
-
-    document.getElementById('f-label').value =
-      '';
-
-    document.getElementById('f-text').value =
-      '';
-
+    document.getElementById('f-role').value='';document.getElementById('f-band').value='';document.getElementById('f-label').value='';document.getElementById('f-text').value='';document.getElementById('fcc').textContent='0 characters';
   }
-
-
-  updateCharacterCount();
-
-
-  document
-    .getElementById('overlay')
-    .classList.add('open');
-
-
-  setTimeout(function(){
-
-    document
-      .getElementById('f-role')
-      .focus();
-
-  },100);
-
+  document.getElementById('ov1').classList.add('open');
 }
+function closeForm(){document.getElementById('ov1').classList.remove('open');editId=null;}
 
-
-function closeForm(){
-
-  document
-    .getElementById('overlay')
-    .classList.remove('open');
-
-  editId = null;
-
-}
-
-
-/* =========================================================
-   CHARACTER COUNT
-========================================================= */
-
-function updateCharacterCount(){
-
-  const text =
-    document.getElementById(
-      'f-text'
-    ).value;
-
-  document.getElementById(
-    'cc'
-  ).textContent =
-    text.length + ' characters';
-
-}
-
-
-/* =========================================================
-   SAVE STATEMENT
-========================================================= */
-
-async function saveStatement(){
-
-  if(!currentTrust){
-
-    toast(
-      'Please select an NHS Trust first.',
-      '#ef4444'
-    );
-
-    return;
-  }
-
-
-  const role =
-    document
-      .getElementById('f-role')
-      .value
-      .trim();
-
-
-  const band =
-    document
-      .getElementById('f-band')
-      .value;
-
-
-  const label =
-    document
-      .getElementById('f-label')
-      .value
-      .trim();
-
-
-  const text =
-    document
-      .getElementById('f-text')
-      .value
-      .trim();
-
-
-  if(!role){
-
-    toast(
-      'Please enter the role title.',
-      '#ef4444'
-    );
-
-    return;
-  }
-
-
-  if(!text){
-
-    toast(
-      'Please enter your supporting statement.',
-      '#ef4444'
-    );
-
-    return;
-  }
-
-
-  const statements =
-    getStatements(currentTrust);
-
-
+function saveStmt(){
+  var role=document.getElementById('f-role').value.trim();
+  var band=document.getElementById('f-band').value;
+  var label=document.getElementById('f-label').value.trim();
+  var text=document.getElementById('f-text').value.trim();
+  if(!role){toast('Please enter the role title','#ef4444');return;}
+  if(!text){toast('Please enter your supporting statement','#ef4444');return;}
+  if(!db[cur])db[cur]={s:[]};
+  var arr=db[cur].s;
   if(editId){
-
-    const stmt =
-      statements.find(
-        item => item.id === editId
-      );
-
-
-    if(!stmt){
-
-      toast(
-        'Statement could not be found.',
-        '#ef4444'
-      );
-
-      return;
-    }
-
-
-    stmt.role = role;
-
-    stmt.band = band;
-
-    stmt.label = label;
-
-    stmt.text = text;
-
-
-    saveLocal();
-
-    renderTrust();
-
-    updateStats();
-
-    closeForm();
-
-    toast(
-      'Statement updated successfully.',
-      '#22c55e'
-    );
-
-
-    await sbUpdate(stmt);
-
-    return;
-
+    var s=getS(editId);
+    if(s){s.role=role;s.band=band;s.label=label;s.text=text;sbPatch(s);}
+    toast('Statement updated','#22c55e');
+  }else{
+    if(arr.length>=10){toast('Max 10 statements per trust','#ef4444');return;}
+    var ns={id:gid(),role:role,band:band,label:label,text:text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+    arr.unshift(ns);sbSave(ns,cur);
+    toast('Statement saved','#22c55e');
   }
-
-
-  if(statements.length >= 10){
-
-    toast(
-      'Maximum 10 statements per trust reached.',
-      '#ef4444'
-    );
-
-    return;
-  }
-
-
-  const statement = {
-
-    id:genId(),
-
-    role,
-
-    band,
-
-    label,
-
-    text,
-
-    date:today(),
-
-    outcome:'pending'
-
-  };
-
-
-  statements.unshift(statement);
-
-
-  saveLocal();
-
-  renderTrust();
-
-  updateStats();
-
-  closeForm();
-
-
-  toast(
-    'Statement saved successfully.',
-    '#22c55e'
-  );
-
-
-  await sbSave(
-    statement,
-    currentTrust
-  );
-
+  save();closeForm();renderTrust();updateStats();
 }
 
-
-/* =========================================================
-   DELETE
-========================================================= */
-
-async function deleteStatement(id){
-
-  const confirmed =
-    window.confirm(
-      'Delete this statement? This cannot be undone.'
-    );
-
-
-  if(!confirmed){
-    return;
-  }
-
-
-  const statements =
-    getStatements(currentTrust);
-
-
-  const index =
-    statements.findIndex(
-      item => item.id === id
-    );
-
-
-  if(index === -1){
-    return;
-  }
-
-
-  statements.splice(index,1);
-
-
-  saveLocal();
-
-  renderTrust();
-
-  updateStats();
-
-
-  toast(
-    'Statement deleted.',
-    '#ef4444'
-  );
-
-
-  await sbDelete(id);
-
+function delS(id){
+  if(!confirm('Delete this statement?'))return;
+  if(db[cur])db[cur].s=(db[cur].s||[]).filter(function(s){return s.id!==id;});
+  save();sbDel(id);renderTrust();updateStats();toast('Deleted','#ef4444');
 }
 
-
-/* =========================================================
-   COPY
-========================================================= */
-
-async function copyStatement(id){
-
-  const stmt =
-    getStatements(currentTrust)
-      .find(
-        item => item.id === id
-      );
-
-
-  if(!stmt){
-    return;
-  }
-
-
-  try{
-
-    if(
-      navigator.clipboard &&
-      window.isSecureContext
-    ){
-
-      await navigator.clipboard.writeText(
-        stmt.text
-      );
-
-    }else{
-
-      fallbackCopy(
-        stmt.text
-      );
-
-    }
-
-
-    flashStatement(id);
-
-    toast(
-      'Statement copied to clipboard.',
-      '#22c55e'
-    );
-
-  }catch(error){
-
-    try{
-
-      fallbackCopy(stmt.text);
-
-      toast(
-        'Statement copied to clipboard.',
-        '#22c55e'
-      );
-
-    }catch(copyError){
-
-      toast(
-        'Copy failed. Please copy the text manually.',
-        '#ef4444'
-      );
-
-    }
-
-  }
-
-}
-
-
-function fallbackCopy(text){
-
-  const textarea =
-    document.createElement('textarea');
-
-  textarea.value = text;
-
-  textarea.style.position = 'fixed';
-
-  textarea.style.left = '-9999px';
-
-  document.body.appendChild(
-    textarea
-  );
-
-  textarea.focus();
-
-  textarea.select();
-
-  const successful =
-    document.execCommand('copy');
-
-  textarea.remove();
-
-
-  if(!successful){
-    throw new Error('Copy failed');
-  }
-
-}
-
-
-function flashStatement(id){
-
-  const card =
-    document.querySelector(
-      `[data-statement-id="${CSS.escape(id)}"]`
-    );
-
-
-  if(!card){
-    return;
-  }
-
-
-  card.style.background =
-    '#d1fae5';
-
-
-  setTimeout(function(){
-
-    card.style.background =
-      '';
-
-  },500);
-
-}
-
-
-/* =========================================================
-   DUPLICATE
-========================================================= */
-
-async function duplicateStatement(id){
-
-  const statements =
-    getStatements(currentTrust);
-
-
-  if(statements.length >= 10){
-
-    toast(
-      'Maximum 10 statements per trust reached.',
-      '#ef4444'
-    );
-
-    return;
-  }
-
-
-  const original =
-    statements.find(
-      item => item.id === id
-    );
-
-
-  if(!original){
-    return;
-  }
-
-
-  const copy = {
-
-    id:genId(),
-
-    role:original.role,
-
-    band:original.band,
-
-    label:
-      original.label
-        ? original.label + ' (copy)'
-        : 'Copy',
-
-    text:original.text,
-
-    date:today(),
-
-    outcome:'pending'
-
-  };
-
-
-  statements.unshift(copy);
-
-
-  saveLocal();
-
-  renderTrust();
-
-  updateStats();
-
-
-  toast(
-    'Statement duplicated.',
-    '#22c55e'
-  );
-
-
-  await sbSave(
-    copy,
-    currentTrust
-  );
-
-}
-
-
-/* =========================================================
-   OUTCOME
-========================================================= */
-
-const OUTCOMES = [
-  'pending',
-  'interview',
-  'no',
-  'offer'
-];
-
-
-async function cycleOutcome(id){
-
-  const stmt =
-    getStatements(currentTrust)
-      .find(
-        item => item.id === id
-      );
-
-
-  if(!stmt){
-    return;
-  }
-
-
-  const currentIndex =
-    OUTCOMES.indexOf(
-      stmt.outcome || 'pending'
-    );
-
-
-  const nextIndex =
-    currentIndex === -1
-      ? 0
-      : (currentIndex + 1) %
-        OUTCOMES.length;
-
-
-  stmt.outcome =
-    OUTCOMES[nextIndex];
-
-
-  saveLocal();
-
-  renderTrust();
-
-
-  await sbUpdate(stmt);
-
-}
-
-
-/* =========================================================
-   EXPAND
-========================================================= */
-
-function toggleExpand(id){
-
-  expanded[id] =
-    !expanded[id];
-
-  renderTrust();
-
-}
-
-
-/* =========================================================
-   BAND FILTER
-========================================================= */
-
-function setBandFilter(band){
-
-  filterBand = band;
-
-  renderTrust();
-
-}
-
-
-/* =========================================================
-   SEARCH INSIDE STATEMENTS
-========================================================= */
-
-function filterStatements(value){
-
-  const query =
-    value
-      .trim()
-      .toLowerCase();
-
-
-  document
-    .querySelectorAll('.sc')
-    .forEach(function(card){
-
-      const text =
-        card.textContent.toLowerCase();
-
-
-      card.style.display =
-        !query ||
-        text.includes(query)
-          ? ''
-          : 'none';
-
-    });
-
-}
-
-
-/* =========================================================
-   AI OPEN
-========================================================= */
-
+// AI REWRITER
 function openAI(id){
-
-  const stmt =
-    getStatements(currentTrust)
-      .find(
-        item => item.id === id
-      );
-
-
-  if(!stmt){
-    return;
-  }
-
-
-  aiSourceId = id;
-
-  aiResult = null;
-
-
-  document.getElementById(
-    'ai-sub'
-  ).textContent =
-    'Rewriting: ' +
-    (stmt.role || 'statement') +
-    ' for ' +
-    currentTrust;
-
-
-  document.getElementById(
-    'ai-role'
-  ).value =
-    stmt.role || '';
-
-
-  document.getElementById(
-    'ai-band'
-  ).value =
-    stmt.band || '';
-
-
-  document.getElementById(
-    'ai-trust'
-  ).value =
-    '';
-
-
-  document.getElementById(
-    'ai-spec'
-  ).value =
-    '';
-
-
-  document.getElementById(
-    'ai-result'
-  ).style.display =
-    'none';
-
-
-  document.getElementById(
-    'ai-loading'
-  ).style.display =
-    'none';
-
-
-  document.getElementById(
-    'ai-output'
-  ).textContent =
-    '';
-
-
-  document.getElementById(
-    'ai-run-btn'
-  ).disabled =
-    false;
-
-
-  document
-    .getElementById('ai-overlay')
-    .classList.add('open');
-
+  aiId=id;aiResult=null;
+  var s=getS(id);if(!s)return;
+  document.getElementById('ai-sub').textContent='Rewriting: '+(s.role||'statement')+' at '+cur;
+  document.getElementById('ai-role').value=s.role||'';
+  document.getElementById('ai-band').value=s.band||'';
+  document.getElementById('ai-trust').value='';
+  document.getElementById('ai-spec').value='';
+  document.getElementById('ai-res').style.display='none';
+  document.getElementById('ai-ld').style.display='none';
+  document.getElementById('ov2').classList.add('open');
 }
-
-
-/* =========================================================
-   CLOSE AI
-========================================================= */
-
-function closeAI(){
-
-  document
-    .getElementById('ai-overlay')
-    .classList.remove('open');
-
-  aiSourceId = null;
-
-  aiResult = null;
-
-}
-
-
-/* =========================================================
-   AI REWRITE
-========================================================= */
+function closeAI(){document.getElementById('ov2').classList.remove('open');aiId=null;}
 
 async function runAI(){
-
-  if(!aiSourceId){
-    return;
-  }
-
-
-  const stmt =
-    getStatements(currentTrust)
-      .find(
-        item => item.id === aiSourceId
-      );
-
-
-  if(!stmt){
-    return;
-  }
-
-
-  const newRole =
-    document
-      .getElementById('ai-role')
-      .value
-      .trim() ||
-    stmt.role;
-
-
-  const newBand =
-    document
-      .getElementById('ai-band')
-      .value ||
-    stmt.band;
-
-
-  const newTrust =
-    document
-      .getElementById('ai-trust')
-      .value
-      .trim() ||
-    currentTrust;
-
-
-  const specification =
-    document
-      .getElementById('ai-spec')
-      .value
-      .trim();
-
-
-  const loading =
-    document.getElementById(
-      'ai-loading'
-    );
-
-
-  const result =
-    document.getElementById(
-      'ai-result'
-    );
-
-
-  const runButton =
-    document.getElementById(
-      'ai-run-btn'
-    );
-
-
-  result.style.display =
-    'none';
-
-
-  loading.style.display =
-    'flex';
-
-
-  loading.innerHTML = `
-    <div class="ai-spinner"></div>
-    <span>
-      AI is rewriting your statement...
-    </span>
-  `;
-
-
-  runButton.disabled = true;
-
-
-  const prompt = `
-You are an expert NHS job application writer.
-
-ORIGINAL STATEMENT
-
-Role: ${stmt.role}
-Band: ${stmt.band}
-Trust: ${currentTrust}
-
-${stmt.text}
-
-
-REWRITE FOR
-
-Role: ${newRole}
-Band: ${newBand}
-Trust: ${newTrust}
-
-PERSON SPECIFICATION / REQUIREMENTS:
-
-${specification || 'No additional specification provided.'}
-
-
-INSTRUCTIONS:
-
-1. Keep the candidate's real experience intact.
-2. Do not invent qualifications, employment, responsibilities, achievements or clinical experience.
-3. Adapt the emphasis to the target role.
-4. Use professional NHS application language.
-5. Demonstrate relevant skills and competencies.
-6. Reflect NHS values naturally where appropriate.
-7. Keep the statement approximately similar in useful detail to the original.
-8. Return ONLY the rewritten supporting statement.
-`;
-
-
-  /*
-    IMPORTANT:
-
-    Put your own secure backend endpoint here.
-
-    Example:
-
-    const AI_ENDPOINT =
-      'https://your-domain.com/api/rewrite';
-
-    Do NOT put an Anthropic/OpenAI secret
-    API key in this HTML.
-  */
-
-  const AI_ENDPOINT = '';
-
-
-  if(!AI_ENDPOINT){
-
-    loading.innerHTML = `
-      <span style="color:#dc2626">
-        ✕ AI service is not connected.
-        Add your secure AI backend endpoint
-        to AI_ENDPOINT.
-      </span>
-    `;
-
-    runButton.disabled = false;
-
-    return;
-
-  }
-
-
+  var s=getS(aiId);if(!s)return;
+  var role=document.getElementById('ai-role').value.trim()||s.role;
+  var band=document.getElementById('ai-band').value||s.band;
+  var trust=document.getElementById('ai-trust').value.trim()||cur;
+  var spec=document.getElementById('ai-spec').value.trim();
+  document.getElementById('ai-res').style.display='none';
+  document.getElementById('ai-ld').style.display='flex';
+  document.getElementById('ai-run').disabled=true;
+  var prompt='You are an expert NHS job application writer.\n\nORIGINAL STATEMENT (written for: '+s.role+', '+s.band+' at '+cur+'):\n'+s.text+'\n\nREWRITE FOR:\n- Role: '+role+'\n- Band: '+band+'\n- Trust: '+trust+'\n'+(spec?'- Person specification:\n'+spec+'\n\n':'\n')+'RULES:\n1. Keep real experience and achievements\n2. Adjust emphasis to match new role\n3. Show NHS values throughout\n4. Match original length\n5. Return ONLY the rewritten statement, no preamble';
   try{
-
-    const response =
-      await fetch(
-        AI_ENDPOINT,
-        {
-          method:'POST',
-
-          headers:{
-            'Content-Type':
-              'application/json'
-          },
-
-          body:JSON.stringify({
-            prompt:prompt,
-            role:newRole,
-            band:newBand,
-            trust:newTrust,
-            specification:specification
-          })
-
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!response.ok){
-
-      throw new Error(
-        data.error ||
-        'AI request failed with status ' +
-        response.status
-      );
-
-    }
-
-
-    aiResult =
-      data.text ||
-      data.output ||
-      data.result ||
-      (
-        data.content &&
-        data.content[0] &&
-        data.content[0].text
-      ) ||
-      '';
-
-
-    if(!aiResult){
-
-      throw new Error(
-        'The AI service returned no text.'
-      );
-
-    }
-
-
-    document.getElementById(
-      'ai-output'
-    ).textContent =
-      aiResult;
-
-
-    result.style.display =
-      'block';
-
-
-    loading.style.display =
-      'none';
-
-
-    runButton.disabled =
-      false;
-
-
-    runButton.dataset.role =
-      newRole;
-
-
-    runButton.dataset.band =
-      newBand;
-
-
-    runButton.dataset.trust =
-      newTrust;
-
-
-  }catch(error){
-
-    console.error(
-      'AI error:',
-      error
-    );
-
-
-    loading.innerHTML = `
-      <span style="color:#dc2626">
-        ✕ ${escapeHTML(error.message)}
-      </span>
-    `;
-
-
-    runButton.disabled =
-      false;
-
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    var d=await r.json();
+    aiResult=d.content&&d.content[0]&&d.content[0].text;
+    if(!aiResult)throw new Error('No response from AI');
+    document.getElementById('ai-out').textContent=aiResult;
+    document.getElementById('ai-res').style.display='block';
+    document.getElementById('ai-ld').style.display='none';
+    document.getElementById('ai-run').dataset.role=role;
+    document.getElementById('ai-run').dataset.band=band;
+    document.getElementById('ai-run').dataset.trust=trust;
+  }catch(e){
+    document.getElementById('ai-ld').innerHTML='<span style="color:#dc2626">Error: '+e.message+'</span>';
   }
-
+  document.getElementById('ai-run').disabled=false;
 }
 
-
-/* =========================================================
-   SAVE AI REWRITE
-========================================================= */
-
-async function saveRewritten(){
-
-  if(!aiResult){
-    return;
-  }
-
-
-  const runButton =
-    document.getElementById(
-      'ai-run-btn'
-    );
-
-
-  const role =
-    runButton.dataset.role ||
-    document.getElementById(
-      'ai-role'
-    ).value.trim();
-
-
-  const band =
-    runButton.dataset.band ||
-    document.getElementById(
-      'ai-band'
-    ).value;
-
-
-  const trust =
-    runButton.dataset.trust ||
-    document.getElementById(
-      'ai-trust'
-    ).value.trim() ||
-    currentTrust;
-
-
-  if(!trust){
-    return;
-  }
-
-
-  if(!db[trust]){
-    db[trust] = {
-      s:[]
-    };
-  }
-
-
-  const statements =
-    getStatements(trust);
-
-
-  if(statements.length >= 10){
-
-    toast(
-      'Maximum 10 statements for this trust.',
-      '#ef4444'
-    );
-
-    return;
-  }
-
-
-  const newStatement = {
-
-    id:genId(),
-
-    role,
-
-    band,
-
-    label:'AI Rewrite',
-
-    text:aiResult,
-
-    outcome:'pending',
-
-    date:today()
-
-  };
-
-
-  statements.unshift(
-    newStatement
-  );
-
-
-  saveLocal();
-
-  updateStats();
-
-
-  if(trust === currentTrust){
-    renderTrust();
-  }
-
-
-  closeAI();
-
-
-  toast(
-    'Rewritten statement saved.',
-    '#22c55e'
-  );
-
-
-  await sbSave(
-    newStatement,
-    trust
-  );
-
+function saveRewritten(){
+  if(!aiResult)return;
+  var role=document.getElementById('ai-run').dataset.role||'';
+  var band=document.getElementById('ai-run').dataset.band||'';
+  var trust=document.getElementById('ai-run').dataset.trust||cur;
+  if(!db[trust])db[trust]={s:[]};
+  if(db[trust].s.length>=10){toast('Max 10 for '+trust,'#ef4444');return;}
+  var ns={id:gid(),role:role,band:band,label:'AI Rewrite',text:aiResult,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+  db[trust].s.unshift(ns);
+  save();sbSave(ns,trust);
+  if(trust===cur)renderTrust();
+  updateStats();closeAI();
+  toast('Rewritten statement saved','#22c55e');
 }
 
-
-/* =========================================================
-   COPY AI RESULT
-========================================================= */
-
-async function copyRewritten(){
-
-  if(!aiResult){
-    return;
-  }
-
-
-  try{
-
-    if(
-      navigator.clipboard &&
-      window.isSecureContext
-    ){
-
-      await navigator.clipboard.writeText(
-        aiResult
-      );
-
-    }else{
-
-      fallbackCopy(aiResult);
-
-    }
-
-
-    toast(
-      'Rewritten statement copied.',
-      '#22c55e'
-    );
-
-  }catch(error){
-
-    toast(
-      'Copy failed.',
-      '#ef4444'
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   STATISTICS
-========================================================= */
+// HELPERS
+function getS(id){return(db[cur]&&db[cur].s||[]).find(function(s){return s.id===id;});}
 
 function updateStats(){
-
-  const trusts =
-    Object.keys(db)
-      .filter(function(trust){
-
-        return (
-          db[trust] &&
-          Array.isArray(db[trust].s) &&
-          db[trust].s.length > 0
-        );
-
-      });
-
-
-  const totalStatements =
-    trusts.reduce(
-      function(total,trust){
-
-        return total +
-          db[trust].s.length;
-
-      },
-      0
-    );
-
-
-  const roles =
-    new Set();
-
-
-  trusts.forEach(function(trust){
-
-    db[trust].s.forEach(function(stmt){
-
-      if(stmt.role){
-
-        roles.add(
-          stmt.role
-            .trim()
-            .toLowerCase()
-        );
-
-      }
-
-    });
-
-  });
-
-
-  document.getElementById(
-    'h-trusts'
-  ).textContent =
-    trusts.length;
-
-
-  document.getElementById(
-    'h-stmts'
-  ).textContent =
-    totalStatements;
-
-
-  document.getElementById(
-    'h-roles'
-  ).textContent =
-    roles.size;
-
-
-  document.getElementById(
-    'n-trusts'
-  ).textContent =
-    trusts.length;
-
-
-  document.getElementById(
-    'n-stmts'
-  ).textContent =
-    totalStatements;
-
+  var trusts=Object.keys(db).filter(function(k){return db[k]&&db[k].s&&db[k].s.length;});
+  var total=trusts.reduce(function(s,k){return s+(db[k].s||[]).length;},0);
+  var roles=[];
+  trusts.forEach(function(k){(db[k].s||[]).forEach(function(s){if(s.role&&roles.indexOf(s.role.toLowerCase())<0)roles.push(s.role.toLowerCase());});});
+  document.getElementById('h-t').textContent=trusts.length;
+  document.getElementById('h-s').textContent=total;
+  document.getElementById('h-r').textContent=roles.length;
+  document.getElementById('n-t').textContent=trusts.length;
+  document.getElementById('n-s').textContent=total;
 }
 
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer = null;
-
-
-function toast(message,color){
-
-  const toastElement =
-    document.getElementById(
-      'toast'
-    );
-
-
-  document.getElementById(
-    'tmsg'
-  ).textContent =
-    message;
-
-
-  document.getElementById(
-    'tdot'
-  ).style.background =
-    color || '#22c55e';
-
-
-  toastElement.classList.add(
-    'show'
-  );
-
-
-  clearTimeout(
-    toastTimer
-  );
-
-
-  toastTimer =
-    setTimeout(function(){
-
-      toastElement.classList.remove(
-        'show'
-      );
-
-    },3000);
-
+var tt;
+function toast(msg,color){
+  document.getElementById('tmsg').textContent=msg;
+  document.getElementById('tdot').style.background=color||'#22c55e';
+  var t=document.getElementById('toast');t.classList.add('show');
+  clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},2500);
 }
 
-
-/* =========================================================
-   EVENT DELEGATION
-   THIS IS THE IMPORTANT FIX
-========================================================= */
-
-
-/*
-   Global click handler.
-
-   Instead of putting onclick=""
-   inside every dynamically-created
-   statement button, every button now
-   uses data-action.
-
-   This means buttons continue to work
-   even after renderTrust() replaces
-   the HTML.
-*/
-
-document.addEventListener(
-  'click',
-  function(event){
-
-    const actionElement =
-      event.target.closest(
-        '[data-action]'
-      );
-
-
-    if(actionElement){
-
-      const action =
-        actionElement.dataset.action;
-
-
-      const id =
-        actionElement.dataset.id;
-
-
-      switch(action){
-
-        case 'add-statement':
-
-          openForm();
-
-          break;
-
-
-        case 'close-form':
-
-          closeForm();
-
-          break;
-
-
-        case 'save-statement':
-
-          saveStatement();
-
-          break;
-
-
-        case 'copy-statement':
-
-          copyStatement(id);
-
-          break;
-
-
-        case 'ai-rewrite':
-
-          openAI(id);
-
-          break;
-
-
-        case 'duplicate-statement':
-
-          duplicateStatement(id);
-
-          break;
-
-
-        case 'edit-statement':
-
-          openForm(id);
-
-          break;
-
-
-        case 'delete-statement':
-
-          deleteStatement(id);
-
-          break;
-
-
-        case 'cycle-outcome':
-
-          cycleOutcome(id);
-
-          break;
-
-
-        case 'toggle-expand':
-
-          toggleExpand(id);
-
-          break;
-
-
-        case 'close-ai':
-
-          closeAI();
-
-          break;
-
-
-        case 'run-ai':
-
-          runAI();
-
-          break;
-
-
-        case 'save-rewritten':
-
-          saveRewritten();
-
-          break;
-
-
-        case 'copy-rewritten':
-
-          copyRewritten();
-
-          break;
-
-      }
-
-      return;
-    }
-
-
-    /*
-      Trust search result.
-    */
-
-    const searchResult =
-      event.target.closest(
-        '.sri[data-trust]'
-      );
-
-
-    if(searchResult){
-
-      pickTrust(
-        searchResult.dataset.trust
-      );
-
-      return;
-    }
-
-
-    /*
-      Browse Trust dropdown.
-    */
-
-    const dropdownItem =
-      event.target.closest(
-        '.dp-item[data-trust]'
-      );
-
-
-    if(dropdownItem){
-
-      pickTrust(
-        dropdownItem.dataset.trust
-      );
-
-      return;
-    }
-
-
-    /*
-      Band filter.
-    */
-
-    const filterButton =
-      event.target.closest(
-        '[data-filter-band]'
-      );
-
-
-    if(filterButton){
-
-      setBandFilter(
-        filterButton.dataset.filterBand
-      );
-
-      return;
-    }
-
-  }
-);
-
-
-/* =========================================================
-   SEARCH INPUT
-========================================================= */
-
-document
-  .getElementById('search-input')
-  .addEventListener(
-    'input',
-    function(){
-
-      performTrustSearch(
-        this.value
-      );
-
-    }
-  );
-
-
-document
-  .getElementById('search-input')
-  .addEventListener(
-    'focus',
-    function(){
-
-      if(this.value.trim()){
-        performTrustSearch(
-          this.value
-        );
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   DROPDOWN BUTTON
-========================================================= */
-
-document
-  .getElementById('dropdown-btn')
-  .addEventListener(
-    'click',
-    function(event){
-
-      event.stopPropagation();
-
-
-      const panel =
-        document.getElementById(
-          'dropdown-panel'
-        );
-
-
-      const button = this;
-
-
-      const isOpen =
-        panel.classList.contains(
-          'show'
-        );
-
-
-      document
-        .getElementById('search-results')
-        .classList.remove('show');
-
-
-      if(isOpen){
-
-        panel.classList.remove(
-          'show'
-        );
-
-        button.classList.remove(
-          'open'
-        );
-
-      }else{
-
-        buildDropdown();
-
-        panel.classList.add(
-          'show'
-        );
-
-        button.classList.add(
-          'open'
-        );
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   STATEMENT SEARCH
-========================================================= */
-
-document.addEventListener(
-  'input',
-  function(event){
-
-    if(
-      event.target.id ===
-      'stmt-search'
-    ){
-
-      filterStatements(
-        event.target.value
-      );
-
-    }
-
-
-    if(
-      event.target.id ===
-      'f-text'
-    ){
-
-      updateCharacterCount();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   MODAL BACKDROP
-========================================================= */
-
-document
-  .getElementById('overlay')
-  .addEventListener(
-    'click',
-    function(event){
-
-      if(
-        event.target === this
-      ){
-
-        closeForm();
-
-      }
-
-    }
-  );
-
-
-document
-  .getElementById('ai-overlay')
-  .addEventListener(
-    'click',
-    function(event){
-
-      if(
-        event.target === this
-      ){
-
-        closeAI();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   ESC KEY
-========================================================= */
-
-document.addEventListener(
-  'keydown',
-  function(event){
-
-    if(event.key !== 'Escape'){
-      return;
-    }
-
-
-    closeForm();
-
-    closeAI();
-
-
-    document
-      .getElementById(
-        'search-results'
-      )
-      .classList.remove(
-        'show'
-      );
-
-
-    document
-      .getElementById(
-        'dropdown-panel'
-      )
-      .classList.remove(
-        'show'
-      );
-
-
-    document
-      .getElementById(
-        'dropdown-btn'
-      )
-      .classList.remove(
-        'open'
-      );
-
-  }
-);
-
-
-/* =========================================================
-   CLICK OUTSIDE SEARCH / DROPDOWN
-========================================================= */
-
-document.addEventListener(
-  'click',
-  function(event){
-
-    if(
-      !event.target.closest(
-        '.search-box'
-      )
-    ){
-
-      document
-        .getElementById(
-          'search-results'
-        )
-        .classList.remove(
-          'show'
-        );
-
-    }
-
-
-    if(
-      !event.target.closest(
-        '.dropdown-box'
-      )
-    ){
-
-      document
-        .getElementById(
-          'dropdown-panel'
-        )
-        .classList.remove(
-          'show'
-        );
-
-
-      document
-        .getElementById(
-          'dropdown-btn'
-        )
-        .classList.remove(
-          'open'
-        );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   INITIALISE
-========================================================= */
-
-loadLocal();
-
-updateStats();
-
-sbLoadAll();
-
+load();updateStats();sbLoad();
 </script>
-
 </body>
 </html>
