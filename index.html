@@ -555,24 +555,109 @@ function openCompare(id){
 }
 function closeCompare(){document.getElementById('ov2').classList.remove('open');cmpId=null;}
 
-async function runCompare(){
+function runCompare(){
   var s=getS(cmpId);if(!s)return;
   var spec=document.getElementById('cmp-spec').value.trim();
   if(!spec){toast('Please paste the person specification first','#ef4444');return;}
+
   document.getElementById('cmp-res').style.display='none';
   document.getElementById('cmp-ld').style.display='flex';
   document.getElementById('m2run').disabled=true;
-  var prompt='You are an NHS recruitment expert. Compare this supporting statement against the person specification below.\n\nSTATEMENT:\n'+s.text+'\n\nPERSON SPECIFICATION:\n'+spec+'\n\nRespond with ONLY a JSON object in this exact format, no markdown:\n{"score":85,"covered":["criterion 1","criterion 2"],"gaps":["missing criterion 1"],"tips":["specific tip 1","specific tip 2"]}';
-  try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-    var d=await r.json();
-    var txt=d.content&&d.content[0]&&d.content[0].text;
-    if(!txt)throw new Error('No response');
-    txt=txt.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
-    var i1=txt.indexOf('{'),i2=txt.lastIndexOf('}')+1;
-    if(i1>=0&&i2>i1)txt=txt.slice(i1,i2);
-    showCmpResult(JSON.parse(txt));
-  }catch(e){document.getElementById('cmp-ld').innerHTML='<span style="color:#dc2626">Error: '+esc(e.message)+'</span>';}
+
+  // Extract criteria lines from person spec
+  // Split on newlines, bullets, numbers
+  var lines=spec.split(/\n|\r/).map(function(l){return l.replace(/^[\s\-\*\u2022\u2013\u2014\d\.\)]+/,'').trim();}).filter(function(l){return l.length>10;});
+
+  // Stem/normalise a word to its root for fuzzy matching
+  function stem(w){
+    w=w.toLowerCase().replace(/[^a-z]/g,'');
+    // Common suffixes
+    if(w.length>6){
+      if(w.endsWith('ing'))return w.slice(0,-3);
+      if(w.endsWith('tion'))return w.slice(0,-4);
+      if(w.endsWith('ed'))return w.slice(0,-2);
+      if(w.endsWith('ly'))return w.slice(0,-2);
+      if(w.endsWith('ment'))return w.slice(0,-4);
+      if(w.endsWith('ness'))return w.slice(0,-4);
+      if(w.endsWith('able'))return w.slice(0,-4);
+      if(w.endsWith('ical'))return w.slice(0,-4);
+      if(w.endsWith('ity'))return w.slice(0,-3);
+      if(w.endsWith('ies'))return w.slice(0,-3)+'y';
+      if(w.endsWith('es')&&w.length>5)return w.slice(0,-2);
+      if(w.endsWith('s')&&w.length>5)return w.slice(0,-1);
+    }
+    return w;
+  }
+
+  // Stop words to ignore
+  var STOP=['the','and','or','to','in','of','a','an','for','with','that','is','are','be','on','at','as','by','it','its','this','their','have','has','can','will','which','who','from','all','not','you','they','we','our','your'];
+
+  // Get stemmed keywords from a text
+  function getKeywords(txt){
+    var words=txt.toLowerCase().split(/[^a-z]+/).filter(function(w){return w.length>3&&STOP.indexOf(w)<0;});
+    return words.map(stem);
+  }
+
+  var stmtKeywords=getKeywords(s.text);
+  var stmtText=s.text.toLowerCase();
+
+  // For each criterion, check if statement covers it
+  var covered=[];
+  var gaps=[];
+
+  lines.forEach(function(line){
+    var lineKeywords=getKeywords(line);
+    if(lineKeywords.length===0)return;
+
+    // Count how many key words from this criterion appear in the statement
+    var matchCount=0;
+    var totalKey=0;
+
+    lineKeywords.forEach(function(kw){
+      if(kw.length<3)return;
+      totalKey++;
+      // Check stemmed match
+      if(stmtKeywords.some(function(sw){return sw===kw||sw.startsWith(kw)||kw.startsWith(sw);}))matchCount++;
+    });
+
+    // Also check for exact phrase fragments (2+ word sequences)
+    var lineWords=line.toLowerCase().split(/\s+/);
+    var phraseMatch=false;
+    for(var i=0;i<lineWords.length-1;i++){
+      var phrase=lineWords[i]+' '+lineWords[i+1];
+      if(phrase.length>6&&stmtText.includes(phrase)){phraseMatch=true;break;}
+    }
+
+    var coverage=totalKey>0?matchCount/totalKey:0;
+    if(phraseMatch||coverage>=0.45){
+      covered.push(line);
+    } else {
+      gaps.push({line:line,coverage:coverage,match:matchCount,total:totalKey});
+    }
+  });
+
+  // Score
+  var total=covered.length+gaps.length;
+  var score=total>0?Math.round((covered.length/total)*100):0;
+
+  // Generate tips for top gaps
+  var tips=[];
+  var topGaps=gaps.slice(0,3);
+  topGaps.forEach(function(g){
+    var words=g.line.split(' ').slice(0,6).join(' ');
+    tips.push('Add specific evidence addressing: "'+words+'..."');
+  });
+  if(covered.length>0&&gaps.length>0)tips.push('Your statement covers '+covered.length+' of '+total+' criteria. Focus edits on the '+gaps.length+' gap'+(gaps.length>1?'s':'')+'.');
+  if(score>=75)tips.push('Strong match overall. Review the gaps above and add 1-2 sentences to address each.');
+
+  showCmpResult({
+    score:score,
+    covered:covered,
+    gaps:gaps.map(function(g){return g.line;}),
+    tips:tips
+  });
+
+  document.getElementById('cmp-ld').style.display='none';
   document.getElementById('m2run').disabled=false;
 }
 
