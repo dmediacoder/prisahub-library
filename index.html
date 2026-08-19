@@ -105,11 +105,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .pr{background:#eff6ff;color:#1d4ed8}
 .pb{background:#f0fdf4;color:#166534}
 .pd{background:#f8fafc;color:#64748b;font-weight:500}
-.opill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
-.op{background:#f1f5f9;color:#64748b}
-.oi{background:#dbeafe;color:#1d4ed8}
-.on2{background:#fee2e2;color:#dc2626}
-.oo{background:#d1fae5;color:#065f46}
+
 .scacts{display:flex;gap:5px;flex-shrink:0}
 .scb{padding:13px 15px}
 .sclbl{font-size:11.5px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
@@ -397,7 +393,7 @@ async function sbLoad(){
         sbDb[row.trust_name].s.push({
           id:row.id,role:row.role||'',band:row.band||'',
           label:row.label||'',text:row.statement||'',
-          outcome:row.outcome||'pending',
+          outcome:row.outcome||'interview',
           date:row.created_at?new Date(row.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):''
         });
       });
@@ -570,40 +566,39 @@ function renderTrust(){
     btn.addEventListener('click',function(){fb=this.getAttribute('data-band');renderTrust();});
   });
 
-  // Statement buttons
-  document.querySelectorAll('.sc').forEach(function(card){
-    var id=card.getAttribute('data-id');
-    var copyBtn=card.querySelector('.s-copy');
-    var cmpBtn=card.querySelector('.s-cmp');
-    var dupBtn=card.querySelector('.s-dup');
-    var editBtn=card.querySelector('.s-edit');
-    var delBtn=card.querySelector('.s-del');
-    var xBtn=card.querySelector('.s-x');
-    var opBtn=card.querySelector('.s-op');
+  // Use event delegation on sclist - prevents duplicate handlers on re-render
+  var sclist=document.getElementById('sclist');
+  if(sclist){
+    sclist.addEventListener('click',function(e){
+      var btn=e.target.closest('button');
+      if(!btn)return;
+      e.stopPropagation();
+      var card=btn.closest('.sc');
+      if(!card)return;
+      var id=card.getAttribute('data-id');
+      if(!id)return;
+      if(btn.classList.contains('s-copy')){doCopy(id);}
+      else if(btn.classList.contains('s-cmp')){openCompare(id);}
+      else if(btn.classList.contains('s-dup')){doDup(id);}
+      else if(btn.classList.contains('s-edit')){openForm(id);}
+      else if(btn.classList.contains('s-del')){doDel(id);}
+      else if(btn.classList.contains('s-x')){xp[id]=!xp[id];renderTrust();}
 
-    if(copyBtn)copyBtn.addEventListener('click',function(e){e.stopPropagation();doCopy(id);});
-    if(cmpBtn)cmpBtn.addEventListener('click',function(e){e.stopPropagation();openCompare(id);});
-    if(dupBtn)dupBtn.addEventListener('click',function(e){e.stopPropagation();doDup(id);});
-    if(editBtn)editBtn.addEventListener('click',function(e){e.stopPropagation();openForm(id);});
-    if(delBtn)delBtn.addEventListener('click',function(e){e.stopPropagation();doDel(id);});
-    if(xBtn)xBtn.addEventListener('click',function(e){e.stopPropagation();xp[id]=!xp[id];renderTrust();});
-    if(opBtn)opBtn.addEventListener('click',function(e){e.stopPropagation();cycleO(id,opBtn);});
-  });
+    });
+  }
 }
 
 // ── RENDER SINGLE STATEMENT ──
 function renderS(s){
   var isX=xp[s.id];
-  var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
-  var oC={pending:'op',interview:'oi',no:'on2',offer:'oo'};
-  var oc=s.outcome||'pending';
+
   return '<div class="sc" id="sc-'+esc(s.id)+'" data-id="'+esc(s.id)+'">'
     +'<div class="sch">'
       +'<div class="scpills">'
         +(s.role?'<span class="pill pr">'+esc(s.role)+'</span>':'')
         +(s.band?'<span class="pill pb">'+esc(s.band)+'</span>':'')
         +(s.date?'<span class="pill pd">'+esc(s.date)+'</span>':'')
-        +'<button class="opill '+oC[oc]+' s-op">'+oL[oc]+'</button>'
+        +'<span class="pill" style="background:#dbeafe;color:#1d4ed8">Interview</span>'
       +'</div>'
       +'<div class="scacts">'
         +'<button class="btn btn-ghost btn-sm s-copy" title="Copy to clipboard">&#128203;</button>'
@@ -637,7 +632,7 @@ function flashCard(id){var el=document.getElementById('sc-'+id);if(el){el.classL
 function doDup(id){
   var s=getS(id);if(!s)return;
   if((db[cur].s||[]).length>=10){toast('Max 10 statements per trust','#ef4444');return;}
-  var ns={id:gid(),role:s.role,band:s.band,label:(s.label?s.label+' (copy)':'Copy'),text:s.text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+  var ns={id:gid(),role:s.role,band:s.band,label:(s.label?s.label+' (copy)':'Copy'),text:s.text,outcome:'interview',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
   db[cur].s.unshift(ns);lsave();sbSave(ns,cur);renderTrust();updateStats();toast('Statement duplicated','#22c55e');
 }
 
@@ -647,23 +642,7 @@ function doDel(id){
   lsave();sbDel(id);renderTrust();updateStats();toast('Deleted','#ef4444');
 }
 
-var OC=['pending','interview','no','offer'];
-function cycleO(id,btn){
-  var s=getS(id);if(!s)return;
-  var i=OC.indexOf(s.outcome||'pending');
-  s.outcome=OC[(i+1)%OC.length];
-  var oL={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
-  var oC2={pending:'op',interview:'oi',no:'on2',offer:'oo'};
-  btn.textContent=oL[s.outcome];btn.className='opill '+oC2[s.outcome]+' s-op';
-  lsave();
-  // Update outcome in Supabase
-  try{
-    fetch(SB+'/rest/v1/library_statements?id=eq.'+s.id,{
-      method:'PATCH',headers:mkHeaders(),
-      body:JSON.stringify({outcome:s.outcome})
-    });
-  }catch(e){}
-}
+
 
 // ── FORM ──
 function openForm(id){
@@ -703,7 +682,7 @@ async function saveStmt(){
     }
   }else{
     if(db[cur].s.length>=10){toast('Max 10 statements per trust','#ef4444');saveBtn.disabled=false;saveBtn.textContent='Save Statement';return;}
-    var ns={id:gid(),role:role,band:band,label:label,text:text,outcome:'pending',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+    var ns={id:gid(),role:role,band:band,label:label,text:text,outcome:'interview',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
     db[cur].s.unshift(ns);
     // Save to localStorage immediately
     lsave();
@@ -996,13 +975,13 @@ function doRoleSearch(){
   var html='<div style="padding:10px 14px 6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em">'+results.length+' statement'+(results.length!==1?'s':'')+' found</div>';
 
   results.forEach(function(r,i){
-    var oColors={pending:'rgba(255,255,255,.2)',interview:'#3b82f6',no:'#ef4444',offer:'#22c55e'};
-    var oLabels={pending:'Pending',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
+    var oColors={pending:'#3b82f6',interview:'#3b82f6',no:'#ef4444',offer:'#22c55e'};
+    var oLabels={pending:'Got Interview',interview:'Got Interview',no:'No Interview',offer:'Got Offer'};
     var oc=r.stmt.outcome||'pending';
     html+='<div class="rsr-item" data-trust="'+esc(r.trust)+'" style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:background .1s">'
       +'<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px">'
         +'<div style="font-size:12px;font-weight:700;color:#60a5fa">'+esc(r.trust)+'</div>'
-        +'<span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:8px;background:'+oColors[oc]+';color:#fff">'+oLabels[oc]+'</span>'
+  
       +'</div>'
       +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">'
         +(r.stmt.role?'<span style="font-size:11px;font-weight:700;padding:2px 9px;border-radius:7px;background:#eff6ff;color:#1d4ed8">'+esc(r.stmt.role)+'</span>':'')
